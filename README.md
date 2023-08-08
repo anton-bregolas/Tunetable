@@ -1,22 +1,28 @@
-The Session Tunelist to Tunetable Converter [v.0.1]
+The Session Tunelist to Tunetable Converter [v.0.2]
 ===================================================
 
 ## Overview
 
 Generate handy tunetables from tunebooks and lists of 
-tunes tagged on thesession.org using The Session API.
+tunes tagged on [thesession.org](https://thesession.org/) using [The Session API](https://thesession.org/api).
 
 ## TO DO:
 
-- Validate inputted TSO URL via Regex.
 - Make AJAX requests to TSO using Fetch API.
 - Fetch multi-page lists via promises.
+- See if loading longer lists requires wait dialog.
+- Get rid of innerHTML in favour of appendChild.
 - Pick colors for light theme, add button.
 - Try adding animations for buttons etc.
 - Find ways to export custom Tunetable as txt.
 - Consider @media requests for mobile devices.
 
 ## DONE: 
+
+[v.0.2]
+
++ Validation of inputted links via RegExp.
++ Some infobox messages added.
 
 [v.0.1]
 
