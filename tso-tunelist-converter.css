@@ -1,0 +1,286 @@
+/* Global parameters */
+
+* { 
+  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  box-sizing: border-box; 
+}
+
+body {
+
+  --bg-color: black;
+  --text-color: yellowgreen;
+  --header-color: yellowgreen;
+  --accent-color: #ffdc18;
+  --alt-accent-color: #ffdc18;
+  --highlight-color: coral;
+  --link-color: #551a8b;
+  --link-active-color: coral;
+  --border-color: #ffdc1823;
+  --alt-border-color: #ffdc1851;
+  --header-cell-color: transparent;
+  --alt-cell-color: #ffe5531b;
+
+  --font-large: 2rem;
+  --font-mid: 1.4rem;
+  --font-base: 1.2rem;
+
+  background-color: var(--bg-color);
+  margin: 0 auto;
+
+}
+
+body * {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration-line: none;
+}
+
+a:active, a:hover {
+  color: var(--link-active-color);
+}
+
+b {
+  color: var(--highlight-color);
+  /* font-weight: normal; */
+}
+
+h1 {
+  color: var(--header-color);
+  font-size: var(--font-large);
+  margin: 2rem;
+  text-align: center;
+}
+
+/* Tunetable styles */
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  font-weight: bold;
+  font-size: var(--font-large);
+  color: var(--accent-color);
+  border: 1px dashed var(--alt-border-color);
+  padding: 0.5rem;
+  background-color: var(--header-cell-color);
+  text-align: center;
+}
+
+tbody td {
+  border: 2px dashed var(--border-color);
+  font-size: var(--font-base);
+  color: var(--text-color);
+  padding: 0.3rem;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: var(--alt-cell-color);
+}
+
+tbody td:nth-of-type(odd) span {
+  text-align: center;
+}
+
+tbody td:nth-of-type(2) {
+  padding-left: 0.5rem;
+}
+
+.t-cell {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: -250px;
+  vertical-align: middle;
+}
+
+.t-head-name {
+  width: 345px;
+  text-align: left;
+}
+
+.t-head-id {
+  width: 80px;
+  min-width: 55px;
+}
+
+.t-head-url {
+  width: 70px;
+}
+
+/* Input form styles */
+
+.input-label {
+  font-size: var(--font-mid);
+  color: var(--text-color);
+  margin: 0 1.2rem;
+  padding-left: 0.2rem;
+}
+
+#input-form {
+  height: 64px;
+  border-radius: 8px;
+  font-size: var(--font-base);
+  margin: 1.5rem 1.2rem;
+  border: 5px solid var(--accent-color);
+  background-color: var(--bg-color);
+  padding: 0 0.5rem;
+  text-align: center;
+  color: var(--alt-accent-color);
+  caret-color: var(--text-color);
+}
+
+#input-form::placeholder {
+  color: var(--alt-accent-color);
+  opacity: 0.5;
+}
+
+#input-form:focus-visible {
+  outline: none;
+}
+
+/* Button & radio button styles */
+
+.t-btn {
+  display: flex;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  font-size: var(--font-mid);
+  padding: 1rem;
+  border-radius: 8px;
+  line-height: 2rem;
+  color: black;
+  background: var(--accent-color);
+} 
+
+.t-btn, .radio-btn:hover, #t-headers:hover {
+  cursor: pointer;
+}
+
+.t-gen-btn, .t-clr-btn, .t-sort-btn {
+  position: relative;
+  width: fit-content;
+  height: inherit;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+/* .t-sort-btn {
+  margin: 0 0 1.5rem 0;
+} */
+
+.t-btn-text {
+  color: black;
+  margin-right: 0.5rem;
+}
+
+.t-gen-btn-icon, .t-sort-btn-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.t-clr-btn-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.t-list-icon {
+  position: absolute;
+  right: 0;
+  margin-right: 1rem;
+  width: inherit; 
+  height: inherit; 
+  fill: black; 
+}
+
+.t-clr-btn-icon .t-list-icon {
+  top: 50%;
+  left: 50%;
+  margin-top: -0.9rem;
+  margin-left: -0.9rem;
+}
+
+input[name="t-radio-btn"] {
+  margin: 0.25rem 1.5rem 1.5rem 0.5rem;
+  height: 1rem;
+  width: 1rem;
+}
+
+.radio-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 50%;
+  border: 0.2rem solid var(--bg-color);
+  background-color: var(--bg-color);
+  box-shadow: 0 0 0 1px var(--alt-accent-color);
+}
+
+.radio-btn:checked {
+
+  box-shadow: 0 0 0 1px var(--alt-accent-color);
+  background-color: var(--text-color);
+  border: 0.2rem solid var(--bg-color);
+  border-width: 0.2rem;
+}
+
+.radio-label {
+  font-weight: bold;
+  font-size: var(--font-base);
+  color: var(--alt-accent-color);
+}
+
+/* Info message box styles */
+
+.info-box {
+  font-weight: bold;
+  font-size: var(--font-large);
+  color: var(--text-color);
+  text-align: center;
+  margin-top: 0.3rem;
+  margin-bottom: 1.7rem;
+}
+
+/* Container settings */
+
+.main-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  max-width: 535px;
+  min-width: 386px;
+  margin: 0 auto;
+}
+
+.t-container, .btn-container, .radio-container {
+  display: flex;
+  margin: 0 1.2rem;
+}
+
+.btn-container, .radio-container {
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.btn-container {  
+  gap: 0.5rem;
+}
+
+.radio-container {
+  padding-left: 0.5rem;
+}
+
+.t-container {
+  justify-content: center;
+}
+
+.input-container {
+  display: flex;
+  flex-flow: column;
+}
