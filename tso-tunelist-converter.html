@@ -1,72 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Session Tunelist to Tunetable Converter</title>
-  <link rel="stylesheet" type="text/css" href="tso-tunelist-converter.css">
-</head>
-<body>
-  <div class="main-container">
-    <h1>TSO Tunelist to Tunetable Converter</h1>
-    <form class="input-container">
-      <label for="input-form" class="input-label">Paste a link to your Tunebook or list of Tagged tunes into the input form below, press the big button and wait a wee bit. After the list is loaded, feel free to use sorting.<br><br>NB: only <a href="https://thesession.org/" target="_blank" title="https://thesession.org/"><b>TheSession.org</b></a> links ending with /tunes or /tunebook are accepted.</label>
-      <input type="url" id="input-form" name="input-form" placeholder="Link ending with /tunes or /tunebook" title="Example: https://thesession.org/members/26966/tags/Polkas101/tunes">
-    </form>
-    <div class="btn-container">
-      <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
-        <div class="t-btn-text">Generate tune table</div>
-        <div class="t-gen-btn-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-list t-list-icon" viewBox="0 0 16 16">
-            <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
-            <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
-            <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
-            <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
-          </svg>
-        </div>
-      </button>
-      <button class="t-btn t-clr-btn" title="Clear Tunetable">
-        <div class="t-clr-btn-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill t-list-icon" viewBox="0 0 16 16">
-            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
-          </svg>
-        </div>
-      </button>
-      <button class="t-btn t-sort-btn" title="Press after selecting sorting options below">
-        <div class="t-btn-text">Sort</div>
-        <div class="t-sort-btn-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-alpha-down t-list-icon" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371h-1.781zm1.57-.785L11 2.687h-.047l-.652 2.157h1.351z"/>
-            <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645V14zM4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293V2.5z"/>
-          </svg>
-        </div>
-      </button>
-    </div> 
-    <form class="radio-container">
-      <label for="keep-the-btn" class="radio-label">Move "The", use default order</label>
-      <input type="radio" id="keep-the-btn" class="radio-btn" name="t-radio-btn" value="1" checked title="Example: An Puncan [...] Magic Slipper, The">
-      <label for="cut-the-btn" class="radio-label">Cut "The", use default order</label>
-      <input type="radio" id="cut-the-btn" class="radio-btn" name="t-radio-btn" value="2" title="Example: An Puncan [...] Magic Slipper">
-      <label for="keep-the-an-btn" class="radio-label">Reorder list, move "The" & "An"</label>
-      <input type="radio" id="keep-the-an-btn" class="radio-btn" name="t-radio-btn" value="3" title="Example: Magic Slipper, The [...] Puncan, An">
-      <label for="cut-the-an-btn" class="radio-label">Reorder list, cut "The" & "An"</label>
-      <input type="radio" id="cut-the-an-btn" class="radio-btn" name="t-radio-btn" value="4" title="Example: Magic Slipper [...] Puncan">
-    </form>
-    <div class="info-box"></div>
-    <div class="t-container">
-      <table>
-        <thead>
-          <tr id="t-headers" title="Click to expand/shrink table">
-            <th class="t-head-no">#</th>
-            <th class="t-head-name">Name</th>
-            <th class="t-head-id">ID</th>
-            <th class="t-head-url">URL</th>
-          </tr>
-        </thead>
-        <tbody id="t-tunes"></tbody>
-      </table>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Session Tunelist to Tunetable Converter</title>
+    <link rel="stylesheet" type="text/css" href="tso-tunelist-converter.css">
+  </head>
+  <body>
+    <div class="main-container">
+      <h1>TSO Tunelist to Tunetable Converter</h1>
+      <form class="input-container">
+        <label for="input-form" class="input-label">Paste a link to your Tunebook or list of Tagged tunes into the input form below, press the big button and wait a wee bit. After the list is loaded, feel free to use sorting.<br><br>NB: only <a href="https://thesession.org/" target="_blank" title="https://thesession.org/"><b>TheSession.org</b></a> links ending with /tunes or /tunebook are accepted. You may need to add /tunes to your tag list URL.</label>
+        <input type="url" id="input-form" name="input-form" placeholder="Link ending with /tunes or /tunebook" title="Example: https://thesession.org/members/26966/tags/Polkas101/tunes">
+        <div class="btn-container">
+          <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
+            <div class="t-btn-text">Generate Tunetable</div>
+            <div class="t-gen-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-list t-list-icon" viewBox="0 0 16 16">
+                <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+                <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
+                <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
+                <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+              </svg>
+            </div>
+          </button>
+          <button class="t-btn t-clr-btn" title="Clear Tunetable and fetched data">
+            <div class="t-clr-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill t-list-icon" viewBox="0 0 16 16">
+                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+              </svg>
+            </div>
+          </button>
+          <button class="t-btn t-sort-btn" title="Sort Tunetable with selected options">
+            <div class="t-btn-text">Sort</div>
+            <div class="t-sort-btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-alpha-down t-list-icon" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371h-1.781zm1.57-.785L11 2.687h-.047l-.652 2.157h1.351z"/>
+                <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645V14zM4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293V2.5z"/>
+              </svg>
+            </div>
+          </button>
+        </div> 
+      </form>
+      <form class="radio-container">
+        <label for="keep-the-btn" class="radio-label">Move "The", use default order</label>
+        <input type="radio" id="keep-the-btn" class="radio-btn" name="t-radio-btn" value=1 checked title="Example: An Puncan [...] Magic Slipper, The">
+        <label for="cut-the-btn" class="radio-label">Cut "The", use default order</label>
+        <input type="radio" id="cut-the-btn" class="radio-btn" name="t-radio-btn" value=2 title="Example: An Puncan [...] Magic Slipper">
+        <label for="keep-the-an-btn" class="radio-label">Reorder list, move "The" & "An"</label>
+        <input type="radio" id="keep-the-an-btn" class="radio-btn" name="t-radio-btn" value=3 title="Example: Magic Slipper, The [...] Puncan, An">
+        <label for="cut-the-an-btn" class="radio-label">Reorder list, cut "The" & "An"</label>
+        <input type="radio" id="cut-the-an-btn" class="radio-btn" name="t-radio-btn" value=4 title="Example: Magic Slipper [...] Puncan">
+      </form>
+      <div class="info-box"></div>
+      <div class="t-container">
+        <table>
+          <thead>
+            <tr id="t-headers" title="Click to expand/shrink table">
+              <th class="t-head-no">#</th>
+              <th class="t-head-name">Name</th>
+              <th class="t-head-id">ID</th>
+              <th class="t-head-url">URL</th>
+            </tr>
+          </thead>
+          <tbody id="t-tunes"></tbody>
+        </table>
+      </div>
     </div>
-  </div>
-  <script type="module" src="tso-tunelist-converter.js"></script>
-</body>
+    <script type="module" src="tso-tunelist-converter.js"></script>
+  </body>
 </html>
