@@ -4,7 +4,7 @@ The Session Tunelist to Tunetable Converter [v.0.2]
 ## Overview
 
 Generate handy tunetables from [thesession.org](https://thesession.org/) tunebooks and lists of 
-tagged tunes using [The Session API](https://thesession.org/api).
+tagged tunes using a simple page with a URL input and sorting options that makes use of [The Session API](https://thesession.org/api).
 
 ## TO DO:
 
