@@ -99,6 +99,15 @@ tbody td:nth-of-type(2) {
   vertical-align: middle;
 }
 
+tbody td:nth-of-type(odd) {
+  padding: 0;
+}
+
+tbody td:nth-child(1) .t-cell{
+  overflow: visible;
+  text-overflow: clip;
+}
+
 .t-head-name {
   width: 345px;
   text-align: left;
@@ -111,6 +120,10 @@ tbody td:nth-of-type(2) {
 
 .t-head-url {
   width: 70px;
+}
+
+.t-head-no {
+  width: 50px;
 }
 
 /* Input form styles */
