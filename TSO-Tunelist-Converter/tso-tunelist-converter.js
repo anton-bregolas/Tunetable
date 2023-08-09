@@ -1,8 +1,9 @@
-import tsoJson from './polkas202-1.json' assert {type: 'json'};
+// import tsoJson from './polkas202-1.json' assert {type: 'json'};
 
 let noThe = 1;
-
+let tsoJson = {};
 let customJson = {};
+let delay = 0;
 
 const tuneTable = document.querySelector('#t-tunes');
 const infoBox = document.querySelector('.info-box');
@@ -19,10 +20,78 @@ function validateTsoUrl() {
 
   if (validTunelist.test(tsoUrl) || validTunebook.test(tsoUrl)) {
 
+    console.log('URL passed validation');
     return true;
   }    
-
+  console.log('URL failed validation');
   return false;
+}
+
+function fetchTheSessionJson(url) {
+
+  let jsonUrl = url + `?format=json`;
+
+  infoBox.innerHTML = `Fetching tunes from TSO...`;
+
+  console.log(`Fetching ${jsonUrl}`);
+
+  fetch(jsonUrl)
+    .then((response) => {
+      return response.json();
+    })
+      .then((data) => {
+
+        tsoJson = data;
+        customJson = {"tunes": []};
+
+        for (const tune of data.tunes) {
+          const { id, name, url, type } = tune;
+          customJson.tunes.push({ id, name, url, type });
+        }
+
+        if (data.pages > 1) {
+
+          delay = (+data.pages / 2.5) * 1000;
+
+          for (let p = 2; p <= data.pages; p++) {
+
+            let newPageUrl = url + `?page=${p}&format=json`;
+            console.log(`Fetching ${newPageUrl}`);
+
+            fetch(newPageUrl)
+              .then((pageResponse) => {
+                return pageResponse.json();
+              })
+                .then((pageData) => {
+                  
+                  tsoJson.tunes = [...tsoJson.tunes, ...pageData.tunes];
+
+                  for (const tune of pageData.tunes) {
+                    const { id, name, url, type } = tune;
+                    customJson.tunes.push({ id, name, url, type });
+                  }
+                })
+            }
+
+          return customJson;
+        }
+        
+        return customJson;
+      }) 
+      
+      .then((resultJson) => { 
+
+        console.log(`Delay set for ${delay} ms`)
+        
+        setTimeout(function() {
+          createTuneTable(resultJson)
+        }, delay)
+      }) 
+
+    .catch(() => {
+      console.error('Error fetching json');
+      infoBox.innerHTML = `<span style="color: coral">Fetching data failed, try again.</span>`
+    });
 }
 
 // Create Tunetable from JSON array of tunes
@@ -32,7 +101,7 @@ function createTuneTable(myJson) {
   const myTunes = myJson.tunes;
 
   tuneTable.innerHTML = "";
-  infoBox.innerHTML = "Hup!";
+  console.log('Creating tunetable');
 
   for (let i = 0; i < myTunes.length; i++) {
 
@@ -66,6 +135,9 @@ function createTuneTable(myJson) {
 
     tuneTable.appendChild(tuneRow);
   }
+
+  infoBox.innerHTML = "Hup!";
+  console.log('Tunetable created');
 
 }
 
@@ -129,7 +201,12 @@ function processTuneTitle(title) {
 
   } else if (title.startsWith("A ")) {
 
-    return newTitle = title.slice(2) + ', A';
+    if (noThe === 1 || noThe === 3) {
+
+      return newTitle = title.slice(2) + ', A';
+    } 
+
+    return title.slice(2);
                          
   }
   
@@ -150,10 +227,7 @@ function initButtons() {
 
       if (validateTsoUrl()) {
 
-      infoBox.innerHTML = "Hup!";
-
-      createTuneTable(tsoJson); 
-      customJson = tsoJson;
+        fetchTheSessionJson(inputForm.value);
   
       } else {
   
@@ -185,7 +259,7 @@ function initButtons() {
 
     if (checkIfEmptyJson(customJson)) {
 
-      infoBox.innerHTML = "No tunes to sort!";
+      infoBox.innerHTML = `<span style="color: coral">No tunes to sort!</span>`;
       return;
     }
 

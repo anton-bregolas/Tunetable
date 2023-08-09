@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.0.2]
+The Session Tunelist to Tunetable Converter [v.0.3]
 ===================================================
 
 ## Overview
@@ -8,8 +8,6 @@ tagged tunes using a simple page with a URL input and sorting options that makes
 
 ## TO DO:
 
-- Make AJAX requests to TSO using Fetch API.
-- Fetch multi-page lists via promises.
 - See if loading longer lists requires wait dialog.
 - Get rid of innerHTML in favour of appendChild.
 - Pick colors for light theme, add button.
@@ -19,10 +17,16 @@ tagged tunes using a simple page with a URL input and sorting options that makes
 
 ## DONE: 
 
+[v.0.3]
+
++ Fetches JSON from thesession.org via Fetch API.
++ Multi-page lists and tunebooks from The Session supported. 
++ Calculates Tunetable generation delay depending on number of pages.
+
 [v.0.2]
 
-+ Validation of inputted links via RegExp.
-+ Some infobox messages added.
++ Validates inputted links via RegExp, only TSO tunebooks and lists pass.
++ Some infobox messages and styling added.
 
 [v.0.1]
 
