@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.0.3]
+The Session Tunelist to Tunetable Converter [v.0.4]
 ===================================================
 
 ## Overview
@@ -16,6 +16,16 @@ tagged tunes using a simple page with a URL input and sorting options that makes
 - Consider @media requests for mobile devices.
 
 ## DONE: 
+
+[v.0.4]
+
++ Fixed fetching and sorting logic. Custom JSON will now be used for all operations. 
++ Fixed delay calculation after changing the /tunes URL being fetched to 50 tunes per page. 
++ Displays grumpy messages with async-await if list will take more than 3 seconds to load.
++ Separated clear data functions to make order of operations more flexible.
++ Clear button now deletes links and Infobox messages if pressed again.
++ Generate button clears JSON data at the start of the fetch request, waits before clearing Tunetable.
++ Turned off annoying autocomplete in input form until finding ways to style it.
 
 [v.0.3]
 
