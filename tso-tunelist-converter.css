@@ -133,6 +133,7 @@ tbody td:nth-child(1) .t-cell{
   color: var(--text-color);
   margin: 0 1.2rem;
   padding-left: 1rem;
+  /* display: none; */
 }
 
 #input-form {
@@ -216,7 +217,7 @@ tbody td:nth-child(1) .t-cell{
 }
 
 input[name="t-radio-btn"] {
-  margin: 0.25rem 1.5rem 1.5rem 0.25rem;
+  margin: 0.2rem 1.5rem 1.5rem 0;
   height: 1rem;
   width: 1rem;
 }
@@ -242,16 +243,18 @@ input[name="t-radio-btn"] {
   font-weight: bold;
   font-size: var(--font-base);
   color: var(--alt-accent-color);
+  margin-bottom: 1.5rem;
 }
 
 /* Info message box styles */
 
 .info-box {
+  height: 2.315rem;
   font-weight: bold;
   font-size: var(--font-large);
   color: var(--text-color);
   text-align: center;
-  margin: 0.3rem 1.2rem 1.7rem 1.2rem;
+  margin: 0.12rem 1.2rem 1.7rem 1.2rem;
 }
 
 /* Container settings */

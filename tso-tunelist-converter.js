@@ -1,9 +1,10 @@
-// import tsoJson from './polkas202-1.json' assert {type: 'json'};
+// Declare global variables, create local JSONs
 
 let noThe = 1;
+let tDelay = 0;
 let tsoJson = {};
-let customJson = {};
-let delay = 0;
+let importJson = {};
+let sortedJson = {};
 
 const tuneTable = document.querySelector('#t-tunes');
 const infoBox = document.querySelector('.info-box');
@@ -27,9 +28,22 @@ function validateTsoUrl() {
   return false;
 }
 
-function fetchTheSessionJson(url) {
+// Retrieve JSON data from The Session using Fetch API
+// Set delay depending on tunebook size then call createTuneTable()
 
-  let jsonUrl = url + `?format=json`;
+function fetchTheSessionJson(url) {
+  
+  clearJsonData();
+
+  let jsonUrl;
+
+  if (url.endsWith("/tunes") || url.endsWith("/tunes/")) {
+
+    jsonUrl = url + `?format=json&perpage=50`
+  } else {
+
+    jsonUrl = url + `?format=json`;
+  }
 
   infoBox.innerHTML = `Fetching tunes from TSO...`;
 
@@ -40,22 +54,23 @@ function fetchTheSessionJson(url) {
       return response.json();
     })
       .then((data) => {
-
+        
+        tDelay = 0;
         tsoJson = data;
-        customJson = {"tunes": []};
+        importJson = {"tunes": []};
 
         for (const tune of data.tunes) {
           const { id, name, url, type } = tune;
-          customJson.tunes.push({ id, name, url, type });
+          importJson.tunes.push({ id, name, url, type });
         }
 
         if (data.pages > 1) {
 
-          delay = (+data.pages / 2.5) * 1000;
+          tDelay = (+data.pages / 2.5) * 1000;
 
           for (let p = 2; p <= data.pages; p++) {
 
-            let newPageUrl = url + `?page=${p}&format=json`;
+            let newPageUrl = jsonUrl + `&page=${p}`;
             console.log(`Fetching ${newPageUrl}`);
 
             fetch(newPageUrl)
@@ -68,33 +83,61 @@ function fetchTheSessionJson(url) {
 
                   for (const tune of pageData.tunes) {
                     const { id, name, url, type } = tune;
-                    customJson.tunes.push({ id, name, url, type });
+                    importJson.tunes.push({ id, name, url, type });
                   }
-                })
+                }) 
+                
+              .catch(() => {
+                console.error('Error fetching multi-page JSON from The Session');
+                infoBox.innerHTML = `<span style="color: coral">Fetching data failed, try again!</span>`
+              });
             }
 
-          return customJson;
+          return importJson;
         }
-        
-        return customJson;
+
+        return importJson;
       }) 
       
       .then((resultJson) => { 
 
-        console.log(`Delay set for ${delay} ms`)
-        
+        console.log(`Table processing delay set to ${tDelay} ms`);
+        clearTunetable();
+
+        if (tDelay > 3000) {
+
+          (async () => {
+            infoBox.innerHTML = 'Jaysus, that’s a long list!';
+            await msgDelay(1250);
+            infoBox.innerHTML = 'Be patient now.';
+            await msgDelay(1250);
+            infoBox.innerHTML = 'Creating Tunetable...';
+          })()
+          
+          async function msgDelay(duration) {
+            return new Promise((resolve) => {
+              setTimeout(resolve, duration);
+            });
+          }
+
+        } else {
+          
+          infoBox.innerHTML = 'Creating Tunetable...';
+        }
+
         setTimeout(function() {
-          createTuneTable(resultJson)
-        }, delay)
+          createTuneTable(resultJson);
+          inputForm.value = "";
+        }, tDelay)
       }) 
 
     .catch(() => {
-      console.error('Error fetching json');
-      infoBox.innerHTML = `<span style="color: coral">Fetching data failed, try again.</span>`
+      console.error('Error fetching JSON from The Session');
+      infoBox.innerHTML = `<span style="color: coral">Fetching data failed, try again!</span>`
     });
 }
 
-// Create Tunetable from JSON array of tunes
+// Create Tunetable from nested JSON array of tunes
 
 function createTuneTable(myJson) {
 
@@ -141,19 +184,30 @@ function createTuneTable(myJson) {
 
 }
 
-// Check if customJson is empty
+// Check if a nested JSON array of tunes is empty
 
 function checkIfEmptyJson(checkJson) {
-  
-  let checkString = JSON.stringify(checkJson);
 
-  if (checkString == "{}") {
-    return true;
+  // Check tunelist object via JSON.stringify (slow)...
+  
+  // let checkString = JSON.stringify(checkJson);
+
+  // if (checkString == "{}") {
+  //   return true;
+  // } 
+  // return false;
+
+  // Check nested tunes array via array.length (faster)...
+
+  if (Array.isArray(checkJson.tunes) && checkJson.tunes.length) { 
+
+    return false 
   } 
-  return false;
+
+  return true 
 }
 
-// Create a deep copy of the fetched JSON
+// Create a deep copy of the JSON specified
 
 function createDeepCopyJson(rawJson) {
 
@@ -161,13 +215,14 @@ function createDeepCopyJson(rawJson) {
 
 }
 
-// Sort Tunetable: Move articles or cut articles then reorder tunes by name
+// Sort Tunetable: Iterate through a nested JSON array of tunes, call processTuneTitle()
+// After it moves or cuts articles, reorder tunes by name and return sorted JSON.
 
-function sortTunetable() {
+function sortTunetable(myJson) {
 
-  let myJson = createDeepCopyJson(tsoJson);
+  sortedJson = createDeepCopyJson(myJson);
 
-  let myTunes = myJson.tunes;
+  let myTunes = sortedJson.tunes;
 
   for (let i of myTunes) {
     i.name = processTuneTitle(i.name);
@@ -177,7 +232,7 @@ function sortTunetable() {
     return a.name.localeCompare(b.name);
   });
 
-  return myJson;
+  return sortedJson;
 }
 
 // Process tune titles according to the selected Sort setting
@@ -213,6 +268,35 @@ function processTuneTitle(title) {
   return newTitle;
 }
 
+// Clear local JSONs with tunes
+
+function clearJsonData() {
+
+  importJson = {};
+  sortedJson = {};
+
+  console.log("Tune data cleared");
+
+}
+
+// Clear Tunetable if it exists, else clear Infobox
+
+function clearTunetable() {
+
+  if (!checkIfEmptyJson(importJson)) {
+
+    tuneTable.innerHTML = "";
+    infoBox.innerHTML = "Tunetable cleared!";
+    console.log("Tunetable cleared");
+
+  } else {
+    infoBox.innerHTML = "";
+  }
+
+  inputForm.value = "";
+
+}
+
 // Add listeners to buttons and radio buttons
 
 function initButtons() {
@@ -231,8 +315,11 @@ function initButtons() {
   
       } else {
   
-        infoBox.innerHTML = `<span style="color: coral">It's not a link we're looking for!</span>`;
+        infoBox.innerHTML = `<span style="color: coral">It’s not a link we’re looking for!</span>`;
       }
+
+    } else {
+      infoBox.innerHTML = `<span style="color: coral">Don’t be shy, input a link!</span>`;
     }
   });
 
@@ -242,13 +329,9 @@ function initButtons() {
 
     event.preventDefault();
 
-    if (!checkIfEmptyJson(customJson)) {
-
-      customJson = {};
-
-      tuneTable.innerHTML = "";
-      infoBox.innerHTML = "Tunetable cleared!";
-    }
+    clearTunetable();
+    clearJsonData();
+    
   });
 
   const sortTunetableBtn = document.querySelector('.t-sort-btn');
@@ -257,15 +340,13 @@ function initButtons() {
 
     event.preventDefault();
 
-    if (checkIfEmptyJson(customJson)) {
+    if (checkIfEmptyJson(importJson)) {
 
       infoBox.innerHTML = `<span style="color: coral">No tunes to sort!</span>`;
       return;
     }
 
-    customJson = sortTunetable();
-
-    createTuneTable(customJson);
+    createTuneTable(sortTunetable(importJson));
 
     infoBox.innerHTML = "Sorted!";
 
