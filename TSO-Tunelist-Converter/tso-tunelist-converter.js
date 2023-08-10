@@ -9,6 +9,15 @@ let sortedJson = {};
 const tuneTable = document.querySelector('#t-tunes');
 const infoBox = document.querySelector('.info-box');
 const inputForm = document.querySelector('#input-form');
+const saveBtn = document.querySelector('.n-save-btn');
+const helpBtn = document.querySelector('.n-help-btn');
+const themeBtn = document.querySelector('.n-theme-btn');
+const saveIcon = saveBtn.querySelector('.n-save-icon');
+const helpIcon = helpBtn.querySelector('.n-help-icon');
+const sunIcon = themeBtn.querySelector('.n-theme-icon-sun');
+const moonIcon = themeBtn.querySelector('.n-theme-icon-moon');
+const inputLabel = document.querySelector('.input-label');
+
 
 // Validate The Session URL
 
@@ -128,6 +137,7 @@ function fetchTheSessionJson(url) {
         setTimeout(function() {
           createTuneTable(resultJson);
           inputForm.value = "";
+          saveIcon.setAttribute("style", "opacity: 1");
         }, tDelay)
       }) 
 
@@ -268,13 +278,31 @@ function processTuneTitle(title) {
   return newTitle;
 }
 
+// Export tune data in JSON format
+
+function exportTuneData(myJson) {
+
+  const currentJson = JSON.stringify(myJson, null, 2);
+  const fileName = "myTuneData.json"
+  let tuneBlob = new Blob([currentJson], { type: "application/json" });
+  let tuneLink = document.createElement("a");
+
+  tuneLink.href = URL.createObjectURL(tuneBlob);
+  tuneLink.download = fileName;
+  document.body.appendChild(tuneLink);
+
+  tuneLink.click();
+  document.body.removeChild(tuneLink);
+
+}
+
 // Clear local JSONs with tunes
 
 function clearJsonData() {
 
   importJson = {};
   sortedJson = {};
-
+  saveIcon.setAttribute("style", "opacity: 0.5");
   console.log("Tune data cleared");
 
 }
@@ -373,6 +401,37 @@ function initButtons() {
           cell.setAttribute("style", "margin-right: 0");
     });
   });
+
+  saveBtn.addEventListener('click', () => {
+
+    if (!checkIfEmptyJson(sortedJson)) {
+
+      infoBox.innerHTML = `Tune data exported!`;
+      exportTuneData(sortedJson);
+
+    } else if (!checkIfEmptyJson(importJson)) {
+
+      infoBox.innerHTML = `Tune data exported!`;
+      exportTuneData(importJson);
+    } else {
+      infoBox.innerHTML = `<span style="color: coral">No tune data to export!</span>`;
+    }
+  });
+
+  themeBtn.addEventListener('click', () => {
+    
+    document.body.classList.toggle("light");
+    sunIcon.classList.toggle("hidden");
+    moonIcon.classList.toggle("displayed");
+
+  });
+
+  helpBtn.addEventListener('click', () => {
+
+    helpIcon.classList.toggle("active");
+    inputLabel.classList.toggle("displayed");
+  })
+
 }
 
 // Initiate necessary functions on page load

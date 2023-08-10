@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.0.4]
+The Session Tunelist to Tunetable Converter [v.0.5]
 ===================================================
 
 ## Overview
@@ -8,14 +8,21 @@ tagged tunes using a simple page with a URL input and sorting options that makes
 
 ## TO DO:
 
-- See if loading longer lists requires wait dialog.
+- Animate transitions and buttons.
+- Add show original order option. 
+- Design an element inserting an example link on click.
+- Export custom Tunetable in plain list format on request.
 - Get rid of innerHTML in favour of appendChild.
-- Pick colors for light theme, add button.
-- Try adding animations for buttons etc.
-- Find ways to export custom Tunetable as txt.
 - Consider @media requests for mobile devices.
 
 ## DONE: 
+
+[v.0.5]
+
++ Redesigned the upper half of the page, navigation button/icons added.
++ Save button exports currently exports Tunetable as a JSON object file.
++ Help button displays instructions, which are now wrapped up by default.
++ Light theme: picked colors, added toggle button with alternating icons.
 
 [v.0.4]
 
