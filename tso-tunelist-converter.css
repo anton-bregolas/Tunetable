@@ -11,6 +11,7 @@ body {
   --bg-color: black;
   --text-color: yellowgreen;
   --header-color: yellowgreen;
+  --menu-color: #ffdc18;
   --accent-color: #ffdc18;
   --alt-accent-color: #ffdc18;
   --highlight-color: coral;
@@ -28,6 +29,22 @@ body {
   background-color: var(--bg-color);
   margin: 0 auto;
 
+}
+
+body.light {
+  --bg-color: cornsilk;
+  --text-color: black;
+  --header-color: #551a8b;
+  --menu-color: #551a8b;
+  --accent-color: #ffdc18;
+  --alt-accent-color: black;
+  --highlight-color: coral;
+  --link-color: #551a8b;
+  --link-active-color: coral;
+  --border-color: #ffdc18;
+  --alt-border-color: #ffdc18;
+  --header-cell-color: #551a8b;
+  --alt-cell-color: #ffe44bf5;
 }
 
 body * {
@@ -50,8 +67,51 @@ b {
 h1 {
   color: var(--header-color);
   font-size: var(--font-large);
-  margin: 2rem 1.2rem;
+  margin: 2rem 0.5rem;
   text-align: center;
+}
+
+/* Nav menu buttons and icons */
+
+.n-save-btn, .n-help-btn, .n-theme-btn {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.n-save-btn:hover, .n-help-btn:hover, .n-theme-btn:hover {
+  cursor: pointer;
+}
+
+.n-help-btn:hover *, .n-theme-btn:hover * {
+  opacity: 1;
+}
+
+.n-save-icon, .n-help-icon, .n-theme-icon-sun, .n-theme-icon-moon {
+  width: 2.25rem; 
+  height: 2.25rem;
+}
+
+.n-save-icon {
+  color: var(--alt-accent-color);
+  opacity: 0.5;
+}
+
+.n-help-icon {
+  color: var(--header-color);
+  opacity: 0.5;
+}
+
+.n-theme-icon-sun {
+  color: var(--highlight-color);
+  opacity: 0.5;
+}
+
+.n-theme-icon-moon {
+  color: var(--highlight-color);
+  opacity: 0.5;
+  display: none;
 }
 
 /* Tunetable styles */
@@ -131,9 +191,10 @@ tbody td:nth-child(1) .t-cell{
 .input-label {
   font-size: var(--font-mid);
   color: var(--text-color);
-  margin: 0 1.2rem;
+  margin: 1.2rem 1.2rem 0.3rem 1.2rem;
   padding-left: 1rem;
-  /* display: none; */
+  display: none;
+  /* transition: ease-in-out 1s; */
 }
 
 #input-form {
@@ -155,7 +216,8 @@ tbody td:nth-child(1) .t-cell{
 }
 
 #input-form:focus-visible {
-  outline: none;
+  
+  outline: 2px solid black;
 }
 
 /* Button & radio button styles */
@@ -242,7 +304,7 @@ input[name="t-radio-btn"] {
 .radio-label {
   font-weight: bold;
   font-size: var(--font-base);
-  color: var(--alt-accent-color);
+  color: var(--menu-color);
   margin-bottom: 1.5rem;
 }
 
@@ -252,9 +314,23 @@ input[name="t-radio-btn"] {
   height: 2.315rem;
   font-weight: bold;
   font-size: var(--font-large);
-  color: var(--text-color);
+  color: var(--header-color);
   text-align: center;
   margin: 0.12rem 1.2rem 1.7rem 1.2rem;
+}
+
+/* Various toggle states */
+
+.hidden {
+  display: none;
+}
+
+.displayed {
+  display: block;
+}
+
+.active {
+  opacity: 1;
 }
 
 /* Container settings */
@@ -264,7 +340,7 @@ input[name="t-radio-btn"] {
   flex-flow: column;
   justify-content: center;
   max-width: 535px;
-  min-width: 386px;
+  min-width: 404px;
   margin: 0 auto;
 }
 
@@ -279,7 +355,8 @@ input[name="t-radio-btn"] {
 }
 
 .btn-container {  
-  gap: 0.5rem;
+  gap: 0 0.5rem;
+  margin-top: 0.1rem;
 }
 
 .radio-container {
@@ -293,4 +370,12 @@ input[name="t-radio-btn"] {
 .input-container {
   display: flex;
   flex-flow: column;
+}
+
+.nav-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0.5rem 1.2rem;
+  padding: 0 0.2rem;
 }
