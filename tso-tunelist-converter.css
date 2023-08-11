@@ -80,11 +80,12 @@ h1 {
   justify-content: center;
 }
 
-.n-save-btn:hover, .n-help-btn:hover, .n-theme-btn:hover {
+.n-save-btn, .n-help-btn, .n-theme-btn, 
+.example-tunebook, .example-tunelist, .t-revert-btn:hover {
   cursor: pointer;
 }
 
-.n-help-btn:hover *, .n-theme-btn:hover * {
+.n-help-btn:hover *, .n-theme-btn:hover *, .t-revert-btn:hover * {
   opacity: 1;
 }
 
@@ -118,6 +119,7 @@ h1 {
 
 table {
   border-collapse: collapse;
+  margin-bottom: 2rem;
 }
 
 th {
@@ -168,22 +170,42 @@ tbody td:nth-child(1) .t-cell{
   text-overflow: clip;
 }
 
-.t-head-name {
+#t-head-name {
   width: 345px;
   text-align: left;
 }
 
-.t-head-id {
+#t-head-id {
   width: 80px;
   min-width: 55px;
 }
 
-.t-head-url {
+#t-head-url {
   width: 70px;
 }
 
-.t-head-no {
+#t-head-no {
   width: 50px;
+}
+
+.t-name-cell {
+  position: relative;
+}
+
+.t-revert-btn {
+  display: inline;
+  text-align: right;
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.22rem;
+  width: 5rem;
+}
+
+.t-revert-icon {
+  color: var(--accent-color);
+  opacity: 0.5;
+  width: 2rem;
+  height: 2rem;
 }
 
 /* Input form styles */
@@ -235,7 +257,8 @@ tbody td:nth-child(1) .t-cell{
   background: var(--accent-color);
 } 
 
-.t-btn, .radio-btn:hover, #t-headers:hover {
+.t-btn, .radio-btn, .radio-label, .r-hide-sort-btn,
+#t-head-no, #t-head-name, #t-head-id, #t-head-url:hover {
   cursor: pointer;
 }
 
@@ -308,6 +331,23 @@ input[name="t-radio-btn"] {
   margin-bottom: 1.5rem;
 }
 
+.r-hide-sort-btn {
+  border-radius: 0.6rem;
+  min-width: 330px;
+  flex-grow: 1;
+  background-color: var(--alt-border-color);
+  opacity: 0.6;
+  text-align: center;
+  margin: 0.2rem 1.5rem 1.5rem 0;
+}
+
+.r-hide-sort-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--alt-accent-color);
+  vertical-align: text-top;
+}
+
 /* Info message box styles */
 
 .info-box {
@@ -321,20 +361,6 @@ input[name="t-radio-btn"] {
 
 .info-error {
   color: var(--highlight-color);
-}
-
-/* Various toggle states */
-
-.hidden {
-  display: none;
-}
-
-.displayed {
-  display: block;
-}
-
-.active {
-  opacity: 1;
 }
 
 /* Container settings */
@@ -365,6 +391,7 @@ input[name="t-radio-btn"] {
 
 .radio-container {
   padding-left: 1rem;
+  display: none;
 }
 
 .t-container {
@@ -382,4 +409,22 @@ input[name="t-radio-btn"] {
   justify-content: space-between;
   margin: 0.5rem 1.2rem;
   padding: 0 0.2rem;
+}
+
+/* Various toggle states */
+
+.hidden {
+  display: none;
+}
+
+.displayed {
+  display: block;
+}
+
+.displayed-flex {
+  display: flex;
+}
+
+.active {
+  opacity: 1;
 }
