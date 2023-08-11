@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.0.5]
+The Session Tunelist to Tunetable Converter [v.0.6]
 ===================================================
 
 ## Overview
@@ -12,10 +12,17 @@ tagged tunes using a simple page with a URL input and sorting options that makes
 - Add show original order option. 
 - Design an element inserting an example link on click.
 - Export custom Tunetable in plain list format on request.
-- Get rid of innerHTML in favour of appendChild.
 - Consider @media requests for mobile devices.
 
 ## DONE: 
+
+[v.0.6]
+
++ Refactored the fetch request function using async-await syntax.
++ Bonus messages now run in parallel to the asynchronous fetch loop.
++ Fine-tested and corrected the calculation of delay that triggers them.
++ Got rid of innerHTML in favour of createElement / appendChild everywhere.
+
 
 [v.0.5]
 

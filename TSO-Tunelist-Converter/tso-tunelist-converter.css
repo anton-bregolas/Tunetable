@@ -311,12 +311,16 @@ input[name="t-radio-btn"] {
 /* Info message box styles */
 
 .info-box {
-  height: 2.315rem;
+  min-height: 2.315rem;
   font-weight: bold;
   font-size: var(--font-large);
   color: var(--header-color);
   text-align: center;
   margin: 0.12rem 1.2rem 1.7rem 1.2rem;
+}
+
+.info-error {
+  color: var(--highlight-color);
 }
 
 /* Various toggle states */
