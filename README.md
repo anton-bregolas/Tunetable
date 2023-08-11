@@ -9,6 +9,7 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 ## TO DO:
 
 - Animate transitions and buttons.
+- Add Tune Meter column option in place of ID.
 - Export custom Tunetable in plain list format on request.
 - Consider additional @media requests for mobile devices.
 
