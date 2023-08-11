@@ -10,19 +10,19 @@
     <div class="main-container">
       <h1><b>TSO</b> Tunelist to Tunetable Converter</h1>
       <div class="nav-container">
-        <div class="n-save-btn" title="Download Tunetable data">
+        <div role="button" class="n-save-btn" title="Download Tunetable data as .json">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database-down n-save-icon" viewBox="0 0 16 16">
             <path d="M12.5 9a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm.354 5.854 1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V10.5a.5.5 0 0 0-1 0v2.793l-.646-.647a.5.5 0 0 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0Z"/>
             <path d="M12.096 6.223A4.92 4.92 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.493 4.493 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.525 4.525 0 0 1-.813-.927C8.5 14.992 8.252 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.552 4.552 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10c.262 0 .52-.008.774-.024a4.525 4.525 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777ZM3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4Z"/>
           </svg>
         </div>
-        <div class="n-help-btn" title="Show instructions">
+        <div role="button" class="n-help-btn" title="Show instructions">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle n-help-icon" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
             <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
           </svg>
         </div>
-        <div class="n-theme-btn" title="Toggle light/dark theme">
+        <div role="button" class="n-theme-btn" title="Toggle light/dark theme">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sun n-theme-icon-sun" viewBox="0 0 16 16">
             <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
           </svg>
@@ -33,7 +33,7 @@
         </div>
       </div>
       <form class="input-container">
-        <label for="input-form" class="input-label">Paste a link to your Tunebook or list of Tagged tunes into the input form below, press the big button and wait a wee bit. After the list is loaded, feel free to use sorting.<br><br>NB: only <a href="https://thesession.org/" target="_blank" title="https://thesession.org/"><b>TheSession.org</b></a> links ending with /tunes or /tunebook are accepted. You may need to add /tunes to your tag list URL.</label>
+        <label for="input-form" class="input-label">Paste a link to your <span role="button" class="example-tunebook"><b>Tunebook</b></span> or list of <span role="button" class="example-tunelist"><b>Tagged</b></span> tunes into the input form below, press the big button and wait a wee bit. After the list is loaded, feel free to use sorting.<br><br>NB: only <a href="https://thesession.org/" target="_blank" title="https://thesession.org/"><b>TheSession.org</b></a> links ending with /tunes or /tunebook are accepted. You may need to add /tunes to your tag list URL.</label>
         <input type="url" id="input-form" name="input-form" placeholder="Link ending with /tunes or /tunebook" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off">
         <div class="btn-container">
           <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
@@ -54,7 +54,7 @@
               </svg>
             </div>
           </button>
-          <button class="t-btn t-sort-btn" title="Sort Tunetable with selected options">
+          <button class="t-btn t-sort-btn" title="Press once to open Sort Menu, press again to sort with selected options">
             <div class="t-btn-text">Sort</div>
             <div class="t-sort-btn-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-alpha-down t-list-icon" viewBox="0 0 16 16">
@@ -74,16 +74,28 @@
         <input type="radio" id="keep-the-an-btn" class="radio-btn" name="t-radio-btn" value=3 title="Example: Magic Slipper, The [...] Puncan, An">
         <label for="cut-the-an-btn" class="radio-label">Reorder list, cut ‘The’ & ‘An’</label>
         <input type="radio" id="cut-the-an-btn" class="radio-btn" name="t-radio-btn" value=4 title="Example: Magic Slipper [...] Puncan">
+        <div role="button" class="r-hide-sort-btn" title="Close Sort menu without sorting">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up r-hide-sort-icon" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z"/>
+          </svg>
+        </div>
       </form>
       <div class="info-box"></div>
       <div class="t-container">
         <table>
           <thead>
-            <tr id="t-headers" title="Click to expand/shrink table">
-              <th class="t-head-no">#</th>
-              <th class="t-head-name">Name</th>
-              <th class="t-head-id">ID</th>
-              <th class="t-head-url">URL</th>
+            <tr id="t-headers">
+              <th id="t-head-no" title="Tunetable Index Number">#</th>
+              <th id="t-head-name" class="t-name-cell" title="Tune Title">Name
+                <div role="button" class="t-revert-btn" title="Revert Tunetable & data to unsorted original">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat t-revert-icon" viewBox="0 0 16 16">
+                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                  </svg>
+                </div>
+              </th>
+              <th id="t-head-id" title="TSO Tune ID: Click to change to Tune Meter">ID</th>
+              <th id="t-head-url" title="Links to TSO: Click to expand/shrink Tunetable">URL</th>
             </tr>
           </thead>
           <tbody id="t-tunes"></tbody>

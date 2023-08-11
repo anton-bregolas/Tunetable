@@ -1,20 +1,26 @@
-The Session Tunelist to Tunetable Converter [v.0.6]
+The Session Tunelist to Tunetable Converter [v.0.7]
 ===================================================
 
 ## Overview
 
 Generate handy tunetables from [thesession.org](https://thesession.org/) tunebooks and lists of 
-tagged tunes using a simple page with a URL input and sorting options that makes use of [The Session API](https://thesession.org/api).
+tagged tunes using a simple web app with a URL input and sorting options that makes use of [The Session API](https://thesession.org/api).
 
 ## TO DO:
 
 - Animate transitions and buttons.
-- Add show original order option. 
-- Design an element inserting an example link on click.
 - Export custom Tunetable in plain list format on request.
-- Consider @media requests for mobile devices.
+- Consider additional @media requests for mobile devices.
 
 ## DONE: 
+
+[v.0.7]
+
++ Example links to a Tunebook / Tunelist can now be inserted on click from the help menu.
++ Revised the Sort function, got rid of redundant createTextNode lines.
++ Sort menu now opens on click and is hidden by default. Additional close button added.
++ Menu and buttons behavior revised, opening Help Menu closes Sort and vice versa (mobile friendly).
++ Added a button reverting the Tunetable and tune data to their original order.
 
 [v.0.6]
 
