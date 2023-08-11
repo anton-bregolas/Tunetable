@@ -18,6 +18,21 @@ const sunIcon = themeBtn.querySelector('.n-theme-icon-sun');
 const moonIcon = themeBtn.querySelector('.n-theme-icon-moon');
 const inputLabel = document.querySelector('.input-label');
 
+// Display Infobox message or warning
+
+function showInfoMsg(msg, err) {
+
+  let infoMsg = document.createElement("span");
+  infoMsg.textContent = msg;
+  
+  if (err) {
+    infoMsg.classList.add("info-error");
+  }
+
+  infoBox.textContent = "";
+  infoBox.appendChild(infoMsg);
+
+}
 
 // Validate The Session URL
 
@@ -37,114 +52,111 @@ function validateTsoUrl() {
   return false;
 }
 
-// Retrieve JSON data from The Session using Fetch API
-// Set delay depending on tunebook size then call createTuneTable()
+// Make a standard fetch request, throw an error if it fails
 
-function fetchTheSessionJson(url) {
+async function fetchData(url) {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching JSON:', error);
+    throw error;
+  }
+}
+
+// Retrieve JSON data from The Session using async fetch requests
+// Display bonus messages if tDelay > 3s, then call createTuneTable()
+
+async function fetchTheSessionJson(url) {
   
   clearJsonData();
 
   let jsonUrl;
 
-  if (url.endsWith("/tunes") || url.endsWith("/tunes/")) {
+  jsonUrl = url.endsWith("/tunes") || url.endsWith("/tunes/") ?
+  `${url}?format=json&perpage=50` :
+  `${url}?format=json`;
 
-    jsonUrl = url + `?format=json&perpage=50`
-  } else {
-
-    jsonUrl = url + `?format=json`;
-  }
-
-  infoBox.innerHTML = `Fetching tunes from TSO...`;
-
+  showInfoMsg("Fetching tunes from TSO...");
   console.log(`Fetching ${jsonUrl}`);
 
-  fetch(jsonUrl)
-    .then((response) => {
-      return response.json();
-    })
-      .then((data) => {
-        
-        tDelay = 0;
-        tsoJson = data;
-        importJson = {"tunes": []};
+  try {
 
-        for (const tune of data.tunes) {
-          const { id, name, url, type } = tune;
-          importJson.tunes.push({ id, name, url, type });
-        }
+    const tsoData = await fetchData(jsonUrl);
 
-        if (data.pages > 1) {
+    console.log("Fetched page #1 of tune JSON");
+    
+    importJson = { "tunes": [] };
+    
+    for (const tune of tsoData.tunes) {
+      const { id, name, url, type } = tune;
+      importJson.tunes.push({ id, name, url, type });
+    } 
 
-          tDelay = (+data.pages / 2.5) * 1000;
+    tDelay = tsoData.pages > 1 ? Math.floor((+tsoData.pages - 1) / 2.6 * 1000) : 0;
+    console.log(`Table processing delay estimated at ${tDelay} ms`);
 
-          for (let p = 2; p <= data.pages; p++) {
+    if (tsoData.pages > 1) {
 
-            let newPageUrl = jsonUrl + `&page=${p}`;
-            console.log(`Fetching ${newPageUrl}`);
+      clearTunetable();
 
-            fetch(newPageUrl)
-              .then((pageResponse) => {
-                return pageResponse.json();
-              })
-                .then((pageData) => {
-                  
-                  tsoJson.tunes = [...tsoJson.tunes, ...pageData.tunes];
-
-                  for (const tune of pageData.tunes) {
-                    const { id, name, url, type } = tune;
-                    importJson.tunes.push({ id, name, url, type });
-                  }
-                }) 
-                
-              .catch(() => {
-                console.error('Error fetching multi-page JSON from The Session');
-                infoBox.innerHTML = `<span style="color: coral">Fetching data failed, try again!</span>`
-              });
-            }
-
-          return importJson;
-        }
-
-        return importJson;
-      }) 
-      
-      .then((resultJson) => { 
-
-        console.log(`Table processing delay set to ${tDelay} ms`);
-        clearTunetable();
+      const messagePromise = (async () => {
 
         if (tDelay > 3000) {
-
-          (async () => {
-            infoBox.innerHTML = 'Jaysus, that’s a long list!';
-            await msgDelay(1250);
-            infoBox.innerHTML = 'Be patient now.';
-            await msgDelay(1250);
-            infoBox.innerHTML = 'Creating Tunetable...';
-          })()
-          
-          async function msgDelay(duration) {
-            return new Promise((resolve) => {
-              setTimeout(resolve, duration);
-            });
-          }
-
+          showInfoMsg("Jaysus, that’s a long list!");
+          await msgDelay(1250);
+          showInfoMsg("Be patient now.");
+          await msgDelay(1250);
+          showInfoMsg("Creating Tunetable...");
         } else {
-          
-          infoBox.innerHTML = 'Creating Tunetable...';
+          showInfoMsg("Creating Tunetable...");
         }
+      })();
+      
+      const fetchingPromise = (async () => {
 
-        setTimeout(function() {
-          createTuneTable(resultJson);
-          inputForm.value = "";
-          saveIcon.setAttribute("style", "opacity: 1");
-        }, tDelay)
-      }) 
+        const tunePages = [];
+      
+        for (let p = 2; p <= tsoData.pages; p++) {
+          let pageUrl = `${jsonUrl}&page=${p}`;
+          console.log(`Fetching ${jsonUrl}`);
+          tunePages.push(fetchData(pageUrl));
+        }
+      
+        const pageResponses = await Promise.all(tunePages);
+      
+        for (const pageData of pageResponses) {
 
-    .catch(() => {
-      console.error('Error fetching JSON from The Session');
-      infoBox.innerHTML = `<span style="color: coral">Fetching data failed, try again!</span>`
-    });
+          for (const tune of pageData.tunes) {
+
+            const { id, name, url, type } = tune;
+            importJson.tunes.push({ id, name, url, type });
+          }
+        }
+      })();
+      
+      await Promise.all([messagePromise, fetchingPromise]);
+    }
+
+    createTuneTable(importJson);
+
+    inputForm.value = "";
+    saveIcon.setAttribute("style", "opacity: 1");
+  } 
+    
+  catch (error) {
+
+    console.error('Error fetching JSON from The Session:', error);
+    showInfoMsg("Fetching data failed, try again!", 1);
+  }
+}
+
+// Delay the display of bonus messages using new Promise
+
+async function msgDelay(duration) {
+
+  await new Promise(resolve => setTimeout(resolve, duration));
 }
 
 // Create Tunetable from nested JSON array of tunes
@@ -153,7 +165,7 @@ function createTuneTable(myJson) {
 
   const myTunes = myJson.tunes;
 
-  tuneTable.innerHTML = "";
+  tuneTable.textContent = "";
   console.log('Creating tunetable');
 
   for (let i = 0; i < myTunes.length; i++) {
@@ -189,7 +201,7 @@ function createTuneTable(myJson) {
     tuneTable.appendChild(tuneRow);
   }
 
-  infoBox.innerHTML = "Hup!";
+  showInfoMsg("Hup!");
   console.log('Tunetable created');
 
 }
@@ -313,12 +325,12 @@ function clearTunetable() {
 
   if (!checkIfEmptyJson(importJson)) {
 
-    tuneTable.innerHTML = "";
-    infoBox.innerHTML = "Tunetable cleared!";
+    tuneTable.textContent = "";
+    showInfoMsg("Tunetable cleared!");
     console.log("Tunetable cleared");
 
   } else {
-    infoBox.innerHTML = "";
+    infoBox.textContent = '';
   }
 
   inputForm.value = "";
@@ -342,12 +354,12 @@ function initButtons() {
         fetchTheSessionJson(inputForm.value);
   
       } else {
-  
-        infoBox.innerHTML = `<span style="color: coral">It’s not a link we’re looking for!</span>`;
+        
+        showInfoMsg("It’s not a link we’re looking for!", 1);
       }
 
     } else {
-      infoBox.innerHTML = `<span style="color: coral">Don’t be shy, input a link!</span>`;
+      showInfoMsg("Don’t be shy, input a link!", 1);
     }
   });
 
@@ -370,13 +382,13 @@ function initButtons() {
 
     if (checkIfEmptyJson(importJson)) {
 
-      infoBox.innerHTML = `<span style="color: coral">No tunes to sort!</span>`;
+      showInfoMsg("No tunes to sort!", 1);
       return;
     }
 
     createTuneTable(sortTunetable(importJson));
 
-    infoBox.innerHTML = "Sorted!";
+    showInfoMsg("Sorted!");
 
   });
 
@@ -384,7 +396,7 @@ function initButtons() {
 
   for (let k = 0; k < 4; k++) {
     radioBtn[k].addEventListener("change", function() {
-      infoBox.innerHTML = `Sorting style #${this.value} picked`;
+      showInfoMsg(`Sorting style #${this.value} picked`);
       return noThe = +this.value;
     });
   }
@@ -394,27 +406,29 @@ function initButtons() {
 
   tuneTableHeaderBtn.addEventListener('click', () => {
 
-    tuneCells.querySelectorAll(".t-cell").forEach(cell => {
+    if (window.screen.width >= 720) {
+      tuneCells.querySelectorAll(".t-cell").forEach(cell => {
 
-      cell.hasAttribute("style")? 
-        cell.removeAttribute("style") :
-          cell.setAttribute("style", "margin-right: 0");
-    });
+        cell.hasAttribute("style")? 
+          cell.removeAttribute("style") :
+            cell.setAttribute("style", "margin-right: 0");
+      });
+    }
   });
 
   saveBtn.addEventListener('click', () => {
 
     if (!checkIfEmptyJson(sortedJson)) {
 
-      infoBox.innerHTML = `Tune data exported!`;
+      showInfoMsg("Tune data exported!");
       exportTuneData(sortedJson);
 
     } else if (!checkIfEmptyJson(importJson)) {
 
-      infoBox.innerHTML = `Tune data exported!`;
+      showInfoMsg("Tune data exported!");
       exportTuneData(importJson);
     } else {
-      infoBox.innerHTML = `<span style="color: coral">No tune data to export!</span>`;
+      showInfoMsg("No tune data to export!", 1);
     }
   });
 
