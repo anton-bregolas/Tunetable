@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.0.8]
+The Session Tunelist to Tunetable Converter [v.0.9]
 ===================================================
 
 ## Overview
@@ -9,10 +9,17 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 ## TO DO:
 
 - Animate transitions and buttons.
-- Export custom Tunetable in plain list format on request.
+- Brainstorm additional sorting options.
+- Consider adding "m" key to custom JSONs.
 - Consider additional @media requests for mobile devices.
 
 ## DONE: 
+
+[v.0.9]
+
++ Experimental: Click on Tunetable '#' to export Tunetable in plain text format.
++ Indentations in myTuneTable.txt are relative, calculated from the longest cell.
++ Tune ID / Tune Meter toggle function now directly changes Tunetable cell values.
 
 [v.0.8]
 
@@ -36,7 +43,6 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 + Bonus messages now run in parallel to the asynchronous fetch loop.
 + Fine-tested and corrected the calculation of delay that triggers them.
 + Got rid of innerHTML in favour of createElement / appendChild everywhere.
-
 
 [v.0.5]
 
