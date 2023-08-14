@@ -24,6 +24,8 @@ const moonIcon = themeBtn.querySelector('.n-theme-icon-moon');
 const exampleTunebook = document.querySelector('.example-tunebook');
 const exampleTunelist = document.querySelector('.example-tunelist');
 const inputLabel = document.querySelector('.input-label');
+const tuneTableHeaders = document.querySelector('#t-headers');
+const saveTuneTableBtn = document.querySelector('#t-head-no');
 
 // Display Infobox message or warning
 
@@ -309,7 +311,9 @@ function processTuneTitle(title) {
 
 function getTuneMeter(tuneType) {
 
-  if (tuneType === "reel" || tuneType === "hornpipe" || tuneType === "barndance" || tuneType === "strathspey" || tuneType === "march") {
+  if (tuneType === "reel" || tuneType === "hornpipe" || 
+  tuneType === "barndance" || tuneType === "strathspey" || 
+  tuneType === "march") {
     
     return "4/4";
 
@@ -339,6 +343,26 @@ function getTuneMeter(tuneType) {
   }
 }
 
+// Toggle & fill in cell values of ID / Meter column
+
+function toggleIdMeter() {
+
+  let cellValue;
+  let tableRows = tuneTable.getElementsByTagName('tr');
+  let myJson = !checkIfEmptyJson(sortedJson)? sortedJson : importJson;
+
+  for (let i = 0; i < tableRows.length; i++) {
+
+    let tuneRow = tableRows[i];
+    let tuneCell = tuneRow.getElementsByTagName('td')[2];
+    let textSpan = tuneCell.querySelector('.t-cell');
+
+    cellValue = showMeter === 0? myJson.tunes[i].id : getTuneMeter(myJson.tunes[i].type);
+
+    textSpan.textContent = cellValue;
+  }
+}
+
 // Export tune data in JSON format
 
 function exportTuneData(myJson) {
@@ -365,6 +389,66 @@ function clearJsonData() {
   sortedJson = {};
   saveIcon.setAttribute("style", "opacity: 0.5");
   console.log("Tune data cleared");
+
+}
+
+// Export Tunetable in plain text format, adding relative indentation
+
+function exportTuneTable() {
+
+  const tableRows = tuneTable.getElementsByTagName('tr');
+  const tableWidths = new Array(tuneTable.rows[0].cells.length).fill(0);
+
+  let tableHeaders = "";
+  let headersList = !showMeter? ["#", "Name", "ID", "URL"] : ["#", "Name", "M", "URL"];
+
+  tableWidths[2] = 2;
+
+  for (let f = 0; f < tableRows.length; f++) {
+
+    const tableCells = tableRows[f].getElementsByTagName('td');
+
+    for (let g = 0; g < tableCells.length; g++) {
+
+      tableWidths[g] = Math.max(tableWidths[g], tableCells[g].textContent.length);
+    }
+  }
+
+  for (let h = 0; h < headersList.length; h++) {
+
+    const headerText = headersList[h];
+    const spacesToAdd = tableWidths[h] - headerText.length + 1;
+    tableHeaders += h === (headersList.length - 1)? headerText : 
+    headerText + ' '.repeat(spacesToAdd) + '\t\t';
+  }
+
+  let tableContent = tableHeaders + '\n\n';
+
+  for (let i = 0; i < tableRows.length; i++) {
+
+    const tableCells = tableRows[i].getElementsByTagName('td');
+
+    for (let j = 0; j < tableCells.length; j++) {
+
+      const cellText = tableCells[j].textContent;
+      const spacesToAdd = tableWidths[j] - cellText.length + 1;
+      tableContent += j === tableCells.length - 1? cellText : 
+      cellText + ' '.repeat(spacesToAdd) + '\t\t';
+    }
+
+    tableContent += '\n';
+  }
+
+  const txtName = "myTuneTable.txt";
+  let tuneTableBlob = new Blob([tableContent], { type: "text/plain" });
+  let tuneTableLink = document.createElement("a");
+
+  tuneTableLink.href = URL.createObjectURL(tuneTableBlob);
+  tuneTableLink.download = txtName;
+  document.body.appendChild(tuneTableLink);
+
+  tuneTableLink.click();
+  document.body.removeChild(tuneTableLink);
 
 }
 
@@ -548,17 +632,11 @@ function initButtons() {
     showMeter = !showMeter? 1 : 0;
     tuneTableIdBtn.textContent = !showMeter? "ID" : "M";
 
-    if (!checkIfEmptyJson(sortedJson)) {
+    if (!checkIfEmptyTable()) {
       
-      createTuneTable(sortedJson);
+      toggleIdMeter();
       return;
-
-    } else if (!checkIfEmptyJson(importJson)) {
-
-      createTuneTable(importJson);
-      return;
-    }
-
+    } 
   });
 
   // Save Tune data in JSON format button
@@ -569,15 +647,34 @@ function initButtons() {
 
       showInfoMsg("Tune data exported!");
       exportTuneData(sortedJson);
+      console.log("Tune data exported");
 
     } else if (!checkIfEmptyJson(importJson)) {
 
       showInfoMsg("Tune data exported!");
       exportTuneData(importJson);
+      console.log("Tune data exported");
     } else {
       showInfoMsg("No tune data to export!", 1);
     }
   });
+
+  // Save Tunetable data in plain text format button
+
+  saveTuneTableBtn.addEventListener('click', () => {
+
+    if (!checkIfEmptyTable()) {
+
+      showInfoMsg("Tunetable exported!");
+      console.log("Tunetable exported");
+      exportTuneTable();
+
+    } else {
+
+      showInfoMsg("No Tunetable to export!", 1);
+    }
+  });
+
 
   // Light / dark theme toggle button
 
@@ -619,6 +716,7 @@ function initButtons() {
     if (!checkIfEmptyTable()) {
 
       clearSortMenu();
+      sortedJson = {};
       createTuneTable(importJson);
       showInfoMsg("Reverted to TSO defaults!");
     }
