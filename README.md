@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.0.7]
+The Session Tunelist to Tunetable Converter [v.0.8]
 ===================================================
 
 ## Overview
@@ -9,11 +9,18 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 ## TO DO:
 
 - Animate transitions and buttons.
-- Add Tune Meter column option in place of ID.
 - Export custom Tunetable in plain list format on request.
 - Consider additional @media requests for mobile devices.
 
 ## DONE: 
+
+[v.0.8]
+
++ Added Tune ID / Tune Meter toggle button for the Tunetable. 
++ Tune Meter is deducted from the tune type value saved in JSON data.
++ Tune type is not displayed to avoid classifying airs as reels etc.
++ Clear and Sort buttons updated, default sorting style is now None. 
++ Generate button doesn't delete user-picked sorting style while Clear does.
 
 [v.0.7]
 

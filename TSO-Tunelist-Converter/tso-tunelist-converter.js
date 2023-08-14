@@ -2,8 +2,9 @@
 // Declare global variables, create local JSONs
 ///////////////////////////////////////////////
 
-let noThe = 1;
+let noThe = 0;
 let tDelay = 0;
+let showMeter = 0;
 let tsoJson = {};
 let importJson = {};
 let sortedJson = {};
@@ -186,11 +187,13 @@ function createTuneTable(myJson) {
       const tuneCell = document.createElement("td");
       const cellSpan = document.createElement("span");
       cellSpan.classList.add("t-cell");
+      
+      const myTunesIdMeter = showMeter? getTuneMeter(myTunes[i].type) : myTunes[i].id;
 
       let cellContent =
         j === 0 ? i + 1 :
         j === 1 ? myTunes[i].name :
-        j === 2 ? myTunes[i].id : myTunes[i].url;
+        j === 2 ? myTunesIdMeter : myTunes[i].url;
       
       if (j === 3) {
 
@@ -236,6 +239,16 @@ function createDeepCopyJson(rawJson) {
 
 }
 
+function checkIfEmptyTable() {
+
+  if (tuneTable.textContent === "") {
+
+    return true;
+  } 
+
+  return false;
+}
+
 // Sort Tunetable: Iterate through a nested JSON array of tunes, call processTuneTitle()
 // After it moves or cuts articles, reorder tunes by name and return sorted JSON.
 
@@ -264,31 +277,66 @@ function processTuneTitle(title) {
 
   let newTitle = title;
 
-  if (title.startsWith("The ")) {
+  if (noThe > 0) {
 
-    if (noThe === 1 || noThe === 3) {
+    if (title.startsWith("The ")) {
 
-      return newTitle = title.slice(4) + ', The';
-    } 
+      if (noThe === 1 || noThe === 3) {
 
-    return newTitle = title.slice(4);
+        return newTitle = title.slice(4) + ', The';
+      } 
 
-  } else if (title.startsWith("An ") && (noThe > 2)) {
+      return newTitle = title.slice(4);
 
-    return newTitle = noThe < 4? title.slice(3) + ', An' : title.slice(3);
+    } else if (title.startsWith("An ") && (noThe > 2)) {
 
-  } else if (title.startsWith("A ")) {
+      return newTitle = noThe < 4? title.slice(3) + ', An' : title.slice(3);
 
-    if (noThe === 1 || noThe === 3) {
+    } else if (title.startsWith("A ")) {
 
-      return newTitle = title.slice(2) + ', A';
-    } 
+      if (noThe === 1 || noThe === 3) {
 
-    return title.slice(2);
-                         
+        return newTitle = title.slice(2) + ', A';
+      } 
+
+      return title.slice(2);
+                          
+    }
   }
   
   return newTitle;
+}
+
+function getTuneMeter(tuneType) {
+
+  if (tuneType === "reel" || tuneType === "hornpipe" || tuneType === "barndance" || tuneType === "strathspey" || tuneType === "march") {
+    
+    return "4/4";
+
+  } else if (tuneType === "jig") {
+
+    return "6/8";
+
+  } else if (tuneType === "polka") {
+
+    return "2/4";
+
+  } else if (tuneType === "slide") {
+
+    return "12/8";
+
+  } else if (tuneType === "waltz" || tuneType === "mazurka") {
+
+    return "3/4";
+
+  } else if (tuneType === "slip jig") {
+
+    return "9/8";
+
+  } else if (tuneType === "three-two" || "mazurka") {
+
+    return "3/2";
+  }
 }
 
 // Export tune data in JSON format
@@ -324,18 +372,29 @@ function clearJsonData() {
 
 function clearTunetable() {
 
-  if (!checkIfEmptyJson(importJson)) {
+  if (!checkIfEmptyTable()) {
 
     tuneTable.textContent = "";
     showInfoMsg("Tunetable cleared!");
     console.log("Tunetable cleared");
 
   } else {
-    infoBox.textContent = '';
+    infoBox.textContent = "";
   }
 
   inputForm.value = "";
 
+}
+
+// Clear checked radio button and sorting style value
+
+function clearSortMenu() {
+
+  if (noThe > 0) {
+    noThe = 0;
+    document.querySelector('input[name="t-radio-btn"]:checked').checked = false;
+    console.log("Sorting menu cleared");
+  }
 }
 
 // Show or hide help menu
@@ -363,6 +422,8 @@ function hideSortMenu() {
 
 function initButtons() {
 
+  // Create Tunetable button
+
   const generateTunetableBtn = document.querySelector('.t-gen-btn');
 
   generateTunetableBtn.addEventListener('click', (event) => {
@@ -387,6 +448,8 @@ function initButtons() {
     }
   });
 
+  // Clear Tunetable and all data button
+
   const clearTunetableBtn = document.querySelector('.t-clr-btn');
   
   clearTunetableBtn.addEventListener('click', (event) => {
@@ -394,10 +457,13 @@ function initButtons() {
     event.preventDefault();
 
     hideSortMenu();
+    clearSortMenu();
     clearTunetable();
     clearJsonData();
     
   });
+
+  // Sort Tunetable with Sort menu options button
 
   const sortTunetableBtn = document.querySelector('.t-sort-btn');
 
@@ -409,15 +475,20 @@ function initButtons() {
       toggleHelpMenu();
     }
 
-    if (checkIfEmptyJson(importJson)) {
+    if (checkIfEmptyTable()) {
 
       return showInfoMsg("No tunes to sort!", 1);
 
-    } else if (radioBox.classList.contains("displayed-flex")) {
+    } else if (radioBox.classList.contains("displayed-flex") && noThe > 0) {
 
       hideSortMenu();
       createTuneTable(sortTunetable(importJson));
       showInfoMsg("Sorted!");
+      return;
+
+    } else if (radioBox.classList.contains("displayed-flex") && noThe === 0) {
+    
+      showInfoMsg("Select sorting method!");
       return;
 
     } else {
@@ -428,6 +499,8 @@ function initButtons() {
 
   });
 
+  // Toggle Sort menu options with radio buttons
+
   const radioBtn = document.querySelectorAll('input[name="t-radio-btn"]');
 
   for (let k = 0; k < 4; k++) {
@@ -437,6 +510,8 @@ function initButtons() {
     });
   }
 
+  // Hide Sort menu options
+
   const hideSortMenuBtn = document.querySelector('.r-hide-sort-btn');
 
   hideSortMenuBtn.addEventListener('click', () => {
@@ -444,20 +519,49 @@ function initButtons() {
     hideSortMenu();
   });
 
+  // Expand / shrink Tunetable URL button
+
   const tuneCells = document.querySelector("#t-tunes");
   const tuneTableUrlBtn = document.querySelector("#t-head-url");
 
   tuneTableUrlBtn.addEventListener('click', () => {
 
-    if (window.screen.width >= 720) {
-      tuneCells.querySelectorAll(".t-cell").forEach(cell => {
+    if (!checkIfEmptyTable()) {
 
-        cell.hasAttribute("style")? 
-          cell.removeAttribute("style") :
-            cell.setAttribute("style", "margin-right: 0");
-      });
+      if (window.screen.width >= 720) {
+        tuneCells.querySelectorAll(".t-cell").forEach(cell => {
+
+          cell.hasAttribute("style")? 
+            cell.removeAttribute("style") :
+              cell.setAttribute("style", "margin-right: 0");
+        });
+      }
     }
   });
+
+  // Show Tune ID / Meter toggle button
+  
+  const tuneTableIdBtn = document.querySelector("#t-head-id");
+
+  tuneTableIdBtn.addEventListener('click', () => {
+
+    showMeter = !showMeter? 1 : 0;
+    tuneTableIdBtn.textContent = !showMeter? "ID" : "M";
+
+    if (!checkIfEmptyJson(sortedJson)) {
+      
+      createTuneTable(sortedJson);
+      return;
+
+    } else if (!checkIfEmptyJson(importJson)) {
+
+      createTuneTable(importJson);
+      return;
+    }
+
+  });
+
+  // Save Tune data in JSON format button
 
   saveBtn.addEventListener('click', () => {
 
@@ -475,6 +579,8 @@ function initButtons() {
     }
   });
 
+  // Light / dark theme toggle button
+
   themeBtn.addEventListener('click', () => {
     
     document.body.classList.toggle("light");
@@ -483,10 +589,14 @@ function initButtons() {
 
   });
 
+  // Show / hide help menu button
+
   helpBtn.addEventListener('click', () => {
 
     toggleHelpMenu();
   });
+
+  // Input example Tunebook button
 
   exampleTunebook.addEventListener('click', () => {
 
@@ -494,16 +604,21 @@ function initButtons() {
     toggleHelpMenu();
   });
 
+  // Input example Tunelist of tagged tunes button
+
   exampleTunelist.addEventListener('click', () => {
 
     inputForm.value = "https://thesession.org/members/1/tags/SliabhLuachra/tunes";
     toggleHelpMenu();
   });
 
+  // Revert Tunetable & JSON data to unsorted original button
+
   revertBtn.addEventListener('click', () => {
 
-    if (!checkIfEmptyJson(importJson)) {
+    if (!checkIfEmptyTable()) {
 
+      clearSortMenu();
       createTuneTable(importJson);
       showInfoMsg("Reverted to TSO defaults!");
     }
