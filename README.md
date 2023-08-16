@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.0.9]
+The Session Tunelist to Tunetable Converter [v.1.0]
 ===================================================
 
 ## Overview
@@ -14,6 +14,10 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 - Consider additional @media requests for mobile devices.
 
 ## DONE: 
+
+[v.1.0]
+
++ Now supports Sets. Accepted TSO links may now end with: /tunebook, /tunes, /sets, /tunesets
 
 [v.0.9]
 
