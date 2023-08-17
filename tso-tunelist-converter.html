@@ -10,10 +10,10 @@
     <div class="main-container">
       <h1><b>TSO</b> Tunelist to Tunetable Converter</h1>
       <div class="nav-container">
-        <div role="button" class="n-save-btn" title="Download Tunetable data as .json">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database-down n-save-icon" viewBox="0 0 16 16">
-            <path d="M12.5 9a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm.354 5.854 1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V10.5a.5.5 0 0 0-1 0v2.793l-.646-.647a.5.5 0 0 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0Z"/>
-            <path d="M12.096 6.223A4.92 4.92 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.493 4.493 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.525 4.525 0 0 1-.813-.927C8.5 14.992 8.252 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.552 4.552 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10c.262 0 .52-.008.774-.024a4.525 4.525 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777ZM3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4Z"/>
+        <div role="button" class="n-save-btn" title="Download Tunetable">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download n-save-icon" viewBox="0 0 16 16">
+            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
           </svg>
         </div>
         <div role="button" class="n-help-btn" title="Show instructions">
@@ -33,7 +33,15 @@
         </div>
       </div>
       <form class="input-container">
-        <label for="input-form" class="input-label">Paste a link to your <span role="button" class="example-tunebook"><b>Tunebook</b></span> or list of <span role="button" class="example-tunelist"><b>Tagged</b></span> tunes into the input form below, press the big button and wait a wee bit. After the list is loaded, feel free to use sorting.<br><br>NB: only <a href="https://thesession.org/" target="_blank" title="https://thesession.org/"><b>TheSession.org</b></a> links ending with /tunes or /tunebook are accepted. You may need to add /tunes to your tag list URL.</label>
+        <label for="input-form" class="input-label">Paste a link to your <span role="button" class="example-tunebook"><b>Tunebook</b></span> 
+          or list of <span role="button" class="example-tunelist"><b>Tagged tunes</b></span> into the input form below, press the big button 
+          and wait a wee bit.<br><br>
+          NB: only <a href="https://thesession.org/" target="_blank" title="https://thesession.org/"><b>TheSession.org</b></a> links ending 
+          with /tunes or /tunebook, as well as <span role="button" class="example-setbook"><b>/sets</b></span> and 
+          <span role="button" class="example-setlist"><b>/tunesets</b></span> are accepted. You may need to add /tunes or /tunesets at the end of your 
+          URL.<br><br>When the Tunetable is ready, press Sort button once to open sorting menu, select sorting style and press the button again.
+          Use the Download button to save your Tunetable in .txt format.
+        </label>
         <input type="url" id="input-form" name="input-form" placeholder="Link ending with /tunes or /tunebook" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off">
         <div class="btn-container">
           <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
@@ -54,7 +62,7 @@
               </svg>
             </div>
           </button>
-          <button class="t-btn t-sort-btn" title="Press once to open Sort Menu, press again to sort with selected options">
+          <button class="t-btn t-sort-btn" title="For tunes: Press once to open Sort Menu, select options, press again to sort">
             <div class="t-btn-text">Sort</div>
             <div class="t-sort-btn-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-alpha-down t-list-icon" viewBox="0 0 16 16">
@@ -85,8 +93,8 @@
         <table>
           <thead>
             <tr id="t-headers">
-              <th id="t-head-no" title="Tunetable Index Number | Click to download Tunetable">#</th>
-              <th id="t-head-name" class="t-name-cell" title="Tune Title">Name
+              <th id="t-head-no" title="Tunetable Index Number | Click to download Tune data .json">#</th>
+              <th class="t-name-cell" title="Tune Title | Click to expand or shrink Tunetable"><span id="t-head-name">Name</span>
                 <div role="button" class="t-revert-btn" title="Revert Tunetable & data to unsorted original">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat t-revert-icon" viewBox="0 0 16 16">
                     <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
@@ -95,7 +103,7 @@
                 </div>
               </th>
               <th id="t-head-id" title="TSO Tune ID / Meter | Click to toggle">ID</th>
-              <th id="t-head-url" title="Links to TSO | Click to expand/shrink Tunetable">URL</th>
+              <th id="t-head-url" title="Links to TSO | Click to expand or shrink Tunetable">URL</th>
             </tr>
           </thead>
           <tbody id="t-tunes"></tbody>
