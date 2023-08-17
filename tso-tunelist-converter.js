@@ -109,10 +109,33 @@ function checkIfSetsUrl(url) {
 async function fetchData(url) {
   try {
     const response = await fetch(url);
+
+    if (!response.ok) {
+
+      let errorMessage;
+
+      if (response.status < 500) {
+
+        errorMessage = "Broken link or else, check URL!";
+
+      } else {
+
+        errorMessage = "Server error. Give TSO a break!";
+      }
+
+      console.error("HTTP error code:", response.status);
+
+      showInfoMsg(errorMessage, 1);
+
+      throw new Error(errorMessage);
+    }
+
     const data = await response.json();
     return data;
+
   } catch (error) {
-    console.error('Error fetching JSON:', error);
+
+    console.error("Fetching data failed! Error rethrown.");
     throw error;
   }
 }
@@ -125,10 +148,16 @@ async function fetchTheSessionJson(url) {
   clearJsonData();
 
   let jsonUrl;
+  let errorMessage;
 
   jsonUrl = url.endsWith("/tunes") || url.endsWith("/tunes/") || checkIfSetsUrl(url) ?
   `${url}?format=json&perpage=50` :
   `${url}?format=json`;
+
+  if (url.startsWith("http:")) {
+    
+    jsonUrl = jsonUrl.replace("http:", "https:");
+  }
 
   showInfoMsg("Fetching tunes from TSO...");
   console.log(`Fetching ${jsonUrl}`);
@@ -137,27 +166,38 @@ async function fetchTheSessionJson(url) {
 
     const tsoData = await fetchData(jsonUrl);
 
-    console.log("Fetched page #1 of tune JSON");
+    if (checkIfJsonHasTunes(tsoData) || checkIfJsonHasSets(tsoData)) {
 
-    if (!checkIfSetsUrl(url)) {
-    
-      importJson = { "tunes": [] };
+      if (!checkIfSetsUrl(url)) {
       
-      for (const tune of tsoData.tunes) {
-        const { id, name, url, type } = tune;
-        importJson.tunes.push({ id, name, url, type });
-      } 
+        importJson = { "tunes": [] };
+        
+        for (const tune of tsoData.tunes) {
+          const { id, name, url, type } = tune;
+          importJson.tunes.push({ id, name, url, type });
+        } 
+
+        console.log("Fetched page #1 of Tunes JSON");
+
+      } else {
+
+        importJson = { "sets": [] };
+
+        for (const set of tsoData.sets) {
+          const { id, name, url, settings } = set;
+          importJson.sets.push({ id, name, url, settings });
+        } 
+
+        console.log("Fetched page #1 of Sets JSON");
+      }
 
     } else {
 
-      importJson = { "sets": [] };
-
-      for (const set of tsoData.sets) {
-        const { id, name, url, settings } = set;
-        importJson.sets.push({ id, name, url, settings });
-      } 
+      console.error("Found empty tune/set array, link corrupted or list missing:", jsonUrl);
+      errorMessage = "No tune data found! Check URL";
+      throw new Error(errorMessage);
     }
-    
+
     const timeStamp1 = new Date();
     tDelay = tsoData.pages > 1 ? Math.floor((+tsoData.pages - 1) / 2.6 * 1000) : 0;
     console.log(`Table processing delay estimated at ${tDelay} ms`);
@@ -222,11 +262,16 @@ async function fetchTheSessionJson(url) {
     inputForm.value = "";
     saveIcon.setAttribute("style", "opacity: 1");
   } 
-    
+
   catch (error) {
 
-    console.error('Error fetching JSON from The Session:', error);
-    showInfoMsg("Fetching data failed, try again!", 1);
+    errorMessage = error.message || "Fetching data failed, try again!";
+
+    console.error("Error fetching JSON from The Session:", error);
+    
+    showInfoMsg(errorMessage, 1);
+    
+    return;
   }
 }
 
@@ -472,9 +517,13 @@ function calcTuneMeter(tuneType) {
 
     return "9/8";
 
-  } else if (tuneType === "three-two" || "mazurka") {
+  } else if (tuneType === "three-two") {
 
     return "3/2";
+
+  } else {
+
+    return "N/A";
   }
 }
 
@@ -764,7 +813,7 @@ function initButtons() {
 
   for (let k = 0; k < 4; k++) {
     radioBtn[k].addEventListener("change", function() {
-      showInfoMsg(`Sorting style #${this.value} picked`);
+      showInfoMsg(`Sorting style: #${this.value}. Sort?`);
       return noThe = +this.value;
     });
   }
