@@ -20,6 +20,7 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 + User will now get several distinct error messages depending on Fetch error.
 + URLs starting with http will now be replaced with https to avoid SOP error. 
 + Added another check to the Fetch function to catch empty tune/set arrays.
++ Fixed the timing of clearing data during Fetch, error won't result in broken Tunetable.
 
 [v.1.0]
 

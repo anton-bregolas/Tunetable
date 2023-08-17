@@ -144,8 +144,6 @@ async function fetchData(url) {
 // Display bonus messages if tDelay > 3s, then call createTuneTable()
 
 async function fetchTheSessionJson(url) {
-  
-  clearJsonData();
 
   let jsonUrl;
   let errorMessage;
@@ -155,7 +153,7 @@ async function fetchTheSessionJson(url) {
   `${url}?format=json`;
 
   if (url.startsWith("http:")) {
-    
+
     jsonUrl = jsonUrl.replace("http:", "https:");
   }
 
@@ -167,6 +165,9 @@ async function fetchTheSessionJson(url) {
     const tsoData = await fetchData(jsonUrl);
 
     if (checkIfJsonHasTunes(tsoData) || checkIfJsonHasSets(tsoData)) {
+
+      clearJsonData();
+      clearTunetable();
 
       if (!checkIfSetsUrl(url)) {
       
@@ -203,8 +204,6 @@ async function fetchTheSessionJson(url) {
     console.log(`Table processing delay estimated at ${tDelay} ms`);
 
     if (tsoData.pages > 1) {
-
-      clearTunetable();
 
       const messagePromise = (async () => {
 
@@ -295,9 +294,14 @@ function createTuneTable(myJson) {
 
     myData = myJson.tunes;
 
-  } else {
+  } else if (checkIfJsonHasSets(myJson)) {
 
     myData = myJson.sets;
+
+  } else {
+
+    showInfoMsg("No tune data found!", 1);
+    return;
   }
 
   for (let i = 0; i < myData.length; i++) {
@@ -421,7 +425,7 @@ function sortTunetable(myJson) {
       i.name = processTuneTitle(i.name);
     }
 
-  } else {
+  } else if (checkIfJsonHasSets(sortedJson)) {
 
     myData = sortedJson.sets;
 
@@ -438,6 +442,11 @@ function sortTunetable(myJson) {
         j.name += k === j.settings.length - 1? tuneName : tuneName + " / ";
       }
     }
+
+  } else {
+
+    showInfoMsg("No tune data found!", 1);
+    return;
   }
 
   if (noThe > 2) {
@@ -785,7 +794,7 @@ function initButtons() {
       toggleHelpMenu();
     }
 
-    if (checkIfTableEmpty()) {
+    if (!checkIfJsonHasTunes(importJson) && !checkIfJsonHasSets(importJson)) {
 
       return showInfoMsg("No tunes to sort!", 1);
  
