@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.1.0]
+The Session Tunelist to Tunetable Converter [v.1.1]
 ===================================================
 
 ## Overview
@@ -8,11 +8,18 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## TO DO:
 
-- Collect initial feedback.
-- Animate transitions and buttons.
+- Collect initial feedback, fix more bugs.
+- Animate some transitions and buttons.
 - Brainstorm additional sorting options.
 
 ## DONE: 
+
+[v.1.1]
+
++ Fixed handling of HTTP response errors during Fetch, they now get thrown properly.
++ User will now get several distinct error messages depending on Fetch error.
++ URLs starting with http will now be replaced with https to avoid SOP error. 
++ Added another check to the Fetch function to catch empty tune/set arrays.
 
 [v.1.0]
 
