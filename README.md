@@ -8,16 +8,21 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## TO DO:
 
+- Collect initial feedback.
 - Animate transitions and buttons.
 - Brainstorm additional sorting options.
-- Consider adding "m" key to custom JSONs.
-- Consider additional @media requests for mobile devices.
 
 ## DONE: 
 
 [v.1.0]
 
-+ Now supports Sets. Accepted TSO links may now end with: /tunebook, /tunes, /sets, /tunesets
++ Now supports Sets. Accepted TSO links may now end with: 
+/tunebook || /tunes || /sets || /tunesets
++ Sets are generated and sorted with tune keys.
++ Download button now exports Tunetable in plain text format.
++ Index # button now exports Tune data in .json format.
++ ID / Meter button now works with Sets, shows M of 1st tune.
++ Expanded Help menu, added auto-fill links for Setbook / Setlist.
 
 [v.0.9]
 

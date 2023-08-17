@@ -9,23 +9,49 @@ let tsoJson = {};
 let importJson = {};
 let sortedJson = {};
 
-const tuneTable = document.querySelector('#t-tunes');
-const infoBox = document.querySelector('.info-box');
-const radioBox = document.querySelector('.radio-container');
-const inputForm = document.querySelector('#input-form');
+// Navigation menu elements
+
 const saveBtn = document.querySelector('.n-save-btn');
 const helpBtn = document.querySelector('.n-help-btn');
 const themeBtn = document.querySelector('.n-theme-btn');
-const revertBtn = document.querySelector('.t-revert-btn');
 const saveIcon = saveBtn.querySelector('.n-save-icon');
 const helpIcon = helpBtn.querySelector('.n-help-icon');
 const sunIcon = themeBtn.querySelector('.n-theme-icon-sun');
 const moonIcon = themeBtn.querySelector('.n-theme-icon-moon');
 const exampleTunebook = document.querySelector('.example-tunebook');
 const exampleTunelist = document.querySelector('.example-tunelist');
+const exampleSetbook = document.querySelector('.example-setbook');
+const exampleSetlist = document.querySelector('.example-setlist');
+
+// Input form elements
+
+const inputForm = document.querySelector('#input-form');
+const generateTunetableBtn = document.querySelector('.t-gen-btn');
+const clearTunetableBtn = document.querySelector('.t-clr-btn');
+const sortTunetableBtn = document.querySelector('.t-sort-btn');
+const hideSortMenuBtn = document.querySelector('.r-hide-sort-btn');
+const radioBox = document.querySelector('.radio-container');
 const inputLabel = document.querySelector('.input-label');
+const radioBtn = document.querySelectorAll('input[name="t-radio-btn"]');
+
+// Tunetable elements
+
+const tuneTable = document.querySelector('#t-tunes');
 const tuneTableHeaders = document.querySelector('#t-headers');
-const saveTuneTableBtn = document.querySelector('#t-head-no');
+const tuneCells = document.querySelector("#t-tunes");
+const saveJsonBtn = document.querySelector('#t-head-no');
+const tuneTableNameBtn = document.querySelector("#t-head-name");
+const tuneTableIdBtn = document.querySelector("#t-head-id");
+const tuneTableUrlBtn = document.querySelector("#t-head-url");
+const revertBtn = document.querySelector('.t-revert-btn');
+
+// Infobox elements
+
+const infoBox = document.querySelector('.info-box');
+
+//////////////////////////////////////////////////////////
+// Functions: Messages, checks, fetching, sorting, saving
+/////////////////////////////////////////////////////////
 
 // Display Infobox message or warning
 
@@ -51,13 +77,30 @@ function validateTsoUrl() {
 
   const validTunelist = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btags\b\/.+\/\btunes\b\/?$/;
   const validTunebook = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btunebook\b\/?$/;
+  const validSetbook = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\bsets\b\/?$/;
+  const validSetlist = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btags\b\/.+\/\btunesets\b\/?$/;
 
-  if (validTunelist.test(tsoUrl) || validTunebook.test(tsoUrl)) {
+  if (validTunelist.test(tsoUrl) || validTunebook.test(tsoUrl) || 
+  validSetbook.test(tsoUrl) || validSetlist.test(tsoUrl)) {
 
     console.log('URL passed validation');
     return true;
-  }    
+  }
+  
   console.log('URL failed validation');
+  return false;
+}
+
+// Check if The Session URL contains sets of tunes
+
+function checkIfSetsUrl(url) {
+
+  if (url.endsWith("/sets") || url.endsWith("/sets/") ||
+  url.endsWith("/tunesets") || url.endsWith("/tunesets/")) {
+
+    return true;
+  }
+
   return false;
 }
 
@@ -83,7 +126,7 @@ async function fetchTheSessionJson(url) {
 
   let jsonUrl;
 
-  jsonUrl = url.endsWith("/tunes") || url.endsWith("/tunes/") ?
+  jsonUrl = url.endsWith("/tunes") || url.endsWith("/tunes/") || checkIfSetsUrl(url) ?
   `${url}?format=json&perpage=50` :
   `${url}?format=json`;
 
@@ -95,13 +138,25 @@ async function fetchTheSessionJson(url) {
     const tsoData = await fetchData(jsonUrl);
 
     console.log("Fetched page #1 of tune JSON");
+
+    if (!checkIfSetsUrl(url)) {
     
-    importJson = { "tunes": [] };
-    
-    for (const tune of tsoData.tunes) {
-      const { id, name, url, type } = tune;
-      importJson.tunes.push({ id, name, url, type });
-    } 
+      importJson = { "tunes": [] };
+      
+      for (const tune of tsoData.tunes) {
+        const { id, name, url, type } = tune;
+        importJson.tunes.push({ id, name, url, type });
+      } 
+
+    } else {
+
+      importJson = { "sets": [] };
+
+      for (const set of tsoData.sets) {
+        const { id, name, url, settings } = set;
+        importJson.sets.push({ id, name, url, settings });
+      } 
+    }
     
     const timeStamp1 = new Date();
     tDelay = tsoData.pages > 1 ? Math.floor((+tsoData.pages - 1) / 2.6 * 1000) : 0;
@@ -138,10 +193,21 @@ async function fetchTheSessionJson(url) {
       
         for (const pageData of pageResponses) {
 
-          for (const tune of pageData.tunes) {
+          if (checkIfJsonHasTunes(pageData)) {
 
-            const { id, name, url, type } = tune;
-            importJson.tunes.push({ id, name, url, type });
+            for (const tune of pageData.tunes) {
+
+              const { id, name, url, type } = tune;
+              importJson.tunes.push({ id, name, url, type });
+            } 
+
+          } else if (checkIfJsonHasSets(pageData)) {
+
+            for (const set of pageData.sets) {
+
+              const { id, name, url, settings } = set;
+              importJson.sets.push({ id, name, url, settings });
+            }
           }
         }
       })();
@@ -175,12 +241,21 @@ async function msgDelay(duration) {
 
 function createTuneTable(myJson) {
 
-  const myTunes = myJson.tunes;
-
   tuneTable.textContent = "";
   console.log('Creating tunetable');
 
-  for (let i = 0; i < myTunes.length; i++) {
+  let myData;
+
+  if (checkIfJsonHasTunes(myJson)) {
+
+    myData = myJson.tunes;
+
+  } else {
+
+    myData = myJson.sets;
+  }
+
+  for (let i = 0; i < myData.length; i++) {
 
     const tuneRow = document.createElement("tr");
 
@@ -190,12 +265,31 @@ function createTuneTable(myJson) {
       const cellSpan = document.createElement("span");
       cellSpan.classList.add("t-cell");
       
-      const myTunesIdMeter = showMeter? getTuneMeter(myTunes[i].type) : myTunes[i].id;
+      const myDataId = showMeter? getTuneMeter(myJson, i) : myData[i].id;
+      let myDataName;
+
+      if (checkIfJsonHasSets(myJson) && myJson === importJson) {
+
+        myDataName = "";
+    
+        for (let k = 0; k < myData[i].settings.length; k++) {
+  
+          let tuneName = myData[i].settings[k].name;
+          let tuneKey = myData[i].settings[k].key;
+  
+          myDataName += k === (myData[i].settings.length - 1)? tuneName + ` (${tuneKey})` : 
+          tuneName + ` (${tuneKey})` + " / ";
+        }
+
+      } else {
+
+        myDataName = myData[i].name;
+      }
 
       let cellContent =
         j === 0 ? i + 1 :
-        j === 1 ? myTunes[i].name :
-        j === 2 ? myTunesIdMeter : myTunes[i].url;
+        j === 1 ? myDataName :
+        j === 2 ? myDataId : myData[i].url;
       
       if (j === 3) {
 
@@ -223,14 +317,26 @@ function createTuneTable(myJson) {
 
 // Check if a nested JSON array of tunes is missing or empty
 
-function checkIfEmptyJson(checkJson) {
+function checkIfJsonHasTunes(checkJson) {
 
-  if (Array.isArray(checkJson.tunes) && checkJson.tunes.length) { 
+  if (Array.isArray(checkJson.tunes) && checkJson.tunes.length > 0) { 
 
-    return false 
+    return true; 
   } 
 
-  return true 
+  return false; 
+}
+
+// Check if a nested JSON array of sets is missing or empty
+
+function checkIfJsonHasSets(checkJson) {
+
+  if (Array.isArray(checkJson.sets) && checkJson.sets.length > 0) { 
+
+    return true; 
+  } 
+
+  return false; 
 }
 
 // Create a deep copy of the JSON specified
@@ -241,7 +347,7 @@ function createDeepCopyJson(rawJson) {
 
 }
 
-function checkIfEmptyTable() {
+function checkIfTableEmpty() {
 
   if (tuneTable.textContent === "") {
 
@@ -260,15 +366,42 @@ function sortTunetable(myJson) {
 
   sortedJson = createDeepCopyJson(myJson);
 
-  let myTunes = sortedJson.tunes;
+  let myData;
+  
+  if (checkIfJsonHasTunes(sortedJson)) {
 
-  for (let i of myTunes) {
-    i.name = processTuneTitle(i.name);
+    myData = sortedJson.tunes;
+
+    for (let i of myData) {
+      i.name = processTuneTitle(i.name);
+    }
+
+  } else {
+
+    myData = sortedJson.sets;
+
+    for (let j of myData) {
+
+      j.name = "";
+
+      for (let k = 0; k < j.settings.length; k++) {
+
+        let tuneName = j.settings[k].name;
+        let tuneKey = j.settings[k].key;
+
+        tuneName = processTuneTitle(tuneName) + ` (${tuneKey})`;
+        j.name += k === j.settings.length - 1? tuneName : tuneName + " / ";
+      }
+    }
   }
+
+  if (noThe > 2) {
+
+    myData.sort((a, b) => {
     
-  myTunes.sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  });
+      return a.name.localeCompare(b.name);
+    });
+  }
 
   return sortedJson;
 }
@@ -309,7 +442,9 @@ function processTuneTitle(title) {
   return newTitle;
 }
 
-function getTuneMeter(tuneType) {
+// Determine tune's meter according to its "type" property
+
+function calcTuneMeter(tuneType) {
 
   if (tuneType === "reel" || tuneType === "hornpipe" || 
   tuneType === "barndance" || tuneType === "strathspey" || 
@@ -343,13 +478,54 @@ function getTuneMeter(tuneType) {
   }
 }
 
+// For tunes, get the specific tune's meter using calcTuneMeter()
+// For sets, get the meter of the first tune in the set
+
+function getTuneMeter(data, i) {
+
+  if (checkIfJsonHasTunes(data)) {
+
+    return calcTuneMeter(data.tunes[i].type);
+
+  } else {
+
+    return calcTuneMeter(data.sets[i].settings[0].type);
+  }
+}
+
 // Toggle & fill in cell values of ID / Meter column
 
 function toggleIdMeter() {
 
   let cellValue;
   let tableRows = tuneTable.getElementsByTagName('tr');
-  let myJson = !checkIfEmptyJson(sortedJson)? sortedJson : importJson;
+  let myJson;
+  let dataType;
+  
+  if (checkIfJsonHasTunes(sortedJson)) {
+
+    myJson = sortedJson;
+    dataType = myJson.tunes;
+
+  } else if (checkIfJsonHasTunes(importJson)) {
+
+    myJson = importJson;
+    dataType = myJson.tunes;
+
+  } else if (checkIfJsonHasSets(sortedJson)){
+
+    myJson = sortedJson;
+    dataType = myJson.sets;
+
+  } else if (checkIfJsonHasSets(importJson)) {
+
+    myJson = importJson;
+    dataType = myJson.sets;
+
+  } else {
+
+    return;
+  }
 
   for (let i = 0; i < tableRows.length; i++) {
 
@@ -357,7 +533,14 @@ function toggleIdMeter() {
     let tuneCell = tuneRow.getElementsByTagName('td')[2];
     let textSpan = tuneCell.querySelector('.t-cell');
 
-    cellValue = showMeter === 0? myJson.tunes[i].id : getTuneMeter(myJson.tunes[i].type);
+    if (showMeter === 0) {
+
+      cellValue = dataType[i].id;
+    
+    } else {
+
+      cellValue = getTuneMeter(myJson, i);
+    }
 
     textSpan.textContent = cellValue;
   }
@@ -419,7 +602,7 @@ function exportTuneTable() {
     const headerText = headersList[h];
     const spacesToAdd = tableWidths[h] - headerText.length + 1;
     tableHeaders += h === (headersList.length - 1)? headerText : 
-    headerText + ' '.repeat(spacesToAdd) + '\t\t';
+    headerText + ' '.repeat(spacesToAdd) + '\t';
   }
 
   let tableContent = tableHeaders + '\n\n';
@@ -433,7 +616,7 @@ function exportTuneTable() {
       const cellText = tableCells[j].textContent;
       const spacesToAdd = tableWidths[j] - cellText.length + 1;
       tableContent += j === tableCells.length - 1? cellText : 
-      cellText + ' '.repeat(spacesToAdd) + '\t\t';
+      cellText + ' '.repeat(spacesToAdd) + '\t';
     }
 
     tableContent += '\n';
@@ -456,7 +639,7 @@ function exportTuneTable() {
 
 function clearTunetable() {
 
-  if (!checkIfEmptyTable()) {
+  if (!checkIfTableEmpty()) {
 
     tuneTable.textContent = "";
     showInfoMsg("Tunetable cleared!");
@@ -508,8 +691,6 @@ function initButtons() {
 
   // Create Tunetable button
 
-  const generateTunetableBtn = document.querySelector('.t-gen-btn');
-
   generateTunetableBtn.addEventListener('click', (event) => {
 
     event.preventDefault();
@@ -533,8 +714,6 @@ function initButtons() {
   });
 
   // Clear Tunetable and all data button
-
-  const clearTunetableBtn = document.querySelector('.t-clr-btn');
   
   clearTunetableBtn.addEventListener('click', (event) => {
 
@@ -549,8 +728,6 @@ function initButtons() {
 
   // Sort Tunetable with Sort menu options button
 
-  const sortTunetableBtn = document.querySelector('.t-sort-btn');
-
   sortTunetableBtn.addEventListener('click', (event) => {
 
     event.preventDefault();
@@ -559,10 +736,10 @@ function initButtons() {
       toggleHelpMenu();
     }
 
-    if (checkIfEmptyTable()) {
+    if (checkIfTableEmpty()) {
 
       return showInfoMsg("No tunes to sort!", 1);
-
+ 
     } else if (radioBox.classList.contains("displayed-flex") && noThe > 0) {
 
       hideSortMenu();
@@ -585,8 +762,6 @@ function initButtons() {
 
   // Toggle Sort menu options with radio buttons
 
-  const radioBtn = document.querySelectorAll('input[name="t-radio-btn"]');
-
   for (let k = 0; k < 4; k++) {
     radioBtn[k].addEventListener("change", function() {
       showInfoMsg(`Sorting style #${this.value} picked`);
@@ -596,64 +771,62 @@ function initButtons() {
 
   // Hide Sort menu options
 
-  const hideSortMenuBtn = document.querySelector('.r-hide-sort-btn');
-
   hideSortMenuBtn.addEventListener('click', () => {
 
     hideSortMenu();
   });
 
-  // Expand / shrink Tunetable URL button
+  // Expand / shrink Tunetable by clicking on its Name or URL
 
-  const tuneCells = document.querySelector("#t-tunes");
-  const tuneTableUrlBtn = document.querySelector("#t-head-url");
+  [tuneTableNameBtn, tuneTableUrlBtn].forEach(btn => {
 
-  tuneTableUrlBtn.addEventListener('click', () => {
+    btn.addEventListener('click', () => {
 
-    if (!checkIfEmptyTable()) {
+      if (!checkIfTableEmpty()) {
 
-      if (window.screen.width >= 720) {
-        tuneCells.querySelectorAll(".t-cell").forEach(cell => {
+        if (window.screen.width >= 720) {
+          tuneCells.querySelectorAll(".t-cell").forEach(cell => {
 
-          cell.hasAttribute("style")? 
-            cell.removeAttribute("style") :
-              cell.setAttribute("style", "margin-right: 0");
-        });
+            cell.hasAttribute("style")? 
+              cell.removeAttribute("style") :
+                cell.setAttribute("style", "margin-right: 0; max-width: 40vw");
+          });
+        }
       }
-    }
+    });
   });
 
   // Show Tune ID / Meter toggle button
-  
-  const tuneTableIdBtn = document.querySelector("#t-head-id");
 
   tuneTableIdBtn.addEventListener('click', () => {
-
+    
     showMeter = !showMeter? 1 : 0;
     tuneTableIdBtn.textContent = !showMeter? "ID" : "M";
 
-    if (!checkIfEmptyTable()) {
+    if (!checkIfTableEmpty()) {
       
       toggleIdMeter();
-      return;
     } 
+
+    return;
   });
 
   // Save Tune data in JSON format button
 
-  saveBtn.addEventListener('click', () => {
+  saveJsonBtn.addEventListener('click', () => {
 
-    if (!checkIfEmptyJson(sortedJson)) {
+    if (checkIfJsonHasTunes(sortedJson) || checkIfJsonHasSets(sortedJson)) {
 
       showInfoMsg("Tune data exported!");
       exportTuneData(sortedJson);
       console.log("Tune data exported");
 
-    } else if (!checkIfEmptyJson(importJson)) {
+    } else if (checkIfJsonHasTunes(importJson) || checkIfJsonHasSets(importJson)) {
 
       showInfoMsg("Tune data exported!");
       exportTuneData(importJson);
       console.log("Tune data exported");
+
     } else {
       showInfoMsg("No tune data to export!", 1);
     }
@@ -661,9 +834,9 @@ function initButtons() {
 
   // Save Tunetable data in plain text format button
 
-  saveTuneTableBtn.addEventListener('click', () => {
+  saveBtn.addEventListener('click', () => {
 
-    if (!checkIfEmptyTable()) {
+    if (!checkIfTableEmpty()) {
 
       showInfoMsg("Tunetable exported!");
       console.log("Tunetable exported");
@@ -709,11 +882,27 @@ function initButtons() {
     toggleHelpMenu();
   });
 
+  // Input example Setbook button
+
+  exampleSetbook.addEventListener('click', () => {
+
+    inputForm.value = "https://thesession.org/members/1/sets";
+    toggleHelpMenu();
+  });
+
+  // Input example list of tagged sets button
+
+  exampleSetlist.addEventListener('click', () => {
+
+    inputForm.value = "https://thesession.org/members/1/tags/StarAboveTheGarter/tunesets";
+    toggleHelpMenu();
+  });
+
   // Revert Tunetable & JSON data to unsorted original button
 
   revertBtn.addEventListener('click', () => {
 
-    if (!checkIfEmptyTable()) {
+    if (!checkIfTableEmpty()) {
 
       clearSortMenu();
       sortedJson = {};
