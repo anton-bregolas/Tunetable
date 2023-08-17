@@ -81,7 +81,9 @@ h1 {
 }
 
 .n-save-btn, .n-help-btn, .n-theme-btn, 
-.example-tunebook, .example-tunelist, .t-revert-btn:hover {
+.example-tunebook, .example-tunelist, 
+.example-setbook, .example-setlist, 
+.t-revert-btn:hover {
   cursor: pointer;
 }
 
@@ -157,12 +159,12 @@ tbody td:nth-of-type(2) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-right: -250px;
+  margin-right: -1200px;
   vertical-align: middle;
 }
 
 tbody td:nth-of-type(odd) {
-  padding: 0;
+  padding: 0.15rem;
 }
 
 tbody td:nth-child(1) .t-cell{
@@ -171,25 +173,27 @@ tbody td:nth-child(1) .t-cell{
 }
 
 #t-head-name {
-  width: 345px;
-  text-align: left;
+  display: block;
+  max-width: 85%;
 }
 
 #t-head-id {
-  width: 80px;
-  min-width: 55px;
+  width: 5rem;
+  min-width: 3.4375rem;
 }
 
 #t-head-url {
-  width: 70px;
+  width: 4.375rem;
 }
 
 #t-head-no {
-  width: 50px;
+  width: 3.125px;
 }
 
 .t-name-cell {
   position: relative;
+  width: 21.5625rem;
+  text-align: left;
 }
 
 .t-revert-btn {
@@ -198,7 +202,7 @@ tbody td:nth-child(1) .t-cell{
   position: absolute;
   right: 0.5rem;
   bottom: 0.22rem;
-  width: 5rem;
+  width: 3rem;
 }
 
 .t-revert-icon {
@@ -216,15 +220,15 @@ tbody td:nth-child(1) .t-cell{
   margin: 1.2rem 1.2rem 0.3rem 1.2rem;
   padding-left: 1rem;
   display: none;
-  /* transition: ease-in-out 1s; */
+  /* transition: ease-in-out 2s; */
 }
 
 #input-form {
-  height: 64px;
-  border-radius: 8px;
+  height: 4rem;
+  border-radius: 0.5rem;
   font-size: var(--font-base);
   margin: 1.5rem 1.2rem;
-  border: 5px solid var(--accent-color);
+  border: 0.3125rem solid var(--accent-color);
   background-color: var(--bg-color);
   padding: 0 0.5rem;
   text-align: center;
@@ -239,7 +243,7 @@ tbody td:nth-child(1) .t-cell{
 
 #input-form:focus-visible {
   
-  outline: 2px solid black;
+  outline: 0.1875rem solid black;
 }
 
 /* Button & radio button styles */
@@ -251,7 +255,7 @@ tbody td:nth-child(1) .t-cell{
   box-shadow: none;
   font-size: var(--font-mid);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   line-height: 2rem;
   color: black;
   background: var(--accent-color);
@@ -333,7 +337,7 @@ input[name="t-radio-btn"] {
 
 .r-hide-sort-btn {
   border-radius: 0.6rem;
-  min-width: 330px;
+  min-width: 20.625rem;
   flex-grow: 1;
   background-color: var(--alt-border-color);
   opacity: 0.6;
@@ -369,8 +373,8 @@ input[name="t-radio-btn"] {
   display: flex;
   flex-flow: column;
   justify-content: center;
-  max-width: 535px;
-  min-width: 404px;
+  max-width: 33.4375rem;
+  min-width: 25.2rem;
   margin: 0 auto;
 }
 
@@ -427,4 +431,12 @@ input[name="t-radio-btn"] {
 
 .active {
   opacity: 1;
+}
+
+@media screen and (max-width: 420px) {
+
+  html {
+    font-size: 14px;
+  }
+  
 }
