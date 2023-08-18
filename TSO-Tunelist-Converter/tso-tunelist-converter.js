@@ -4,6 +4,7 @@
 
 let noThe = 0;
 let tDelay = 0;
+let appBusy = 0;
 let showMeter = 0;
 let tsoJson = {};
 let importJson = {};
@@ -104,6 +105,24 @@ function checkIfSetsUrl(url) {
   return false;
 }
 
+// Disable input form buttons
+
+function disableButtons() {
+
+  generateTunetableBtn.setAttribute("disabled", '');
+  clearTunetableBtn.setAttribute("disabled", '');
+  sortTunetableBtn.setAttribute("disabled", '');
+}
+
+// Reactivate input form buttons
+
+function enableButtons() {
+
+  generateTunetableBtn.removeAttribute("disabled");
+  clearTunetableBtn.removeAttribute("disabled");
+  sortTunetableBtn.removeAttribute("disabled");
+}
+
 // Make a standard fetch request, throw an error if it fails
 
 async function fetchData(url) {
@@ -147,6 +166,9 @@ async function fetchTheSessionJson(url) {
 
   let jsonUrl;
   let errorMessage;
+
+  appBusy = 1;
+  disableButtons();
 
   jsonUrl = url.endsWith("/tunes") || url.endsWith("/tunes/") || checkIfSetsUrl(url) ?
   `${url}?format=json&perpage=50` :
@@ -260,15 +282,23 @@ async function fetchTheSessionJson(url) {
 
     inputForm.value = "";
     saveIcon.setAttribute("style", "opacity: 1");
+
+    appBusy = 0;
+    enableButtons();
   } 
 
   catch (error) {
 
-    errorMessage = error.message || "Fetching data failed, try again!";
+    errorMessage = error.message === "Failed to fetch"? "Network error, check your connection!" :
+     error.message || "Fetching data failed, try again!";
 
     console.error("Error fetching JSON from The Session:", error);
     
     showInfoMsg(errorMessage, 1);
+
+    appBusy = 0;
+
+    enableButtons();
     
     return;
   }
@@ -287,6 +317,7 @@ function createTuneTable(myJson) {
 
   tuneTable.textContent = "";
   console.log('Creating tunetable');
+  appBusy = 1;
 
   let myData;
 
@@ -362,6 +393,7 @@ function createTuneTable(myJson) {
 
   showInfoMsg("Hup!");
   console.log('Tunetable created');
+  appBusy = 0;
 }
 
 // Check if a nested JSON array of tunes is missing or empty
@@ -857,53 +889,73 @@ function initButtons() {
   // Show Tune ID / Meter toggle button
 
   tuneTableIdBtn.addEventListener('click', () => {
+
+    if (!appBusy) {
     
-    showMeter = !showMeter? 1 : 0;
-    tuneTableIdBtn.textContent = !showMeter? "ID" : "M";
+      showMeter = !showMeter? 1 : 0;
+      tuneTableIdBtn.textContent = !showMeter? "ID" : "M";
 
-    if (!checkIfTableEmpty()) {
-      
-      toggleIdMeter();
-    } 
+      if (!checkIfTableEmpty()) {
+        
+        toggleIdMeter();
+      } 
 
-    return;
+      return;
+    }
+
+    showInfoMsg("Wait for Tunetable to load!", 1);
   });
 
   // Save Tune data in JSON format button
 
   saveJsonBtn.addEventListener('click', () => {
 
-    if (checkIfJsonHasTunes(sortedJson) || checkIfJsonHasSets(sortedJson)) {
+    if (!appBusy) {
 
-      showInfoMsg("Tune data exported!");
-      exportTuneData(sortedJson);
-      console.log("Tune data exported");
+      if (checkIfJsonHasTunes(sortedJson) || checkIfJsonHasSets(sortedJson)) {
 
-    } else if (checkIfJsonHasTunes(importJson) || checkIfJsonHasSets(importJson)) {
+        showInfoMsg("Tune data exported!");
+        exportTuneData(sortedJson);
+        console.log("Tune data exported");
+        return;
 
-      showInfoMsg("Tune data exported!");
-      exportTuneData(importJson);
-      console.log("Tune data exported");
+      } else if (checkIfJsonHasTunes(importJson) || checkIfJsonHasSets(importJson)) {
 
-    } else {
-      showInfoMsg("No tune data to export!", 1);
+        showInfoMsg("Tune data exported!");
+        exportTuneData(importJson);
+        console.log("Tune data exported");
+        return;
+
+      } else {
+        showInfoMsg("No tune data to export!", 1);
+        return;
+      }
     }
+
+    showInfoMsg("Wait for Tunetable to load!", 1);
   });
 
   // Save Tunetable data in plain text format button
 
   saveBtn.addEventListener('click', () => {
 
-    if (!checkIfTableEmpty()) {
+    if (!appBusy) {
 
-      showInfoMsg("Tunetable exported!");
-      console.log("Tunetable exported");
-      exportTuneTable();
+      if (!checkIfTableEmpty()) {
 
-    } else {
+        showInfoMsg("Tunetable exported!");
+        console.log("Tunetable exported");
+        exportTuneTable();
+        return;
 
-      showInfoMsg("No Tunetable to export!", 1);
-    }
+      } else {
+
+        showInfoMsg("No Tunetable to export!", 1);
+        return;
+      }
+    } 
+    
+    showInfoMsg("Wait for Tunetable to load!", 1);
   });
 
 
@@ -960,13 +1012,25 @@ function initButtons() {
 
   revertBtn.addEventListener('click', () => {
 
-    if (!checkIfTableEmpty()) {
+    if (!appBusy) {
 
-      clearSortMenu();
-      sortedJson = {};
-      createTuneTable(importJson);
-      showInfoMsg("Reverted to TSO defaults!");
+      if (!checkIfTableEmpty()) {
+
+        clearSortMenu();
+        sortedJson = {};
+        createTuneTable(importJson);
+        showInfoMsg("Reverted to TSO defaults!");
+        return;
+
+      } else {
+
+        showInfoMsg("No tune data found!", 1);
+        return;
+      }
     }
+
+    showInfoMsg("Wait for Tunetable to load!", 1);
+
   });
 
 }

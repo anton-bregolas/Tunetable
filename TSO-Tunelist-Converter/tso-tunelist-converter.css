@@ -266,6 +266,10 @@ tbody td:nth-child(1) .t-cell{
   cursor: pointer;
 }
 
+*:disabled:hover {
+  cursor: wait;
+}
+
 .t-gen-btn, .t-clr-btn, .t-sort-btn {
   position: relative;
   width: fit-content;

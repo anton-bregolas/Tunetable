@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.1.1]
+The Session Tunelist to Tunetable Converter [v.1.2]
 ===================================================
 
 ## Overview
@@ -13,6 +13,12 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 - Brainstorm additional sorting options.
 
 ## DONE: 
+
+[v.1.2]
+
++ Added basic protection against click interference during Fetch.
++ Input form buttons are now disabled during Fetch until its completion.
++ User will now be notified about connection problem if network error gets thrown.
 
 [v.1.1]
 
