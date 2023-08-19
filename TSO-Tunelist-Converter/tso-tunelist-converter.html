@@ -8,67 +8,52 @@
   </head>
   <body>
     <div class="main-container">
-      <h1><b>TSO</b> Tunelist to Tunetable Converter</h1>
+      <h1><b>TSO</b> <span class="glowing">Tunelist</span> <span class="glowing">to</span> <span class="glowing">Tunetable</span> <span class="glowing">Converter</span></h1>
       <div class="nav-container">
         <div role="button" class="n-save-btn" title="Download Tunetable">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download n-save-icon" viewBox="0 0 16 16">
-            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-          </svg>
+          <svg class="app-icon n-save-icon"><use href="icons.svg#n-save-icon"></use></svg>
         </div>
         <div role="button" class="n-help-btn" title="Show instructions">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle n-help-icon" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-            <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-          </svg>
+          <svg class="app-icon n-help-icon"><use href="icons.svg#n-help-icon"></use></svg>
         </div>
         <div role="button" class="n-theme-btn" title="Toggle light/dark theme">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sun n-theme-icon-sun" viewBox="0 0 16 16">
-            <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars n-theme-icon-moon" viewBox="0 0 16 16">
-            <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z"/>
-            <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
-          </svg>
+          <svg class="app-icon n-theme-icon-sun"><use href="icons.svg#n-theme-icon-sun"></use></svg>
+          <svg class="app-icon n-theme-icon-moon"><use href="icons.svg#n-theme-icon-moon"></use></svg>
+        </div>
+      </div>
+      <div class="acc-wrapper">
+        <div class="acc-help-menu">
+          <h2><span class="glowing">Read</span> <span class="glowing">me</span> <span class="glowing">for</span> <span class="glowing">more</span></h2>
+          <p>Paste a link to your <span role="button" class="example-tunebook"><b>Tunebook</b></span>
+          or list of <span role="button" class="example-tunelist"><b>Tagged tunes</b></span> into the input form below, press the big button
+          and wait a wee bit.</p>
+          <p>NB: only <a href="https://thesession.org/" target="_blank" title="https://thesession.org/"><b>TheSession.org</b></a> links ending
+          with /tunes or /tunebook, as well as <span role="button" class="example-setbook"><b>/sets</b></span> and
+          <span role="button" class="example-setlist"><b>/tunesets</b></span> are accepted. You may need to add /tunes or /tunesets at the end of your
+          URL.</p>
+          <p>When the Tunetable is ready, press <b>Sort</b> button once to open sorting menu, select sorting style and press the button again.
+          Use the <b>Download</b> button to save your Tunetable in .txt format.</p>
         </div>
       </div>
       <form class="input-container">
-        <label for="input-form" class="input-label">Paste a link to your <span role="button" class="example-tunebook"><b>Tunebook</b></span> 
-          or list of <span role="button" class="example-tunelist"><b>Tagged tunes</b></span> into the input form below, press the big button 
-          and wait a wee bit.<br><br>
-          NB: only <a href="https://thesession.org/" target="_blank" title="https://thesession.org/"><b>TheSession.org</b></a> links ending 
-          with /tunes or /tunebook, as well as <span role="button" class="example-setbook"><b>/sets</b></span> and 
-          <span role="button" class="example-setlist"><b>/tunesets</b></span> are accepted. You may need to add /tunes or /tunesets at the end of your 
-          URL.<br><br>When the Tunetable is ready, press Sort button once to open sorting menu, select sorting style and press the button again.
-          Use the Download button to save your Tunetable in .txt format.
-        </label>
-        <input type="url" id="input-form" name="input-form" placeholder="Link ending with /tunes or /tunebook" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off">
+        <!-- <label for="input-form" class="input-label">Input a link to The Session or press “?” for help</label> -->
+        <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session or press “?” for help" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off">
         <div class="btn-container">
           <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
             <div class="t-btn-text">Generate Tunetable</div>
             <div class="t-gen-btn-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-list t-list-icon" viewBox="0 0 16 16">
-                <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
-                <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
-                <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
-                <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
-              </svg>
+              <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-gen-btn-ico"></use></svg>
             </div>
           </button>
           <button class="t-btn t-clr-btn" title="Clear Tunetable and all data">
             <div class="t-clr-btn-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill t-list-icon" viewBox="0 0 16 16">
-                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
-              </svg>
+              <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-clr-btn-icon"></use></svg>
             </div>
           </button>
           <button class="t-btn t-sort-btn" title="For tunes: Press once to open Sort Menu, select options, press again to sort">
             <div class="t-btn-text">Sort</div>
             <div class="t-sort-btn-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-alpha-down t-list-icon" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371h-1.781zm1.57-.785L11 2.687h-.047l-.652 2.157h1.351z"/>
-                <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645V14zM4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293V2.5z"/>
-              </svg>
+              <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-sort-btn-icon"></use></svg>
             </div>
           </button>
         </div> 
@@ -83,27 +68,22 @@
         <label for="cut-the-an-btn" class="radio-label">Reorder list, cut ‘The’ & ‘An’</label>
         <input type="radio" id="cut-the-an-btn" class="radio-btn" name="t-radio-btn" value=4 title="Example: Magic Slipper [...] Puncan">
         <div role="button" class="r-hide-sort-btn" title="Close Sort menu without sorting">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-up r-hide-sort-icon" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M7.776 5.553a.5.5 0 0 1 .448 0l6 3a.5.5 0 1 1-.448.894L8 6.56 2.224 9.447a.5.5 0 1 1-.448-.894l6-3z"/>
-          </svg>
+          <svg class="app-icon r-hide-sort-icon"><use href="icons.svg#r-hide-sort-icon"></use></svg>
         </div>
       </form>
       <div class="info-box"></div>
       <div class="t-container">
-        <table>
+        <table id="tunetable">
           <thead>
             <tr id="t-headers">
-              <th id="t-head-no" title="Tunetable Index Number | Click to download Tune data .json">#</th>
-              <th class="t-name-cell" title="Tune Title | Click to expand or shrink Tunetable"><span id="t-head-name">Name</span>
+              <th id="t-head-no"><span role="button" title="Tunetable Index Number | Click to download Tune data .json">#</span></th>
+              <th class="t-name-cell"><span id="t-head-name" role="button" title="Tune Title | Click to expand or shrink Tunetable">Name</span>
                 <div role="button" class="t-revert-btn" title="Revert Tunetable & data to unsorted original">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat t-revert-icon" viewBox="0 0 16 16">
-                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-                  </svg>
+                  <svg class="app-icon t-revert-icon"><use href="icons.svg#t-revert-icon"></use></svg>
                 </div>
               </th>
-              <th id="t-head-id" title="TSO Tune ID / Meter | Click to toggle">ID</th>
-              <th id="t-head-url" title="Links to TSO | Click to expand or shrink Tunetable">URL</th>
+              <th id="t-head-id"><span role="button" title="TSO Tune ID / Meter | Click to toggle">ID</span></th>
+              <th id="t-head-url"><span role="button" title="Links to TSO | Click to expand or shrink Tunetable">URL</span></th>
             </tr>
           </thead>
           <tbody id="t-tunes"></tbody>
