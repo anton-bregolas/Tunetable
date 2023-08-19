@@ -1,6 +1,6 @@
-////////////////////////////////////////////////
-// Declare global variables, create local JSONs
 ///////////////////////////////////////////////
+// Declare global variables, create user JSONs
+//////////////////////////////////////////////
 
 let noThe = 0;
 let tDelay = 0;
@@ -24,6 +24,11 @@ const exampleTunelist = document.querySelector('.example-tunelist');
 const exampleSetbook = document.querySelector('.example-setbook');
 const exampleSetlist = document.querySelector('.example-setlist');
 
+// Accordion menu elements
+
+const accWrapper = document.querySelector('.acc-wrapper');
+const accHeader = document.querySelector('.acc-wrapper h2');
+
 // Input form elements
 
 const inputForm = document.querySelector('#input-form');
@@ -39,10 +44,10 @@ const radioBtn = document.querySelectorAll('input[name="t-radio-btn"]');
 
 const tuneTable = document.querySelector('#t-tunes');
 const tuneTableHeaders = document.querySelector('#t-headers');
-const tuneCells = document.querySelector("#t-tunes");
 const saveJsonBtn = document.querySelector('#t-head-no');
 const tuneTableNameBtn = document.querySelector("#t-head-name");
 const tuneTableIdBtn = document.querySelector("#t-head-id");
+const idMeterTxt = document.querySelector("#t-head-id > span");
 const tuneTableUrlBtn = document.querySelector("#t-head-url");
 const revertBtn = document.querySelector('.t-revert-btn');
 
@@ -760,7 +765,7 @@ function toggleHelpMenu() {
   
   hideSortMenu();
   helpIcon.classList.toggle("active");
-  inputLabel.classList.toggle("displayed");
+  accWrapper.classList.toggle("unwrapped");
 }
 
 // Hide Sort options menu
@@ -771,6 +776,45 @@ function hideSortMenu() {
     
     radioBox.classList.remove("displayed-flex");
   }
+}
+
+// Expand or collapse the Tunetable cells specified
+
+function toggleTunetable(cells) {
+
+  tuneTable.querySelectorAll(cells).forEach(cell => {
+
+    cell.hasAttribute("style")? 
+      cell.removeAttribute("style") :
+        cell.setAttribute("style", "margin-right: 0");  
+
+  });
+}
+
+// Expand the Tunetable cells specified
+
+function expandTunetable(cells) {
+
+  tuneTable.querySelectorAll(cells).forEach(cell => {
+
+    if (!cell.hasAttribute("style")) {
+
+      cell.setAttribute("style", "margin-right: 0");  
+    }
+  });
+}
+
+// Collapse the Tunetable cells specified
+
+function shrinkTunetable(cells) {
+
+  tuneTable.querySelectorAll(cells).forEach(cell => {
+
+    if (cell.hasAttribute("style")) {
+
+      cell.removeAttribute("style");
+    }
+  });
 }
 
 //////////////////////////////////////////////
@@ -822,7 +866,7 @@ function initButtons() {
 
     event.preventDefault();
 
-    if (inputLabel.classList.contains("displayed")) {
+    if (accWrapper.classList.contains("unwrapped")) {
       toggleHelpMenu();
     }
 
@@ -866,24 +910,32 @@ function initButtons() {
     hideSortMenu();
   });
 
-  // Expand / shrink Tunetable by clicking on its Name or URL
+  // Expand / shrink Tunetable's Name column on click
 
-  [tuneTableNameBtn, tuneTableUrlBtn].forEach(btn => {
+  tuneTableNameBtn.addEventListener('click', () => {
 
-    btn.addEventListener('click', () => {
+    if (!checkIfTableEmpty()) {
 
-      if (!checkIfTableEmpty()) {
+      if (window.screen.width >= 720) {
 
-        if (window.screen.width >= 720) {
-          tuneCells.querySelectorAll(".t-cell").forEach(cell => {
+        shrinkTunetable(`td:nth-child(4) .t-cell`);
+        toggleTunetable(`td:nth-child(2) .t-cell`);
+      } 
+    }
+  });
 
-            cell.hasAttribute("style")? 
-              cell.removeAttribute("style") :
-                cell.setAttribute("style", "margin-right: 0; max-width: 40vw");
-          });
-        }
-      }
-    });
+  // Expand / shrink Tunetable's URL column on click
+
+  tuneTableUrlBtn.addEventListener('click', () => {
+
+    if (!checkIfTableEmpty()) {
+
+      if (window.screen.width >= 720) {
+        
+        shrinkTunetable(`td:nth-child(2) .t-cell`);
+        toggleTunetable(`td:nth-child(4) .t-cell`);
+      } 
+    }
   });
 
   // Show Tune ID / Meter toggle button
@@ -893,7 +945,7 @@ function initButtons() {
     if (!appBusy) {
     
       showMeter = !showMeter? 1 : 0;
-      tuneTableIdBtn.textContent = !showMeter? "ID" : "M";
+      idMeterTxt.textContent = !showMeter? "ID" : "M";
 
       if (!checkIfTableEmpty()) {
         
@@ -971,9 +1023,11 @@ function initButtons() {
 
   // Show / hide help menu button
 
-  helpBtn.addEventListener('click', () => {
-
-    toggleHelpMenu();
+  [accHeader, helpBtn].forEach(btn => {
+    
+    btn.addEventListener('click', () => {
+      toggleHelpMenu();
+    });
   });
 
   // Input example Tunebook button
@@ -1033,6 +1087,40 @@ function initButtons() {
 
   });
 
+  // Expand or collapse Tunetable automatically on 
+  // device screen orientation change (phone rotation)
+
+  screen.orientation.addEventListener('change', (event) => {
+
+    if (!checkIfTableEmpty()) {
+
+      if (event.target.type === "portrait-primary" || event.target.type === "portrait-secondary") {
+
+        if (window.screen.width < 720) {
+
+          shrinkTunetable(".t-cell");
+
+        } else if (window.screen.width > 720) {
+
+          shrinkTunetable(`td:nth-child(4) .t-cell`);
+          expandTunetable(`td:nth-child(2) .t-cell`);
+        }
+        
+      } else if (event.target.type === "landscape-primary" || event.target.type === "landscape-secondary") {
+      
+        if (window.screen.width >= 720) {
+
+          shrinkTunetable(`td:nth-child(4) .t-cell`);
+          expandTunetable(`td:nth-child(2) .t-cell`);
+        }
+
+      } else {
+
+        return;
+      }
+    }
+  });
+
 }
 
 //////////////////////////////////////////////
@@ -1042,5 +1130,6 @@ function initButtons() {
 document.addEventListener("DOMContentLoaded", () => {
   
   initButtons();
+  showInfoMsg("Hi there! Got a link?")
 
 });
