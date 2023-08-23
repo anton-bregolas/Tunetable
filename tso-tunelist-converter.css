@@ -24,6 +24,7 @@ body {
   --alt-cell-color: #ffe5531b;
 
   --font-large: 2rem;
+  --font-subhead: 1.65rem;
   --font-mid: 1.4rem;
   --font-base: 1.2rem;
 
@@ -54,7 +55,7 @@ body * {
 a {
   color: var(--link-color);
   text-decoration-line: none;
-  transition: color 0.7s ease-in-out;
+  transition: color 0.5s ease-in-out;
 }
 
 a:active, a:hover {
@@ -77,6 +78,15 @@ h2 {
   margin: 0.4rem 0 0 0;
 }
 
+h3 {
+  color: var(--header-color);
+  text-align: center;
+}
+
+ul {
+  padding-left: 1.4rem;
+}
+
 /* Nav menu buttons and icons */
 
 .n-save-btn, .n-help-btn, .n-theme-btn {
@@ -89,7 +99,7 @@ h2 {
 .n-save-btn, .n-help-btn, .n-theme-btn, 
 .example-tunebook, .example-tunelist, 
 .example-setbook, .example-setlist, 
-.t-revert-btn:hover {
+.t-revert-btn, h2, .help-menu-subhead:hover {
   cursor: pointer;
 }
 
@@ -97,10 +107,15 @@ h2 {
   opacity: 1;
 }
 
+.app-icon {
+  width: 1em;
+  height: 1em;
+}
+
 .n-save-icon, .n-help-icon, .n-theme-icon-sun, .n-theme-icon-moon {
   width: 2.25rem; 
   height: 2.25rem;
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .n-save-icon {
@@ -143,7 +158,7 @@ th {
 
 th span {
   opacity: 0.85;
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 th:hover span{
@@ -173,7 +188,7 @@ tbody td:nth-of-type(odd) span {
   text-overflow: ellipsis;
   white-space: nowrap;
   vertical-align: middle;
-  transition: margin-right 0.5s linear;
+  /* transition: margin-right 0.5s linear; */
 }
 
 tbody td:nth-child(even) .t-cell {
@@ -228,7 +243,7 @@ tbody td:nth-of-type(2) .t-cell {
   opacity: 0.5;
   width: 2rem;
   height: 2rem;
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 /* Input form styles */
@@ -253,7 +268,9 @@ tbody td:nth-of-type(2) .t-cell {
   color: var(--alt-accent-color);
   caret-color: var(--text-color);
   opacity: 0.75;
-  transition: opacity 0.7s ease-in-out, box-shadow 0.7s ease-in-out;
+  transition: opacity 0.5s ease-in-out, 
+  box-shadow 0.5s ease-in-out,
+  background-color 0.3s linear;
   box-shadow: 0px 0px 0px 0.1875rem transparent;
 }
 
@@ -309,7 +326,7 @@ tbody td:nth-of-type(2) .t-cell {
   margin-bottom: 1.5rem;
   flex-grow: 1;
   opacity: 0.95;
-  transition: opacity 0.7s ease-in-out, box-shadow 0.7s ease-in-out;
+  transition: opacity 0.33s ease-in-out, box-shadow 0.33s ease-in-out;
   box-shadow: 0px 0px 0px 0.1875rem transparent;
 }
 
@@ -393,25 +410,25 @@ input[name="t-radio-btn"] {
 
 /* Accordion menu styles */
 
-.acc-wrapper {
+#acc-main-wrapper, .acc-menu-intro, .acc-wrapper {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.7s ease-in-out;
+  transition: grid-template-rows 0.5s ease-in-out;
 }
 
-.acc-wrapper:hover {
-  cursor: pointer;
+.acc-menu-intro {
+  grid-template-rows: 0.3fr;
 }
 
-.acc-wrapper:hover > * {
+#acc-main-wrapper:hover > * {
   opacity: 1;
 }
 
-.acc-wrapper.unwrapped {
+#acc-main-wrapper.unwrapped, .acc-menu-intro.unwrapped, .acc-wrapper.unwrapped {
   grid-template-rows: 1fr;
 }
 
-.acc-wrapper.unwrapped > * {
+#acc-main-wrapper.unwrapped > * {
   opacity: 1;
 }
 
@@ -419,14 +436,46 @@ input[name="t-radio-btn"] {
   font-size: var(--font-mid);
   color: var(--text-color);
   margin: 1.2rem 1.2rem 0.3rem 1.2rem;
-  padding: 0 1.5rem;
+  padding: 0 10%;
   border: 0.3125rem solid var(--header-color);
   border-radius: 0.5rem;
   min-height: 4rem;
   overflow: hidden;
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
   opacity: 0.75;
 }
+
+.acc-item-content {
+  min-height: 3rem;
+  overflow: hidden;
+}
+
+.help-menu-subhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--header-color);
+  font-size: var(--font-subhead);
+  font-weight: bold;
+  padding-right: 10%;
+}
+
+.plus-icon {
+  transition: transform 1s ease-in-out;
+}
+
+.help-menu-subhead:active {
+  color: var(--highlight-color);
+}
+
+.help-menu-subhead:active > .plus-icon {
+  transform: rotate(135deg);
+}
+
+.acc-wrapper.unwrapped * .plus-icon {
+  transform: rotate(180deg);
+}
+
 
 /* Info message box styles */
 
@@ -509,18 +558,32 @@ input[name="t-radio-btn"] {
   opacity: 1;
 }
 
-.glowing {
-  transition: color 0.7s ease-in-out;
-}
-
-.glowing:hover {
+.highlighted {
   color: var(--highlight-color);
 }
 
-@media screen and (max-width: 420px) {
+.glowing {
+  transition: color 0.5s ease-in-out;
+}
+
+.glowing:hover, .glowing:focus-visible {
+  color: var(--highlight-color);
+}
+
+@media screen and (max-width: 435px) {
 
   html {
     font-size: 14px;
   }
-  
+}
+
+@media screen and (max-width: 500px) {
+
+  .acc-help-menu {
+    padding: 0 5%;
+  }
+
+  .acc-item-header {
+    padding-right: 5%;
+  }
 }
