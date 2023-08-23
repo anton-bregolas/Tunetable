@@ -26,8 +26,13 @@ const exampleSetlist = document.querySelector('.example-setlist');
 
 // Accordion menu elements
 
-const accWrapper = document.querySelector('.acc-wrapper');
-const accHeader = document.querySelector('.acc-wrapper h2');
+const accMainWrapper = document.querySelector('#acc-main-wrapper');
+const accMainHeader = document.querySelector('#acc-main-wrapper h2');
+const accSubHeader = document.querySelectorAll('.help-menu-subhead');
+const accHelpMenu = document.querySelector('.acc-help-menu');
+const accMenuIntro = document.querySelector('.acc-menu-intro');
+const accWrappers = document.querySelectorAll('.acc-wrapper');
+
 
 // Input form elements
 
@@ -765,7 +770,7 @@ function toggleHelpMenu() {
   
   hideSortMenu();
   helpIcon.classList.toggle("active");
-  accWrapper.classList.toggle("unwrapped");
+  accMainWrapper.classList.toggle("unwrapped");
 }
 
 // Hide Sort options menu
@@ -866,7 +871,7 @@ function initButtons() {
 
     event.preventDefault();
 
-    if (accWrapper.classList.contains("unwrapped")) {
+    if (accMainWrapper.classList.contains("unwrapped")) {
       toggleHelpMenu();
     }
 
@@ -1023,10 +1028,46 @@ function initButtons() {
 
   // Show / hide help menu button
 
-  [accHeader, helpBtn].forEach(btn => {
+  [accMainHeader, helpBtn].forEach(btn => {
     
     btn.addEventListener('click', () => {
       toggleHelpMenu();
+    });
+  });
+
+  // Unwrap / wrap accordion menu item
+
+  accWrappers.forEach(myWrapper => {
+
+    const myMenuSubhead = myWrapper.querySelector(".help-menu-subhead");
+
+    myMenuSubhead.addEventListener('click', function() {
+
+      if (accMenuIntro.classList.contains("unwrapped")) {
+        accMenuIntro.classList.remove("unwrapped");
+      }
+
+      accWrappers.forEach(wrapper => {
+
+        const menuSubhead = wrapper.querySelector(".help-menu-subhead");
+
+        if (wrapper.classList.contains("unwrapped") && wrapper !== myWrapper) {
+          wrapper.classList.remove("unwrapped");
+          menuSubhead.classList.remove("highlighted");
+        }
+      });
+
+      if (!myWrapper.classList.contains("unwrapped")) {
+
+        myWrapper.classList.add("unwrapped");
+        myMenuSubhead.classList.add("highlighted");
+
+      } else {
+
+        myWrapper.classList.remove("unwrapped");
+        myMenuSubhead.classList.remove("highlighted");
+        accMenuIntro.classList.add("unwrapped");
+      }
     });
   });
 
@@ -1130,6 +1171,6 @@ function initButtons() {
 document.addEventListener("DOMContentLoaded", () => {
   
   initButtons();
-  showInfoMsg("Hi there! Got a link?")
+  showInfoMsg("Hi there! Got any tunes?")
 
 });

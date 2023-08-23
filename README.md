@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.1.3]
+The Session Tunelist to Tunetable Converter [v.1.4]
 ===================================================
 
 ## Overview
@@ -9,10 +9,16 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 ## TO DO:
 
 - Collect initial feedback, fix more bugs.
-- Complete accordion help menu with headers.
+- Make menu elements more accessible.
 - Brainstorm additional sorting options.
 
 ## DONE: 
+
+[v.1.4]
+
++ Experimental: Accordion help menu with subheaders finished using grid transitions.
++ New, expanded help menu items added (accepted links, how to sort, how to save).
++ Adjusted transition durations, removed performance-killing table transition.
 
 [v.1.3]
 
