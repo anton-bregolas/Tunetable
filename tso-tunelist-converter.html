@@ -10,16 +10,16 @@
     <div class="main-container">
       <h1><b>TSO</b> <span class="glowing">Tunelist</span> <span class="glowing">to</span> <span class="glowing">Tunetable</span> <span class="glowing">Converter</span></h1>
       <div class="nav-container">
-        <div role="button" class="n-save-btn" id="save" title="Download Tunetable">
+        <button class="n-save-btn" id="save" title="Download Tunetable">
           <svg class="app-icon n-save-icon"><use href="icons.svg#n-save-icon"></use></svg>
-        </div>
-        <div role="button" class="n-help-btn" title="Show instructions">
+        </button>
+        <button class="n-help-btn" title="Show helpful instructions" tabindex="0">
           <svg class="app-icon n-help-icon"><use href="icons.svg#n-help-icon"></use></svg>
-        </div>
-        <div role="button" class="n-theme-btn" title="Toggle light/dark theme">
+        </button>
+        <button class="n-theme-btn" title="Toggle light/dark theme">
           <svg class="app-icon n-theme-icon-sun"><use href="icons.svg#n-theme-icon-sun"></use></svg>
           <svg class="app-icon n-theme-icon-moon"><use href="icons.svg#n-theme-icon-moon"></use></svg>
-        </div>
+        </button>
       </div>
       <div id="acc-main-wrapper">
         <div class="acc-help-menu">
@@ -30,7 +30,6 @@
                 paste it into the input form below and then press the big Generate button and wait a wee bit. A&nbsp;neat <a href="#tunetable" tabindex="-1"><b>Tunetable</b></a> will appear below.
             </div>
           </div>
-          
           <div class="acc-wrapper">
             <div class="acc-item-content">
               <div class="help-menu-subhead glowing">
@@ -62,7 +61,8 @@
               </div>
               <div class="help-menu-text">
                 <p>When the Tunetable is ready, press the <a href="#sort" tabindex="-1"><b>Sort</b></a> button once to open sorting menu, select the preferred sorting style
-                   and press the button again to confirm. Depending on the options picked, this will also (re)move the (in)definite articles in tune titles.</p>
+                   and press the button again to confirm. Your tunes / sets can either be left in the default TSO order or be sorted anew in alphabetical order.
+                   Depending on the options picked, Sort will also (re)move the articles in tune titles to make skimming through the list easier.</p>
               </div>
             </div>
           </div>
@@ -76,6 +76,8 @@
               <div class="help-menu-text">
                 <p>Use the <a href="#save" tabindex="-1"><b>Download</b></a> button to save your Tunetable in plain text (.txt) format.
                   If you want to save the data as .json, press the <a href=#t-head-no tabindex="-1"><b>Index (#)</b></a> button on the Tunetable.</p>
+                <p>Should you wish to revert your tune titles to TSO defaults before saving the Tunetable, press the <a href="#revert" tabindex="-1"><b>Revert</b></a> button to the right of
+                  Tunetable Name.</p>
               </div>
             </div>
           </div>
@@ -83,7 +85,7 @@
       </div>
       <form class="input-container">
         <!-- <label for="input-form" class="input-label">Input a link to The Session or press “?” for help</label> -->
-        <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session or press “?” for help" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off">
+        <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session or press “?”" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off">
         <div class="btn-container">
           <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
             <div class="t-btn-text">Generate Tunetable</div>
@@ -113,23 +115,40 @@
         <input type="radio" id="keep-the-an-btn" class="radio-btn" name="t-radio-btn" value=3 title="Example: Magic Slipper, The [...] Puncan, An">
         <label for="cut-the-an-btn" class="radio-label">Reorder list, cut ‘The’ & ‘An’</label>
         <input type="radio" id="cut-the-an-btn" class="radio-btn" name="t-radio-btn" value=4 title="Example: Magic Slipper [...] Puncan">
-        <div role="button" class="r-hide-sort-btn" title="Close Sort menu without sorting">
-          <svg class="app-icon r-hide-sort-icon"><use href="icons.svg#r-hide-sort-icon"></use></svg>
+        <label for="sort-by-m-btn" class="radio-label">Sort by tune type, move ‘The’</label>
+        <input type="radio" id="sort-by-m-btn" class="radio-btn" name="t-radio-btn" value=5 title="Example: John Walsh’s (polka) [...] Star Above The Garter, The (slide)">
+        <div class="checkbox-container">
+          <span class="checkbox-intro">Show: </span>
+          <label for="add-type" class="radio-label">Type
+            <input type="checkbox" id="add-type" name="checkbox-type" class="t-checkbox" value="1">
+            <span class="checkbox-btn"></span>
+          </label>
+          <label for="add-keys" class="radio-label">Keys
+            <input type="checkbox" id="add-keys" name="checkbox-keys" class="t-checkbox" value="1">
+            <span class="checkbox-btn"></span>
+          </label>
+          <label for="add-abc" class="radio-label">ABC
+            <input type="checkbox" id="add-abc" name="checkbox-abc" class="t-checkbox" value="1">
+            <span class="checkbox-btn"></span>
+          </label>
         </div>
+        <button class="r-hide-sort-btn" title="Close Sort menu without sorting">
+          <svg class="app-icon r-hide-sort-icon"><use href="icons.svg#r-hide-sort-icon"></use></svg>
+        </button>
       </form>
       <div class="info-box"></div>
       <div class="t-container">
         <table id="tunetable">
           <thead>
             <tr id="t-headers">
-              <th id="t-head-no"><span role="button" title="Tunetable Index Number | Click to download Tune data .json">#</span></th>
-              <th class="t-name-cell"><span id="t-head-name" role="button" title="Tune Title | Click to expand or shrink Tunetable">Name</span>
-                <div role="button" class="t-revert-btn" title="Revert Tunetable & data to unsorted original">
+              <th id="t-head-no"><button title="Tunetable Index Number | Click to download Tune data .json">#</button></th>
+              <th class="t-name-cell"><button id="t-head-name" role="button" title="Tune Title | Click to expand or shrink Tunetable">Name</button>
+                <button class="t-revert-btn" id="revert" title="Revert Tunetable & data to unsorted original">
                   <svg class="app-icon t-revert-icon"><use href="icons.svg#t-revert-icon"></use></svg>
-                </div>
+                </button>
               </th>
-              <th id="t-head-id"><span role="button" title="TSO Tune ID / Meter | Click to toggle">ID</span></th>
-              <th id="t-head-url"><span role="button" title="Links to TSO | Click to expand or shrink Tunetable">URL</span></th>
+              <th id="t-head-id"><button title="TSO Tune ID / Meter | Click to toggle">ID</button></th>
+              <th id="t-head-url"><button title="Links to TSO | Click to expand or shrink Tunetable">URL</button></th>
             </tr>
           </thead>
           <tbody id="t-tunes"></tbody>

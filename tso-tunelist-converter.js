@@ -6,6 +6,9 @@ let noThe = 0;
 let tDelay = 0;
 let appBusy = 0;
 let showMeter = 0;
+let showType = 0;
+let showKeys = 0;
+let showAbc = 0;
 let tsoJson = {};
 let importJson = {};
 let sortedJson = {};
@@ -33,7 +36,6 @@ const accHelpMenu = document.querySelector('.acc-help-menu');
 const accMenuIntro = document.querySelector('.acc-menu-intro');
 const accWrappers = document.querySelectorAll('.acc-wrapper');
 
-
 // Input form elements
 
 const inputForm = document.querySelector('#input-form');
@@ -44,6 +46,9 @@ const hideSortMenuBtn = document.querySelector('.r-hide-sort-btn');
 const radioBox = document.querySelector('.radio-container');
 const inputLabel = document.querySelector('.input-label');
 const radioBtn = document.querySelectorAll('input[name="t-radio-btn"]');
+const showTypeBox = document.querySelector('#add-type');
+const showKeysBox = document.querySelector('#add-keys');
+const showAbcBox = document.querySelector('#add-abc');
 
 // Tunetable elements
 
@@ -52,7 +57,7 @@ const tuneTableHeaders = document.querySelector('#t-headers');
 const saveJsonBtn = document.querySelector('#t-head-no');
 const tuneTableNameBtn = document.querySelector("#t-head-name");
 const tuneTableIdBtn = document.querySelector("#t-head-id");
-const idMeterTxt = document.querySelector("#t-head-id > span");
+const idMeterTxt = document.querySelector("#t-head-id > button");
 const tuneTableUrlBtn = document.querySelector("#t-head-url");
 const revertBtn = document.querySelector('.t-revert-btn');
 
@@ -135,9 +140,11 @@ function enableButtons() {
 
 // Make a standard fetch request, throw an error if it fails
 
-async function fetchData(url) {
+async function fetchData(url, type) {
   try {
     const response = await fetch(url);
+
+    let data;
 
     if (!response.ok) {
 
@@ -159,7 +166,20 @@ async function fetchData(url) {
       throw new Error(errorMessage);
     }
 
-    const data = await response.json();
+    if (type === "json") {
+
+      data = await response.json();
+
+    } else if (type === "text") {
+
+      data = await response.text();
+
+    } else {
+
+      console.error("Invalid data type passed to Fetch!");
+      throw error;
+    }
+
     return data;
 
   } catch (error) {
@@ -194,7 +214,7 @@ async function fetchTheSessionJson(url) {
 
   try {
 
-    const tsoData = await fetchData(jsonUrl);
+    const tsoData = await fetchData(jsonUrl, "json");
 
     if (checkIfJsonHasTunes(tsoData) || checkIfJsonHasSets(tsoData)) {
 
@@ -206,22 +226,47 @@ async function fetchTheSessionJson(url) {
         importJson = { "tunes": [] };
         
         for (const tune of tsoData.tunes) {
+
+          const tuneUrl = tune.url + '/incipit';
+          const incipit = await fetchData(tuneUrl, "text");
+          const key = incipit.slice(4, 8);
+          const abc = incipit.slice(9);
+
           const { id, name, url, type } = tune;
-          importJson.tunes.push({ id, name, url, type });
+          importJson.tunes.push({ id, name, url, type, key, abc });
         } 
 
         console.log("Fetched page #1 of Tunes JSON");
 
-      } else {
+      } else if (checkIfSetsUrl(url)) {
 
         importJson = { "sets": [] };
 
+        for (m = 0; m < tsoData.sets.length; m++) {
+
+          for (n = 0; n < tsoData.sets[m].settings.length; n++) {
+
+              let tune = tsoData.sets[m].settings[n];
+              const tuneUrl = tune.url.split("#", 1)[0] + '/incipit';
+              const incipit = await fetchData(tuneUrl, "text");
+              const abcBars = incipit.slice(9);
+
+              tune["abc"] = abcBars;
+          }
+        }
+
         for (const set of tsoData.sets) {
+
           const { id, name, url, settings } = set;
           importJson.sets.push({ id, name, url, settings });
         } 
 
         console.log("Fetched page #1 of Sets JSON");
+
+      } else {
+
+        errorMessage = "No tunes or sets found! Check URL";
+        throw new Error(errorMessage);
       }
 
     } else {
@@ -257,7 +302,7 @@ async function fetchTheSessionJson(url) {
         for (let p = 2; p <= tsoData.pages; p++) {
           let pageUrl = `${jsonUrl}&page=${p}`;
           console.log(`Fetching ${jsonUrl}`);
-          tunePages.push(fetchData(pageUrl));
+          tunePages.push(fetchData(pageUrl, "json"));
         }
       
         const pageResponses = await Promise.all(tunePages);
@@ -268,11 +313,29 @@ async function fetchTheSessionJson(url) {
 
             for (const tune of pageData.tunes) {
 
+              const tuneUrl = tune.url + '/incipit';
+              const incipit = await fetchData(tuneUrl, "text");
+              const key = incipit.slice(4, 8);
+              const abc = incipit.slice(9);
+
               const { id, name, url, type } = tune;
-              importJson.tunes.push({ id, name, url, type });
+              importJson.tunes.push({ id, name, url, type, key, abc });
             } 
 
           } else if (checkIfJsonHasSets(pageData)) {
+
+            for (q = 0; q < pageData.sets.length; q++) {
+
+              for (r = 0; r < pageData.sets[q].settings.length; r++) {
+    
+                  let tune = pageData.sets[q].settings[r];
+                  const tuneUrl = tune.url.split("#", 1)[0] + '/incipit';
+                  const incipit = await fetchData(tuneUrl, "text");
+                  const abcBars = incipit.slice(9);
+    
+                  tune["abc"] = abcBars;
+              }
+            }
 
             for (const set of pageData.sets) {
 
@@ -356,6 +419,7 @@ function createTuneTable(myJson) {
       cellSpan.classList.add("t-cell");
       
       const myDataId = showMeter? getTuneMeter(myJson, i) : myData[i].id;
+
       let myDataName;
 
       if (checkIfJsonHasSets(myJson) && myJson === importJson) {
@@ -376,12 +440,31 @@ function createTuneTable(myJson) {
         myDataName = myData[i].name;
       }
 
+      let myDataUrlAbc;
+
+      if (checkIfJsonHasTunes(myJson) && showAbc === 1) {
+
+        myDataUrlAbc = myData[i].abc;
+
+      } else if (checkIfJsonHasSets(myJson) && showAbc === 1) {
+
+        for (let l = 0; l < myData[i].settings.length; l++) {
+  
+          myDataUrlAbc = myData[i].settings[l].abc
+  
+        }
+
+      } else {
+
+        myDataUrlAbc = myData[i].url;
+      }
+
       let cellContent =
         j === 0 ? i + 1 :
         j === 1 ? myDataName :
-        j === 2 ? myDataId : myData[i].url;
+        j === 2 ? myDataId : myDataUrlAbc;
       
-      if (j === 3) {
+      if (j === 3 && showAbc === 0) {
 
         const cellLink = document.createElement("a");
         cellLink.setAttribute("href", cellContent);
@@ -464,7 +547,7 @@ function sortTunetable(myJson) {
     myData = sortedJson.tunes;
 
     for (let i of myData) {
-      i.name = processTuneTitle(i.name);
+      i.name = processTuneTitle(i.name, i.type, i.key);
     }
 
   } else if (checkIfJsonHasSets(sortedJson)) {
@@ -478,9 +561,10 @@ function sortTunetable(myJson) {
       for (let k = 0; k < j.settings.length; k++) {
 
         let tuneName = j.settings[k].name;
+        let tuneType = j.settings[k].type;
         let tuneKey = j.settings[k].key;
 
-        tuneName = processTuneTitle(tuneName) + ` (${tuneKey})`;
+        tuneName = processTuneTitle(tuneName, tuneType, tuneKey);
         j.name += k === j.settings.length - 1? tuneName : tuneName + " / ";
       }
     }
@@ -491,12 +575,32 @@ function sortTunetable(myJson) {
     return;
   }
 
-  if (noThe > 2) {
+  if (noThe > 2 && noThe < 5) {
 
     myData.sort((a, b) => {
     
       return a.name.localeCompare(b.name);
     });
+
+  } else if (noThe === 5) {
+
+    showMeter = 1;
+    idMeterTxt.textContent = "M";
+    
+    if (myData == sortedJson.tunes) {
+
+    myData.sort((a, b) => {
+    
+      return a.type.localeCompare(b.type);
+    });
+
+    } else if (myData == sortedJson.sets) {
+
+      myData.sort((a, b) => {
+      
+        return a.settings[0].type.localeCompare(b.settings[0].type);
+      });
+    }
   }
 
   return sortedJson;
@@ -504,7 +608,7 @@ function sortTunetable(myJson) {
 
 // Process tune titles according to the selected Sort setting
 
-function processTuneTitle(title) {
+function processTuneTitle(title, type, key) {
 
   let newTitle = title;
 
@@ -512,27 +616,42 @@ function processTuneTitle(title) {
 
     if (title.startsWith("The ")) {
 
-      if (noThe === 1 || noThe === 3) {
+      if (noThe === 1 || noThe === 3 || noThe === 5) {
 
-        return newTitle = title.slice(4) + ', The';
-      } 
+        newTitle = title.slice(4) + ', The';
 
-      return newTitle = title.slice(4);
+      } else if (noThe === 2 || noThe === 4) {
 
-    } else if (title.startsWith("An ") && (noThe > 2)) {
+        newTitle = title.slice(4);
+      }
 
-      return newTitle = noThe < 4? title.slice(3) + ', An' : title.slice(3);
+    } else if (title.startsWith("An ") && noThe === 3) {
+
+      newTitle = title.slice(3) + ', An' ;
+
+    } else if (title.startsWith("An ") && noThe === 4) {
+
+      newTitle = title.slice(3);
 
     } else if (title.startsWith("A ")) {
 
       if (noThe === 1 || noThe === 3) {
 
-        return newTitle = title.slice(2) + ', A';
+        newTitle = title.slice(2) + ', A';
       } 
 
-      return title.slice(2);
-                          
+      newTitle = title.slice(2);
     }
+  } 
+  
+  if (showType === 1) {
+
+    newTitle += ` (${type})`;
+  } 
+  
+  if (showKeys === 1) {
+
+    newTitle += ` (${key})`;
   }
   
   return newTitle;
@@ -901,12 +1020,36 @@ function initButtons() {
 
   // Toggle Sort menu options with radio buttons
 
-  for (let k = 0; k < 4; k++) {
+  for (let k = 0; k < 5; k++) {
     radioBtn[k].addEventListener("change", function() {
       showInfoMsg(`Sorting style: #${this.value}. Sort?`);
       return noThe = +this.value;
     });
   }
+
+  // Toggle tune type display option for the Tunetable 
+
+  showTypeBox.addEventListener("change", (event) => {
+
+    return showType = event.currentTarget.checked? 1 : 0;
+
+  });
+
+  // Toggle tune key display option for the Tunetable 
+
+  showKeysBox.addEventListener("change", (event) => {
+
+    return showKeys = event.currentTarget.checked? 1 : 0;
+
+  });
+
+  // Toggle ABC incipits option for the Tunetable 
+
+  showAbcBox.addEventListener("change", (event) => {
+
+    return showAbc = event.currentTarget.checked? 1 : 0;
+
+  });
 
   // Hide Sort menu options
 

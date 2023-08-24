@@ -66,6 +66,34 @@ b {
   color: var(--highlight-color);
 }
 
+button {
+  appearance: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background-color: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-align: inherit;
+  padding: 0;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 0.2rem solid var(--header-color);
+  outline-offset: 0.5rem;
+  border-radius: 0.4rem;
+}
+
 h1, h2 {
   color: var(--header-color);
   font-size: var(--font-large);
@@ -156,12 +184,17 @@ th {
   text-align: center;
 }
 
-th span {
+th button {
   opacity: 0.85;
   transition: opacity 0.5s ease-in-out;
 }
 
-th:hover span{
+th button:focus-visible {
+  border-radius: 0.07rem;
+  outline-color: var(--accent-color);
+}
+
+th:hover button{
   opacity: 1;
 }
 
@@ -284,8 +317,14 @@ tbody td:nth-of-type(2) .t-cell {
   opacity: 1;
 }
 
-#input-form:focus-visible {
+#input-form:focus:not(:focus-visible) {
   outline: none;
+}
+
+#input-form:focus-visible {
+  outline: 0.16rem solid var(--header-color);
+  outline-offset: 0.07rem;
+  border-radius: 0.5rem;
   box-shadow: 0px 0px 0px 0.1875rem black;
   opacity: 1;
 }
@@ -295,8 +334,6 @@ tbody td:nth-of-type(2) .t-cell {
 .t-btn {
   display: flex;
   border: none;
-  outline: none;
-  box-shadow: none;
   font-size: var(--font-mid);
   padding: 1rem;
   border-radius: 0.5rem;
@@ -305,8 +342,14 @@ tbody td:nth-of-type(2) .t-cell {
   background: var(--accent-color);
 } 
 
-.t-btn, .radio-btn, .radio-label, .r-hide-sort-btn,
-#t-head-no, #t-head-name, #t-head-id, #t-head-url:hover {
+.t-btn:focus-visible {
+  outline: 0.2rem solid var(--header-color);
+  outline-offset: 0.05rem;
+  border-radius: 0.5rem;
+}
+
+.t-btn, .radio-btn, .radio-label, .r-hide-sort-btn, .t-checkbox,
+.checkbox-btn, #t-head-no, #t-head-name, #t-head-id, #t-head-url:hover {
   cursor: pointer;
 }
 
@@ -361,7 +404,7 @@ tbody td:nth-of-type(2) .t-cell {
   margin-left: -0.9rem;
 }
 
-input[name="t-radio-btn"] {
+input[name="t-radio-btn"], .t-checkbox {
   margin: 0.2rem 1.5rem 1.5rem 0;
   height: 1rem;
   width: 1rem;
@@ -384,7 +427,7 @@ input[name="t-radio-btn"] {
   border-width: 0.2rem;
 }
 
-.radio-label {
+.radio-label, .checkbox-intro {
   font-weight: bold;
   font-size: var(--font-base);
   color: var(--menu-color);
@@ -406,6 +449,36 @@ input[name="t-radio-btn"] {
   height: 2.5rem;
   color: var(--alt-accent-color);
   vertical-align: text-top;
+}
+
+.checkbox-intro {
+  margin-right: 0.5rem;
+}
+
+.t-checkbox {
+  display: none;
+}
+
+.checkbox-btn {
+  display: inline-flex;
+  width: 1.17rem;
+  height: 1.17rem;
+  border: 0.1rem solid var(--accent-color);
+  border-radius: 0.12rem;
+  background: var(--bg-color);
+  color: var(--header-color);
+  align-items: center;
+  margin: 0 0.5rem;
+}
+
+.checkbox-btn::before{
+  content:"\2714";
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.t-checkbox:checked + .checkbox-btn::before{
+  opacity: 1;
 }
 
 /* Accordion menu styles */
