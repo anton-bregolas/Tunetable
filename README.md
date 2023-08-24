@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.1.4]
+The Session Tunelist to Tunetable Converter [v.1.5]
 ===================================================
 
 ## Overview
@@ -13,6 +13,13 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 - Brainstorm additional sorting options.
 
 ## DONE: 
+
+[v.1.5]
+
++ Experimental: Fetches ABC incipit and tune keys for each tune, adds them to importJson.
++ Checkboxes with Type, Keys, ABC options added to Sort menu.
++ Help menu updated with more instructions on sorting options.
++ Button-like divs replaced with buttons, tab focus indicators now appear for each button.
 
 [v.1.4]
 
