@@ -8,6 +8,8 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## TO DO:
 
+- Rewrite ABC incipit fetching to use specially prepared local file.
+- Fetch ABC incipit from The Session only if ABC is missing from the file.
 - Collect initial feedback, fix more bugs.
 - Make menu elements more accessible.
 - Brainstorm additional sorting options.
@@ -18,8 +20,12 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 + Experimental: Fetches ABC incipit and tune keys for each tune, adds them to importJson.
 + Checkboxes with Type, Keys, ABC options added to Sort menu.
+
+[v.1.4.1]
+
 + Help menu updated with more instructions on sorting options.
 + Button-like divs replaced with buttons, tab focus indicators now appear for each button.
+- Rolled back ABC incipit fetching and checkboxes, attempting to fix CORS policy error.
 
 [v.1.4]
 
