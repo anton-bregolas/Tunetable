@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Session Tunelist to Tunetable Converter</title>
     <link rel="stylesheet" type="text/css" href="tso-tunelist-converter.css">
+    <script defer type="module" src="tso-tunelist-converter.js"></script>
   </head>
   <body>
     <div class="main-container">
@@ -13,7 +14,7 @@
         <button class="n-save-btn" id="save" title="Download Tunetable">
           <svg class="app-icon n-save-icon"><use href="icons.svg#n-save-icon"></use></svg>
         </button>
-        <button class="n-help-btn" title="Show helpful instructions" tabindex="0">
+        <button class="n-help-btn" title="Show help instructions" tabindex="0">
           <svg class="app-icon n-help-icon"><use href="icons.svg#n-help-icon"></use></svg>
         </button>
         <button class="n-theme-btn" title="Toggle light/dark theme">
@@ -85,7 +86,7 @@
       </div>
       <form class="input-container">
         <!-- <label for="input-form" class="input-label">Input a link to The Session or press “?” for help</label> -->
-        <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session or press “?”" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off">
+        <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session or press “?”" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off" autofocus>
         <div class="btn-container">
           <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
             <div class="t-btn-text">Generate Tunetable</div>
@@ -108,27 +109,27 @@
       </form>
       <form class="radio-container">
         <label for="keep-the-btn" class="radio-label">Move ‘The’, use default order</label>
-        <input type="radio" id="keep-the-btn" class="radio-btn" name="t-radio-btn" value=1 title="Example: An Puncan [...] Magic Slipper, The">
+        <input type="radio" id="keep-the-btn" class="radio-btn" name="sortstyle" value=1 title="Example: An Puncan [...] Magic Slipper, The">
         <label for="cut-the-btn" class="radio-label">Cut ‘The’, use default order</label>
-        <input type="radio" id="cut-the-btn" class="radio-btn" name="t-radio-btn" value=2 title="Example: An Puncan [...] Magic Slipper">
+        <input type="radio" id="cut-the-btn" class="radio-btn" name="sortstyle" value=2 title="Example: An Puncan [...] Magic Slipper">
         <label for="keep-the-an-btn" class="radio-label">Reorder list, move ‘The’ & ‘An’</label>
-        <input type="radio" id="keep-the-an-btn" class="radio-btn" name="t-radio-btn" value=3 title="Example: Magic Slipper, The [...] Puncan, An">
+        <input type="radio" id="keep-the-an-btn" class="radio-btn" name="sortstyle" value=3 title="Example: Magic Slipper, The [...] Puncan, An">
         <label for="cut-the-an-btn" class="radio-label">Reorder list, cut ‘The’ & ‘An’</label>
-        <input type="radio" id="cut-the-an-btn" class="radio-btn" name="t-radio-btn" value=4 title="Example: Magic Slipper [...] Puncan">
+        <input type="radio" id="cut-the-an-btn" class="radio-btn" name="sortstyle" value=4 title="Example: Magic Slipper [...] Puncan">
         <label for="sort-by-m-btn" class="radio-label">Sort by tune type, move ‘The’</label>
-        <input type="radio" id="sort-by-m-btn" class="radio-btn" name="t-radio-btn" value=5 title="Example: John Walsh’s (polka) [...] Star Above The Garter, The (slide)">
+        <input type="radio" id="sort-by-m-btn" class="radio-btn" name="sortstyle" value=5 title="Example: John Walsh’s (polka) [...] Star Above The Garter, The (slide)">
         <div class="checkbox-container">
           <span class="checkbox-intro">Show: </span>
-          <label for="add-type" class="radio-label">Type
-            <input type="checkbox" id="add-type" name="checkbox-type" class="t-checkbox" value="1">
+          <label for="add-type" class="checkbox-label">Type
+            <input type="checkbox" id="add-type" name="type" class="t-checkbox" value="1">
             <span class="checkbox-btn"></span>
           </label>
-          <label for="add-keys" class="radio-label">Keys
-            <input type="checkbox" id="add-keys" name="checkbox-keys" class="t-checkbox" value="1">
+          <label for="add-keys" class="checkbox-label">Keys
+            <input type="checkbox" id="add-keys" name="keys" class="t-checkbox" value="1">
             <span class="checkbox-btn"></span>
           </label>
-          <label for="add-abc" class="radio-label">ABC
-            <input type="checkbox" id="add-abc" name="checkbox-abc" class="t-checkbox" value="1">
+          <label for="add-abc" class="checkbox-label">ABC
+            <input type="checkbox" id="add-abc" name="abc" class="t-checkbox" value="1">
             <span class="checkbox-btn"></span>
           </label>
         </div>
@@ -155,6 +156,6 @@
         </table>
       </div>
     </div>
-    <script src="tso-tunelist-converter.js"></script>
+    <!-- <script src="tso-tunelist-converter.js"></script> -->
   </body>
 </html>

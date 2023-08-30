@@ -1,3 +1,5 @@
+import abcJson from '/abc.json' assert {type: 'json'};
+
 ///////////////////////////////////////////////
 // Declare global variables, create user JSONs
 //////////////////////////////////////////////
@@ -45,7 +47,7 @@ const sortTunetableBtn = document.querySelector('.t-sort-btn');
 const hideSortMenuBtn = document.querySelector('.r-hide-sort-btn');
 const radioBox = document.querySelector('.radio-container');
 const inputLabel = document.querySelector('.input-label');
-const radioBtn = document.querySelectorAll('input[name="t-radio-btn"]');
+const radioBtn = document.querySelectorAll('input[name="sortstyle"]');
 const showTypeBox = document.querySelector('#add-type');
 const showKeysBox = document.querySelector('#add-keys');
 const showAbcBox = document.querySelector('#add-abc');
@@ -59,6 +61,7 @@ const tuneTableNameBtn = document.querySelector("#t-head-name");
 const tuneTableIdBtn = document.querySelector("#t-head-id");
 const idMeterTxt = document.querySelector("#t-head-id > button");
 const tuneTableUrlBtn = document.querySelector("#t-head-url");
+const urlAbcTxt = document.querySelector("#t-head-url > button");
 const revertBtn = document.querySelector('.t-revert-btn');
 
 // Infobox elements
@@ -89,7 +92,7 @@ function showInfoMsg(msg, err) {
 
 function validateTsoUrl() {
 
-  let tsoUrl = inputForm.value;
+  let tsoUrl = inputForm.value.trim();
 
   const validTunelist = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btags\b\/.+\/\btunes\b\/?$/;
   const validTunebook = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btunebook\b\/?$/;
@@ -220,6 +223,7 @@ async function fetchTheSessionJson(url) {
 
       clearJsonData();
       clearTunetable();
+      clearCheckboxData();
 
       if (!checkIfSetsUrl(url)) {
       
@@ -227,13 +231,8 @@ async function fetchTheSessionJson(url) {
         
         for (const tune of tsoData.tunes) {
 
-          const tuneUrl = tune.url + '/incipit';
-          const incipit = await fetchData(tuneUrl, "text");
-          const key = incipit.slice(4, 8);
-          const abc = incipit.slice(9);
-
           const { id, name, url, type } = tune;
-          importJson.tunes.push({ id, name, url, type, key, abc });
+          importJson.tunes.push({ id, name, url, type });
         } 
 
         console.log("Fetched page #1 of Tunes JSON");
@@ -241,19 +240,6 @@ async function fetchTheSessionJson(url) {
       } else if (checkIfSetsUrl(url)) {
 
         importJson = { "sets": [] };
-
-        for (m = 0; m < tsoData.sets.length; m++) {
-
-          for (n = 0; n < tsoData.sets[m].settings.length; n++) {
-
-              let tune = tsoData.sets[m].settings[n];
-              const tuneUrl = tune.url.split("#", 1)[0] + '/incipit';
-              const incipit = await fetchData(tuneUrl, "text");
-              const abcBars = incipit.slice(9);
-
-              tune["abc"] = abcBars;
-          }
-        }
 
         for (const set of tsoData.sets) {
 
@@ -276,7 +262,7 @@ async function fetchTheSessionJson(url) {
       throw new Error(errorMessage);
     }
 
-    const timeStamp1 = new Date();
+    const timeStamp1 = Date.now();
     tDelay = tsoData.pages > 1 ? Math.floor((+tsoData.pages - 1) / 2.6 * 1000) : 0;
     console.log(`Table processing delay estimated at ${tDelay} ms`);
 
@@ -313,29 +299,11 @@ async function fetchTheSessionJson(url) {
 
             for (const tune of pageData.tunes) {
 
-              const tuneUrl = tune.url + '/incipit';
-              const incipit = await fetchData(tuneUrl, "text");
-              const key = incipit.slice(4, 8);
-              const abc = incipit.slice(9);
-
               const { id, name, url, type } = tune;
-              importJson.tunes.push({ id, name, url, type, key, abc });
+              importJson.tunes.push({ id, name, url, type });
             } 
 
           } else if (checkIfJsonHasSets(pageData)) {
-
-            for (q = 0; q < pageData.sets.length; q++) {
-
-              for (r = 0; r < pageData.sets[q].settings.length; r++) {
-    
-                  let tune = pageData.sets[q].settings[r];
-                  const tuneUrl = tune.url.split("#", 1)[0] + '/incipit';
-                  const incipit = await fetchData(tuneUrl, "text");
-                  const abcBars = incipit.slice(9);
-    
-                  tune["abc"] = abcBars;
-              }
-            }
 
             for (const set of pageData.sets) {
 
@@ -349,7 +317,7 @@ async function fetchTheSessionJson(url) {
       await Promise.all([messagePromise, fetchingPromise]);
     }
 
-    const timeStamp2 = new Date();
+    const timeStamp2 = Date.now();
     console.log(`Estimated delay: ${tDelay}ms, actual delay: ${timeStamp2 - timeStamp1}ms`);
     createTuneTable(importJson);
 
@@ -384,6 +352,136 @@ async function msgDelay(duration) {
   await new Promise(resolve => setTimeout(resolve, duration));
 }
 
+// Retrieve JSON data from The Session using async fetch requests
+// Display bonus messages if tDelay > 3s, then call createTuneTable()
+
+async function fetchAbcIncipit(tuneId) {
+
+  let tuneUrl = `https://thesession.org/tunes/${tuneId}?format=json`
+
+  let errorMessage;
+
+  appBusy = 1;
+  disableButtons();
+  saveIcon.setAttribute("style", "opacity: 0.5");
+
+  try {
+
+    showInfoMsg(`Fetching ABC from ${tuneUrl}...`);
+
+    const tsoTuneData = await fetchData(tuneUrl, "json");
+
+    if (Array.isArray(tsoTuneData.settings) && tsoTuneData.settings.length > 0) {
+
+      console.log("Extracting ABC incipit from TSO tune...");
+
+      const abc = tsoTuneData.settings[0].abc;
+      const incipit = abc.slice(0, 33);
+      console.log("Done fetching ABC incipit");
+
+      return incipit;
+
+    } else {
+
+      errorMessage = "Tune ABC missing or empty!";
+      throw new Error(errorMessage);
+    }
+  } 
+
+  catch (error) {
+
+    errorMessage = error.message === "Failed to fetch"? "Network error, check your connection!" :
+     error.message || "Fetching ABCs failed, try again!";
+
+    console.error("Error fetching ABC incipits from The Session:", error);
+    
+    showInfoMsg(errorMessage, 1);
+
+    appBusy = 0;
+    enableButtons();
+    saveIcon.removeAttributeAttribute("style");
+
+    return;
+  }
+}
+
+// Preload ABC incipits into Tune JSON based on Tune ID and JSON type
+
+function loadAbcIncipits() {
+
+  let myJson;
+  let dataType;
+  
+  if (checkIfJsonHasTunes(importJson)) {
+
+    myJson = importJson;
+    dataType = myJson.tunes;
+
+  } else if (checkIfJsonHasSets(importJson)) {
+
+    myJson = importJson;
+    dataType = myJson.sets;
+
+  } else {
+
+    showInfoMsg("No tune data found! Re-generate Tunetable", 1);
+    return;
+  }
+
+  if (checkIfJsonHasTunes(myJson)) {
+
+    console.log("Loading incipits from ABC JSON...");
+
+    for (let l = 0; l < myJson.tunes.length; l++) {
+
+      let tune = myJson.tunes[l];
+      const tuneId = tune.id;
+      const incipit = abcJson[tuneId] == null? fetchAbcIncipit(tuneId) : abcJson[tuneId];
+      const key = incipit.slice(1, 5);
+      const abcBars = incipit.slice(7);
+
+      if (!tune.key) {
+        tune["key"] = key;
+      }
+      if (!tune.abc) {
+        tune["abc"] = abcBars;
+      }
+    }
+
+    console.log("ABC incipits added to Tune JSON");
+
+  } else if (checkIfJsonHasSets(myJson)) {
+
+    console.log("Loading incipits from ABC JSON...");
+
+    for (let m = 0; m < myJson.sets.length; m++) {
+
+      for (let n = 0; n < myJson.sets[m].settings.length; n++) {
+
+          let tune = myJson.sets[m].settings[n];
+          const setTuneUrl = tune.url.split("#", 1)[0];
+          const tuneId = setTuneUrl.split("/")[4];
+          const incipit = abcJson[tuneId] == null? fetchAbcIncipit(tuneId) : abcJson[tuneId];
+          const abcSetBars = incipit.slice(7);
+
+          if (!tune.abc) {
+            tune["abc"] = abcSetBars;
+          }
+      }
+    }
+
+    console.log("ABC incipits added to Set JSON");
+
+  } else {
+
+    showInfoMsg("No tune data found!", 1);
+    console.error("Failed to preload ABC incipits!");
+    return;
+  }
+
+  showInfoMsg("ABC incipits preloaded");
+}
+
 // Create Tunetable from nested JSON array of tunes
 
 function createTuneTable(myJson) {
@@ -393,6 +491,7 @@ function createTuneTable(myJson) {
   appBusy = 1;
 
   let myData;
+  let myTuneId;
 
   if (checkIfJsonHasTunes(myJson)) {
 
@@ -418,7 +517,7 @@ function createTuneTable(myJson) {
       const cellSpan = document.createElement("span");
       cellSpan.classList.add("t-cell");
       
-      const myDataId = showMeter? getTuneMeter(myJson, i) : myData[i].id;
+      let myDataId = showMeter? getTuneMeter(myJson, i) : myData[i].id;
 
       let myDataName;
 
@@ -440,22 +539,27 @@ function createTuneTable(myJson) {
         myDataName = myData[i].name;
       }
 
-      let myDataUrlAbc;
+      let myDataUrlAbc = '';
 
       if (checkIfJsonHasTunes(myJson) && showAbc === 1) {
 
+        urlAbcTxt.textContent = "ABC";
         myDataUrlAbc = myData[i].abc;
 
       } else if (checkIfJsonHasSets(myJson) && showAbc === 1) {
 
+        urlAbcTxt.textContent = "ABC";
+
         for (let l = 0; l < myData[i].settings.length; l++) {
   
-          myDataUrlAbc = myData[i].settings[l].abc
-  
+          myDataUrlAbc += l === (myData[i].settings.length - 1)? 
+          myData[i].settings[l].abc : myData[i].settings[l].abc + ' / ';
+
         }
 
       } else {
 
+        urlAbcTxt.textContent = "URL";
         myDataUrlAbc = myData[i].url;
       }
 
@@ -513,6 +617,29 @@ function checkIfJsonHasSets(checkJson) {
   return false; 
 }
 
+// Check if a nested JSON array of tunes / sets has ABC incipits
+
+function checkIfJsonHasAbc(checkJson) {
+
+  if (checkIfJsonHasTunes(checkJson)) {
+
+    if (checkJson.tunes[0].abc != null) {
+      
+      return true; 
+    }
+  }
+
+  else if (checkIfJsonHasSets(checkJson)) { 
+
+    if (checkJson.sets[0].settings[0].abc != null) {
+      
+      return true; 
+    }
+  } 
+
+  return false; 
+}
+
 // Create a deep copy of the JSON specified
 
 function createDeepCopyJson(rawJson) {
@@ -547,6 +674,7 @@ function sortTunetable(myJson) {
     myData = sortedJson.tunes;
 
     for (let i of myData) {
+      // i.name = processTuneTitle(i.name, i.type);
       i.name = processTuneTitle(i.name, i.type, i.key);
     }
 
@@ -872,13 +1000,55 @@ function clearTunetable() {
 
 }
 
+// Check if any of the sorting styles are selected
+
+function radioChecked() {
+
+  let sortOptions = document.getElementsByName("sortstyle");
+
+  for (let i = 0; i < sortOptions.length; i++) {
+  
+    if (sortOptions[i].checked) {
+
+        return true;
+    }
+  }
+
+  return false;
+}
+
+// Uncheck all sorting options checkboxes
+
+function clearCheckboxData() {
+
+  showTypeBox.checked = false;
+  showKeysBox.checked = false;
+  showAbcBox.checked = false;
+
+  showType = 0;
+  showKeys = 0;
+  showAbc = 0;
+
+  // if (showTypeBox.checked) {
+  //   showAbcBox.click();
+  // }
+
+  // if (showKeysBox.checked) {
+  //   showAbcBox.click();
+  // }
+
+  // if (showAbcBox.checked) {
+  //   showAbcBox.click();
+  // }
+}
+
 // Clear checked radio button and sorting style value
 
 function clearSortMenu() {
 
   if (noThe > 0) {
     noThe = 0;
-    document.querySelector('input[name="t-radio-btn"]:checked').checked = false;
+    document.querySelector('input[name="sortstyle"]:checked').checked = false;
     console.log("Sorting menu cleared");
   }
 }
@@ -959,7 +1129,8 @@ function initButtons() {
 
       if (validateTsoUrl()) {
 
-        fetchTheSessionJson(inputForm.value);
+        localStorage.setItem("inputUrl", inputForm.value);
+        fetchTheSessionJson(inputForm.value.trim());
   
       } else {
         
@@ -981,6 +1152,7 @@ function initButtons() {
     clearSortMenu();
     clearTunetable();
     clearJsonData();
+    clearCheckboxData();
     
   });
 
@@ -1030,31 +1202,63 @@ function initButtons() {
   // Toggle tune type display option for the Tunetable 
 
   showTypeBox.addEventListener("change", (event) => {
+  
+    if (!appBusy) {
 
-    return showType = event.currentTarget.checked? 1 : 0;
+      return showType = event.currentTarget.checked? 1 : 0;
 
+    } else {
+
+      showInfoMsg("Wait for tune data to load!", 1);
+    }
   });
 
   // Toggle tune key display option for the Tunetable 
 
   showKeysBox.addEventListener("change", (event) => {
 
-    return showKeys = event.currentTarget.checked? 1 : 0;
+    if (!appBusy) {   
 
+      return showKeys = event.currentTarget.checked? 1 : 0;
+
+    } else {
+
+      showInfoMsg("Wait for tune data to load!", 1);
+    }
   });
 
   // Toggle ABC incipits option for the Tunetable 
 
   showAbcBox.addEventListener("change", (event) => {
 
-    return showAbc = event.currentTarget.checked? 1 : 0;
+    if (!appBusy) {
 
+      if (event.currentTarget.checked) {
+
+        showAbc = 1;
+
+        if (!checkIfJsonHasAbc(importJson)) {
+          loadAbcIncipits();
+        }
+        return;
+
+      } else {
+
+        showAbc = 0;
+        return;
+      }
+
+    } else {
+
+      showInfoMsg("Wait for tune data to load!", 1);
+    }
   });
 
   // Hide Sort menu options
 
-  hideSortMenuBtn.addEventListener('click', () => {
+  hideSortMenuBtn.addEventListener('click', (event) => {
 
+    event.preventDefault();
     hideSortMenu();
   });
 
@@ -1313,7 +1517,7 @@ function initButtons() {
 
 document.addEventListener("DOMContentLoaded", () => {
   
+  inputForm.value = localStorage.getItem("inputUrl");
   initButtons();
-  showInfoMsg("Hi there! Got any tunes?")
-
+  showInfoMsg("Hi there! Got any tunes?");
 });
