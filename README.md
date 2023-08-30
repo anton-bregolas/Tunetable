@@ -8,13 +8,18 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## TO DO:
 
-- Rewrite ABC incipit fetching to use specially prepared local file.
-- Fetch ABC incipit from The Session only if ABC is missing from the file.
 - Collect initial feedback, fix more bugs.
 - Make menu elements more accessible.
 - Brainstorm additional sorting options.
 
 ## DONE: 
+
+[v.1.6]
+
++ Create a thoroughly filtered JSON containing ABC incipits of all the current TSO tunes.
++ Rewrote ABC incipit fetching that checks abc.json before attempting to fetch from TSO.
++ Newly-added tunes will be fetched from The Session if ABC is missing from abc.json
++ Initial testing of checkboxes / sorting behavior done, ABC is added in place of URLs.
 
 [v.1.5]
 
