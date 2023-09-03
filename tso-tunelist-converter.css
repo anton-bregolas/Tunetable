@@ -358,7 +358,7 @@ tbody td:nth-of-type(2) .t-cell {
   opacity: 1;
 }
 
-.t-btn:disabled:hover {
+.t-btn, .t-checkbox:disabled:hover {
   cursor: wait;
 }
 
