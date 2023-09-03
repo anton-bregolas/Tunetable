@@ -1,4 +1,4 @@
-//import abcJson from '/abc.json' assert {type: 'json'};
+import { cleanTsoAbc } from '/modules/abc-cleaner.js';
 
 ///////////////////////////////////////////////
 // Declare global variables, create user JSONs
@@ -130,6 +130,9 @@ function disableButtons() {
   generateTunetableBtn.setAttribute("disabled", '');
   clearTunetableBtn.setAttribute("disabled", '');
   sortTunetableBtn.setAttribute("disabled", '');
+  showTypeBox.setAttribute("disabled", '');
+  showKeysBox.setAttribute("disabled", '');
+  showAbcBox.setAttribute("disabled", '');
 }
 
 // Reactivate input form buttons
@@ -139,6 +142,9 @@ function enableButtons() {
   generateTunetableBtn.removeAttribute("disabled");
   clearTunetableBtn.removeAttribute("disabled");
   sortTunetableBtn.removeAttribute("disabled");
+  showTypeBox.removeAttribute("disabled");
+  showKeysBox.removeAttribute("disabled");
+  showAbcBox.removeAttribute("disabled");
 }
 
 // Make a standard fetch request, throw an error if it fails
@@ -367,7 +373,8 @@ async function fetchAbcIncipit(tuneId) {
 
   try {
 
-    showInfoMsg(`Fetching ABC from ${tuneUrl}...`);
+    showInfoMsg(`Fetching ABC from TSO...`);
+    console.log(`Fetching ABC from ${tuneUrl}...`);
 
     const tsoTuneData = await fetchData(tuneUrl, "json");
 
@@ -376,8 +383,14 @@ async function fetchAbcIncipit(tuneId) {
       console.log("Extracting ABC incipit from TSO tune...");
 
       const abc = tsoTuneData.settings[0].abc;
-      const incipit = abc.slice(0, 33);
+      const key = tsoTuneData.settings[0].key.slice(0, 4);
+      const abcBars = cleanTsoAbc(abc);
+      const incipit = `[${key}] ${abcBars}`;
       console.log("Done fetching ABC incipit");
+
+      appBusy = 0;
+      enableButtons();
+      saveIcon.removeAttribute("style");
 
       return incipit;
 
@@ -386,7 +399,7 @@ async function fetchAbcIncipit(tuneId) {
       errorMessage = "Tune ABC missing or empty!";
       throw new Error(errorMessage);
     }
-  } 
+  }
 
   catch (error) {
 
@@ -399,7 +412,7 @@ async function fetchAbcIncipit(tuneId) {
 
     appBusy = 0;
     enableButtons();
-    saveIcon.removeAttributeAttribute("style");
+    saveIcon.removeAttribute("style");
 
     return;
   }
@@ -432,47 +445,56 @@ async function loadAbcIncipits() {
 
   if (checkIfJsonHasTunes(myJson)) {
 
-    console.log("Loading incipits from ABC JSON...");
+    if (!myJson.tunes[0].abc) {
 
-    for (let l = 0; l < myJson.tunes.length; l++) {
+      console.log("Loading incipits from local ABC JSON...");
 
-      let tune = myJson.tunes[l];
-      const tuneId = tune.id;
-      const incipit = abcJson[tuneId] === undefined? fetchAbcIncipit(tuneId) : abcJson[tuneId];
-      const key = incipit.slice(1, 5);
-      const abcBars = incipit.slice(7);
+      for (let l = 0; l < myJson.tunes.length; l++) {
 
-      if (!tune.key) {
-        tune["key"] = key;
+        let tune = myJson.tunes[l];
+        const tuneId = tune.id;
+        let incipit = abcJson[tuneId] === undefined? await fetchAbcIncipit(tuneId) : abcJson[tuneId];
+        const key = incipit.slice(1, 5);
+        const abcBars = incipit.slice(7);
+
+        if (!tune.key) {
+          tune["key"] = key;
+        }
+        if (!tune.abc) {
+          tune["abc"] = abcBars;
+        }
       }
-      if (!tune.abc) {
-        tune["abc"] = abcBars;
-      }
+
+      console.log("ABC incipits added to Tune JSON");
     }
-
-    console.log("ABC incipits added to Tune JSON");
 
   } else if (checkIfJsonHasSets(myJson)) {
 
-    console.log("Loading incipits from ABC JSON...");
+    if (!myJson.sets[0].settings[0].abc) {
 
-    for (let m = 0; m < myJson.sets.length; m++) {
+      console.log("Loading incipits from local ABC JSON...");
 
-      for (let n = 0; n < myJson.sets[m].settings.length; n++) {
+      for (let m = 0; m < myJson.sets.length; m++) {
 
-          let tune = myJson.sets[m].settings[n];
-          const setTuneUrl = tune.url.split("#", 1)[0];
-          const tuneId = setTuneUrl.split("/")[4];
-          const incipit = abcJson[tuneId] === undefined? fetchAbcIncipit(tuneId) : abcJson[tuneId];
-          const abcSetBars = incipit.slice(7);
+        for (let n = 0; n < myJson.sets[m].settings.length; n++) {
 
-          if (!tune.abc) {
-            tune["abc"] = abcSetBars;
-          }
+            let tune = myJson.sets[m].settings[n];
+            const setTuneUrl = tune.url.split("#", 1)[0];
+            const tuneId = setTuneUrl.split("/")[4];
+            const incipit = abcJson[tuneId] === undefined? await fetchAbcIncipit(tuneId) : abcJson[tuneId];
+            const abcSetBars = incipit.slice(7);
+
+            if (!tune.abc) {
+              tune["abc"] = abcSetBars;
+            }
+            if (!tune.key) {
+              tune["key"] = incipit.slice(1, 5);
+            }
+        }
       }
-    }
 
-    console.log("ABC incipits added to Set JSON");
+      console.log("ABC incipits added to Set JSON");
+    }
 
   } else {
 
@@ -482,6 +504,7 @@ async function loadAbcIncipits() {
   }
 
   showInfoMsg("ABC incipits preloaded");
+  return;
 }
 
 // Create Tunetable from nested JSON array of tunes
@@ -625,7 +648,7 @@ function checkIfJsonHasAbc(checkJson) {
 
   if (checkIfJsonHasTunes(checkJson)) {
 
-    if (checkJson.tunes[0].abc != null) {
+    if (checkJson.tunes[0].abc) {
       
       return true; 
     }
@@ -633,7 +656,7 @@ function checkIfJsonHasAbc(checkJson) {
 
   else if (checkIfJsonHasSets(checkJson)) { 
 
-    if (checkJson.sets[0].settings[0].abc != null) {
+    if (checkJson.sets[0].settings[0].abc) {
       
       return true; 
     }
