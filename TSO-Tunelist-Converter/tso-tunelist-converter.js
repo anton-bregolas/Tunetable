@@ -438,7 +438,7 @@ async function loadAbcIncipits() {
 
       let tune = myJson.tunes[l];
       const tuneId = tune.id;
-      const incipit = abcJson[tuneId] == null? fetchAbcIncipit(tuneId) : abcJson[tuneId];
+      const incipit = abcJson[tuneId] === undefined? fetchAbcIncipit(tuneId) : abcJson[tuneId];
       const key = incipit.slice(1, 5);
       const abcBars = incipit.slice(7);
 
@@ -463,7 +463,7 @@ async function loadAbcIncipits() {
           let tune = myJson.sets[m].settings[n];
           const setTuneUrl = tune.url.split("#", 1)[0];
           const tuneId = setTuneUrl.split("/")[4];
-          const incipit = abcJson[tuneId] == null? fetchAbcIncipit(tuneId) : abcJson[tuneId];
+          const incipit = abcJson[tuneId] === undefined? fetchAbcIncipit(tuneId) : abcJson[tuneId];
           const abcSetBars = incipit.slice(7);
 
           if (!tune.abc) {
