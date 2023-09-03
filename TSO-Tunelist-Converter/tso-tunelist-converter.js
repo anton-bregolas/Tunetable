@@ -570,10 +570,16 @@ function createTuneTable(myJson) {
 
         urlAbcTxt.textContent = "ABC";
         myDataUrlAbc = myData[i].abc;
+        tuneTable.querySelectorAll("tbody td:nth-child(even) .t-cell").forEach(cell => {
+          cell.setAttribute("style", "margin-right: -136px");
+        });
 
       } else if (checkIfJsonHasSets(myJson) && showAbc === 1) {
 
         urlAbcTxt.textContent = "ABC";
+        tuneTable.querySelectorAll("tbody td:nth-child(even) .t-cell").forEach(cell => {
+          cell.setAttribute("style", "margin-right: -136px");
+        });
 
         for (let l = 0; l < myData[i].settings.length; l++) {
   
@@ -586,6 +592,11 @@ function createTuneTable(myJson) {
 
         urlAbcTxt.textContent = "URL";
         myDataUrlAbc = myData[i].url;
+        tuneTable.querySelectorAll("tbody td:nth-child(even) .t-cell").forEach(cell => {
+          if (cell.hasAttribute("style")) {
+            cell.removeAttribute("style");
+          }
+        });
       }
 
       let cellContent =
@@ -1105,10 +1116,18 @@ function toggleTunetable(cells) {
 
   tuneTable.querySelectorAll(cells).forEach(cell => {
 
-    cell.hasAttribute("style")? 
-      cell.removeAttribute("style") :
-        cell.setAttribute("style", "margin-right: 0");  
+    if (showAbc) {
 
+      cell.getAttribute("style") === "margin-right: 0" ? 
+        cell.setAttribute("style", "margin-right: -136px") :
+          cell.setAttribute("style", "margin-right: 0");  
+    
+    } else {
+
+      cell.hasAttribute("style")? 
+        cell.removeAttribute("style") :
+          cell.setAttribute("style", "margin-right: 0");  
+    }
   });
 }
 
@@ -1118,9 +1137,16 @@ function expandTunetable(cells) {
 
   tuneTable.querySelectorAll(cells).forEach(cell => {
 
-    if (!cell.hasAttribute("style")) {
+    if (showAbc === 1) {
 
-      cell.setAttribute("style", "margin-right: 0");  
+        cell.setAttribute("style", "margin-right: 0");  
+      
+    } else {
+
+      if (!cell.hasAttribute("style")) {
+
+        cell.setAttribute("style", "margin-right: 0");  
+      }
     }
   });
 }
@@ -1131,9 +1157,16 @@ function shrinkTunetable(cells) {
 
   tuneTable.querySelectorAll(cells).forEach(cell => {
 
-    if (cell.hasAttribute("style")) {
+    if (showAbc === 1) {
 
-      cell.removeAttribute("style");
+        cell.setAttribute("style", "margin-right: -136px");
+    
+    } else {
+      
+      if (cell.hasAttribute("style")) {
+
+        cell.removeAttribute("style");
+      }
     }
   });
 }

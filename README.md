@@ -14,6 +14,10 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.6.3]
+
++ Adjusted ABC column width and expand / collapse behavior.
+
 [v.1.6.2]
 
 + Fixed async function fetching missing tune ABC from The Session.
