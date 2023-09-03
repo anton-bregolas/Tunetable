@@ -1,4 +1,4 @@
-import { cleanTsoAbc } from '/modules/abc-cleaner.js';
+import { cleanTsoAbc } from './modules/abc-cleaner.js';
 
 ///////////////////////////////////////////////
 // Declare global variables, create user JSONs
