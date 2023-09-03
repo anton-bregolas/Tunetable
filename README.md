@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.1.5]
+The Session Tunelist to Tunetable Converter [v.1.6]
 ===================================================
 
 ## Overview
@@ -14,9 +14,13 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.6.1]
+
++ Fixed async function fetching the "local" abc.json from GitHub repository.
+
 [v.1.6]
 
-+ Create a thoroughly filtered JSON containing ABC incipits of all the current TSO tunes.
++ Created a thoroughly filtered JSON containing ABC incipits of all the current TSO tunes.
 + Rewrote ABC incipit fetching that checks abc.json before attempting to fetch from TSO.
 + Newly-added tunes will be fetched from The Session if ABC is missing from abc.json
 + Initial testing of checkboxes / sorting behavior done, ABC is added in place of URLs.

@@ -1,4 +1,4 @@
-import abcJson from '/abc.json' assert {type: 'json'};
+//import abcJson from '/abc.json' assert {type: 'json'};
 
 ///////////////////////////////////////////////
 // Declare global variables, create user JSONs
@@ -407,7 +407,7 @@ async function fetchAbcIncipit(tuneId) {
 
 // Preload ABC incipits into Tune JSON based on Tune ID and JSON type
 
-function loadAbcIncipits() {
+async function loadAbcIncipits() {
 
   let myJson;
   let dataType;
@@ -427,6 +427,8 @@ function loadAbcIncipits() {
     showInfoMsg("No tune data found! Re-generate Tunetable", 1);
     return;
   }
+
+  const abcJson = await fetchData("https://raw.githubusercontent.com/anton-bregolas/TSO-Tunelist-Converter/deploy/abc.json", "json");
 
   if (checkIfJsonHasTunes(myJson)) {
 
@@ -663,22 +665,24 @@ function checkIfTableEmpty() {
 
 function sortTunetable(myJson) {
 
-  console.log("Sorting tune JSON");
-
   sortedJson = createDeepCopyJson(myJson);
 
   let myData;
   
   if (checkIfJsonHasTunes(sortedJson)) {
 
+    console.log("Sorting Tune JSON");
+
     myData = sortedJson.tunes;
 
     for (let i of myData) {
-      // i.name = processTuneTitle(i.name, i.type);
+
       i.name = processTuneTitle(i.name, i.type, i.key);
     }
 
   } else if (checkIfJsonHasSets(sortedJson)) {
+
+    console.log("Sorting Set JSON");
 
     myData = sortedJson.sets;
 
@@ -774,7 +778,7 @@ function processTuneTitle(title, type, key) {
   
   if (showType === 1) {
 
-    newTitle += ` (${type})`;
+    newTitle += ` (${type.charAt(0).toUpperCase() + type.slice(1)})`;
   } 
   
   if (showKeys === 1) {
