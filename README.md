@@ -16,7 +16,8 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 [v.1.7.1]
 
-+ 
++ Added new icons for buttons and help menu sections.
++ Tunetable row expand / shrink event listener tweaked.
 
 [v.1.7]
 
