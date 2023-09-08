@@ -1,4 +1,4 @@
-The Session Tunelist to Tunetable Converter [v.1.6]
+The Session Tunelist to Tunetable Converter [v.1.7]
 ===================================================
 
 ## Overview
@@ -13,6 +13,12 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 - Brainstorm additional sorting options.
 
 ## DONE: 
+
+[v.1.7]
+
++ Rewrote column expand / collapse functions, got rid of negative margins.
++ Revisited Tunetable column widths, increased minimum width for ABCs.
++ Added row expand / shrink event listener, to be combined with media queries.
 
 [v.1.6.3]
 
