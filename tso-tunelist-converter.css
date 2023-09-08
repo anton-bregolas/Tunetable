@@ -5,6 +5,7 @@
   -webkit-box-sizing: border-box; 
   box-sizing: border-box; 
   transition: background-color 0.3s linear;
+  /* outline: 1px solid red; */
 }
 
 body {
@@ -169,6 +170,14 @@ ul {
 
 /* Tunetable styles */
 
+#tunetable {
+  --width-no: 3.125rem;
+  --width-name: 18.75rem;
+  --width-id: 5rem;
+  --width-abc: 8rem;
+  --width-url: 4.375rem;
+}
+
 table {
   border-collapse: collapse;
   margin-bottom: 2rem;
@@ -205,60 +214,79 @@ tbody td {
   padding: 0.3rem;
 }
 
+tbody td:nth-child(even) .t-cell-span:hover {
+  cursor: row-resize;
+}
+
 tbody tr:nth-child(odd) {
   background-color: var(--alt-cell-color);
 }
 
-tbody td:nth-of-type(odd) span {
-  text-align: center;
+.t-cell-no {
+  width: var(--width-no);
 }
 
-.t-cell {
+.t-cell-name {
+  max-width: 18.5svw;
+}
+
+.t-cell-id {
+  width: var(--width-id);
+}
+
+.t-cell-abc {
+  max-width: var(--width-abc);
+}
+
+.t-cell-url {
+  max-width: var(--width-url);
+}
+
+.t-cell-span {
   display: inline-block;
   width: 100%;
-  max-width: 65svw;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   vertical-align: middle;
-  /* transition: margin-right 0.5s linear; */
 }
 
-tbody td:nth-child(even) .t-cell {
-  margin-right: -1200px;
-}
-
-tbody td:nth-child(1) .t-cell {
+.t-cell-no span {
+  text-align: center;
   overflow: visible;
   text-overflow: clip;
 }
 
-tbody td:nth-of-type(2) .t-cell {
+.t-cell-name span {
   padding-inline: 0.2rem;
+}
+
+.t-cell-id span {
+  text-align: center;
 }
 
 #t-head-name {
   display: block;
-  min-width: 10.5rem;
+  min-width: 9rem;
   width: 80%;
 }
 
 #t-head-id {
-  width: 5rem;
+  width: var(--width-id);
   min-width: 3.4375rem;
 }
 
 #t-head-url {
-  width: 4.375rem;
+  width: var(--width-url);
 }
 
 #t-head-no {
-  width: 3.125rem;
+  width: var(--width-no);
 }
 
-.t-name-cell {
+.t-head-name-cell {
   position: relative;
-  width: 21.5625rem;
+  width: var(--width-name);
   text-align: left;
 }
 
@@ -362,7 +390,7 @@ tbody td:nth-of-type(2) .t-cell {
   cursor: wait;
 }
 
-.t-gen-btn, .t-clr-btn, .t-sort-btn {
+.t-gen-btn, .t-clr-btn, .t-sort-btn, .r-go-sort-btn {
   position: relative;
   width: fit-content;
   height: inherit;
@@ -432,6 +460,15 @@ input[name="sortstyle"], .t-checkbox {
   font-size: var(--font-base);
   color: var(--menu-color);
   margin-bottom: 1.5rem;
+}
+
+.r-go-sort-btn {
+  justify-content: center;
+  flex-basis: 100%;
+}
+
+.r-go-sort-icon {
+
 }
 
 .r-hide-sort-btn {
@@ -600,6 +637,13 @@ input[name="sortstyle"], .t-checkbox {
 .checkbox-container {
   display: flex;
   flex: 1;
+  justify-content: space-between;
+  padding-right: 0.94rem;
+}
+
+.options-container {
+  display: flex;
+  flex-basis: 100%;
   justify-content: space-between;
   padding-right: 0.94rem;
 }

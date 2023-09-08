@@ -31,8 +31,8 @@ export function cleanTsoAbc(abc) {
   // Remove all newlines and tabs
   .replace(/\r\n|\r|\t/g, '')
 
-  // Remove unicode for special symbols
-  .replace(/\\u.{4}/g, '')
+  // Remove invisible spaces added via unicode
+  .replace(/\u0000|\u0008|\u0009|\u000A|\u000B|\u000C|\u000D|\u001A|\u007F|\u0014/gi, '')
   // Replace double spaces with spaces
   .replace(/\s\s/g, ' ')
   // Remove all shorthand decoration symbols

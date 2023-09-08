@@ -99,7 +99,8 @@
               <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-clr-btn-icon"></use></svg>
             </div>
           </button>
-          <button class="t-btn t-sort-btn" id="sort" title="Press once to open Sort Menu, select options, press again to sort">
+          <!-- <button class="t-btn t-sort-btn" id="sort" title="Press once to open Sort Menu, select options, press again to sort"> -->
+          <button class="t-btn t-sort-btn" id="sort" title="Press to open or close the Sort Menu">
             <div class="t-btn-text">Sort</div>
             <div class="t-sort-btn-icon">
               <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-sort-btn-icon"></use></svg>
@@ -133,8 +134,11 @@
             <span class="checkbox-btn"></span>
           </label>
         </div>
-        <button class="r-hide-sort-btn" title="Close Sort menu without sorting">
-          <svg class="app-icon r-hide-sort-icon"><use href="icons.svg#r-hide-sort-icon"></use></svg>
+        <button class="t-btn r-go-sort-btn" title="Apply the selected Sort menu settings">
+          <div class="t-btn-text">Work away!</div>
+          <!-- <div class="r-go-sort-btn-icon"> -->
+            <!-- <svg class="app-icon r-go-sort-icon"><use href="icons.svg#r-go-sort-icon"></use></svg> -->
+          <!-- </div> -->
         </button>
       </form>
       <div class="info-box"></div>
@@ -143,7 +147,7 @@
           <thead>
             <tr id="t-headers">
               <th id="t-head-no"><button title="Tunetable Index Number | Click to download Tune data .json">#</button></th>
-              <th class="t-name-cell"><button id="t-head-name" role="button" title="Tune Title | Click to expand or shrink Tunetable">Name</button>
+              <th class="t-head-name-cell"><button id="t-head-name" role="button" title="Tune Title | Click to expand or shrink Tunetable">Name</button>
                 <button class="t-revert-btn" id="revert" title="Revert Tunetable & data to unsorted original">
                   <svg class="app-icon t-revert-icon"><use href="icons.svg#t-revert-icon"></use></svg>
                 </button>

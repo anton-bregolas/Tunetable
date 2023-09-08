@@ -44,6 +44,7 @@ const inputForm = document.querySelector('#input-form');
 const generateTunetableBtn = document.querySelector('.t-gen-btn');
 const clearTunetableBtn = document.querySelector('.t-clr-btn');
 const sortTunetableBtn = document.querySelector('.t-sort-btn');
+const goSortBtn = document.querySelector('.r-go-sort-btn');
 const hideSortMenuBtn = document.querySelector('.r-hide-sort-btn');
 const radioBox = document.querySelector('.radio-container');
 const inputLabel = document.querySelector('.input-label');
@@ -54,15 +55,19 @@ const showAbcBox = document.querySelector('#add-abc');
 
 // Tunetable elements
 
-const tuneTable = document.querySelector('#t-tunes');
-const tuneTableHeaders = document.querySelector('#t-headers');
-const saveJsonBtn = document.querySelector('#t-head-no');
-const tuneTableNameBtn = document.querySelector("#t-head-name");
-const tuneTableIdBtn = document.querySelector("#t-head-id");
-const idMeterTxt = document.querySelector("#t-head-id > button");
-const tuneTableUrlBtn = document.querySelector("#t-head-url");
-const urlAbcTxt = document.querySelector("#t-head-url > button");
-const revertBtn = document.querySelector('.t-revert-btn');
+const tableWrapper = document.querySelector('#tunetable');
+const tuneTable = tableWrapper.querySelector('#t-tunes');
+const tuneTableHeaders = tableWrapper.querySelector('#t-headers');
+const saveJsonBtn = tableWrapper.querySelector('#t-head-no');
+const tuneTableNameBtn = tableWrapper.querySelector("#t-head-name");
+const tuneTableIdBtn = tableWrapper.querySelector("#t-head-id");
+const idMeterTxt = tableWrapper.querySelector("#t-head-id > button");
+const tuneTableUrlBtn = tableWrapper.querySelector("#t-head-url");
+const urlAbcTxt = tableWrapper.querySelector("#t-head-url > button");
+const revertBtn = tableWrapper.querySelector('.t-revert-btn');
+const tuneCellsName = document.querySelectorAll('tbody td:nth-child(2) .t-cell-span');
+const tuneCellsAbc = document.querySelectorAll('tbody td:nth-child(4) .t-cell-span');
+const tuneCellsNameAbc = document.querySelectorAll('tbody td:nth-child(even) .t-cell-span');
 
 // Infobox elements
 
@@ -130,6 +135,7 @@ function disableButtons() {
   generateTunetableBtn.setAttribute("disabled", '');
   clearTunetableBtn.setAttribute("disabled", '');
   sortTunetableBtn.setAttribute("disabled", '');
+  goSortBtn.setAttribute("disabled", '');
   showTypeBox.setAttribute("disabled", '');
   showKeysBox.setAttribute("disabled", '');
   showAbcBox.setAttribute("disabled", '');
@@ -142,6 +148,7 @@ function enableButtons() {
   generateTunetableBtn.removeAttribute("disabled");
   clearTunetableBtn.removeAttribute("disabled");
   sortTunetableBtn.removeAttribute("disabled");
+  goSortBtn.removeAttribute("disabled");
   showTypeBox.removeAttribute("disabled");
   showKeysBox.removeAttribute("disabled");
   showAbcBox.removeAttribute("disabled");
@@ -539,8 +546,19 @@ function createTuneTable(myJson) {
     for (let j = 0; j < 4; j++) {
 
       const tuneCell = document.createElement("td");
+      
+      let cellType = 
+        j === 0? "t-cell-no" :
+        j === 1? "t-cell-name" :
+        j === 2? "t-cell-id" : 
+        showAbc === 1? "t-cell-abc" : "t-cell-url";
+
+      tuneCell.classList.add(cellType);
+
       const cellSpan = document.createElement("span");
-      cellSpan.classList.add("t-cell");
+      cellSpan.classList.add("t-cell-span");
+
+      cellSpan.addEventListener('click', expandTuneNames);
       
       let myDataId = showMeter? getTuneMeter(myJson, i) : myData[i].id;
 
@@ -566,37 +584,28 @@ function createTuneTable(myJson) {
 
       let myDataUrlAbc = '';
 
-      if (checkIfJsonHasTunes(myJson) && showAbc === 1) {
+      if (showAbc === 1) {
 
         urlAbcTxt.textContent = "ABC";
-        myDataUrlAbc = myData[i].abc;
-        tuneTable.querySelectorAll("tbody td:nth-child(even) .t-cell").forEach(cell => {
-          cell.setAttribute("style", "margin-right: -136px");
-        });
 
-      } else if (checkIfJsonHasSets(myJson) && showAbc === 1) {
+        if (checkIfJsonHasTunes(myJson)) {
 
-        urlAbcTxt.textContent = "ABC";
-        tuneTable.querySelectorAll("tbody td:nth-child(even) .t-cell").forEach(cell => {
-          cell.setAttribute("style", "margin-right: -136px");
-        });
+          myDataUrlAbc = myData[i].abc;
 
-        for (let l = 0; l < myData[i].settings.length; l++) {
+        } else if (checkIfJsonHasSets(myJson)) {
+
+          for (let l = 0; l < myData[i].settings.length; l++) {
   
-          myDataUrlAbc += l === (myData[i].settings.length - 1)? 
-          myData[i].settings[l].abc : myData[i].settings[l].abc + ' / ';
-
+            myDataUrlAbc += l === (myData[i].settings.length - 1)? 
+            myData[i].settings[l].abc : myData[i].settings[l].abc + ' // ';
+  
+          }
         }
 
       } else {
 
         urlAbcTxt.textContent = "URL";
         myDataUrlAbc = myData[i].url;
-        tuneTable.querySelectorAll("tbody td:nth-child(even) .t-cell").forEach(cell => {
-          if (cell.hasAttribute("style")) {
-            cell.removeAttribute("style");
-          }
-        });
       }
 
       let cellContent =
@@ -916,7 +925,7 @@ function toggleIdMeter() {
 
     let tuneRow = tableRows[i];
     let tuneCell = tuneRow.getElementsByTagName('td')[2];
-    let textSpan = tuneCell.querySelector('.t-cell');
+    let textSpan = tuneCell.querySelector('.t-cell-span');
 
     if (showMeter === 0) {
 
@@ -1066,18 +1075,6 @@ function clearCheckboxData() {
   showType = 0;
   showKeys = 0;
   showAbc = 0;
-
-  // if (showTypeBox.checked) {
-  //   showAbcBox.click();
-  // }
-
-  // if (showKeysBox.checked) {
-  //   showAbcBox.click();
-  // }
-
-  // if (showAbcBox.checked) {
-  //   showAbcBox.click();
-  // }
 }
 
 // Clear checked radio button and sorting style value
@@ -1116,18 +1113,10 @@ function toggleTunetable(cells) {
 
   tuneTable.querySelectorAll(cells).forEach(cell => {
 
-    if (showAbc) {
-
-      cell.getAttribute("style") === "margin-right: 0" ? 
-        cell.setAttribute("style", "margin-right: -136px") :
-          cell.setAttribute("style", "margin-right: 0");  
-    
-    } else {
-
       cell.hasAttribute("style")? 
         cell.removeAttribute("style") :
-          cell.setAttribute("style", "margin-right: 0");  
-    }
+          cell.setAttribute("style", "max-width: 65svw");
+          
   });
 }
 
@@ -1137,17 +1126,11 @@ function expandTunetable(cells) {
 
   tuneTable.querySelectorAll(cells).forEach(cell => {
 
-    if (showAbc === 1) {
+    if (!cell.hasAttribute("style")) {
 
-        cell.setAttribute("style", "margin-right: 0");  
-      
-    } else {
-
-      if (!cell.hasAttribute("style")) {
-
-        cell.setAttribute("style", "margin-right: 0");  
-      }
+      cell.setAttribute("style", "max-width: 65svw");  
     }
+    
   });
 }
 
@@ -1156,19 +1139,30 @@ function expandTunetable(cells) {
 function shrinkTunetable(cells) {
 
   tuneTable.querySelectorAll(cells).forEach(cell => {
-
-    if (showAbc === 1) {
-
-        cell.setAttribute("style", "margin-right: -136px");
-    
-    } else {
       
-      if (cell.hasAttribute("style")) {
+    if (cell.hasAttribute("style")) {
 
         cell.removeAttribute("style");
-      }
     }
+
   });
+}
+
+// Expand tune cells vertically by toggling white-space
+
+function expandTuneNames() {
+
+  tuneTable.querySelectorAll('td:nth-child(even) .t-cell-span').forEach(cellspan => {
+
+    if (cellspan.hasAttribute("style")) {
+
+        cellspan.removeAttribute("style");
+
+    } else {
+
+        cellspan.setAttribute("style", "white-space: normal");
+    }
+  })
 }
 
 //////////////////////////////////////////////
@@ -1216,7 +1210,7 @@ function initButtons() {
     
   });
 
-  // Sort Tunetable with Sort menu options button
+  // Open Sort Tunetable menu options button
 
   sortTunetableBtn.addEventListener('click', (event) => {
 
@@ -1230,24 +1224,43 @@ function initButtons() {
 
       return showInfoMsg("No tunes to sort!", 1);
  
-    } else if (radioBox.classList.contains("displayed-flex") && noThe > 0) {
+    } else if (radioBox.classList.contains("displayed-flex")) {
+
+      hideSortMenu();
+      return;
+
+    } else {
+
+      radioBox.classList.add("displayed-flex");
+    }
+  });
+
+  // Apply Sort menu settings with Go button
+
+  goSortBtn.addEventListener('click', (event) => {
+
+    event.preventDefault();
+
+    if (!checkIfJsonHasTunes(importJson) && !checkIfJsonHasSets(importJson)) {
+
+      return showInfoMsg("No tunes to sort!", 1);
+ 
+    } else if (noThe > 0) {
 
       hideSortMenu();
       createTuneTable(sortTunetable(importJson));
       showInfoMsg("Sorted!");
       return;
 
-    } else if (radioBox.classList.contains("displayed-flex") && noThe === 0) {
+    } else if (noThe === 0) {
     
       showInfoMsg("Select sorting method!");
       return;
 
     } else {
 
-      radioBox.classList.add("displayed-flex");
       return;
     }
-
   });
 
   // Toggle Sort menu options with radio buttons
@@ -1316,11 +1329,11 @@ function initButtons() {
 
   // Hide Sort menu options
 
-  hideSortMenuBtn.addEventListener('click', (event) => {
+  // hideSortMenuBtn.addEventListener('click', (event) => {
 
-    event.preventDefault();
-    hideSortMenu();
-  });
+  //   event.preventDefault();
+  //   hideSortMenu();
+  // });
 
   // Expand / shrink Tunetable's Name column on click
 
@@ -1330,8 +1343,8 @@ function initButtons() {
 
       if (window.screen.width >= 720) {
 
-        shrinkTunetable(`td:nth-child(4) .t-cell`);
-        toggleTunetable(`td:nth-child(2) .t-cell`);
+        shrinkTunetable(`td:nth-child(4)`);
+        toggleTunetable(`td:nth-child(2)`);
       } 
     }
   });
@@ -1344,8 +1357,8 @@ function initButtons() {
 
       if (window.screen.width >= 720) {
         
-        shrinkTunetable(`td:nth-child(2) .t-cell`);
-        toggleTunetable(`td:nth-child(4) .t-cell`);
+        shrinkTunetable(`td:nth-child(2)`);
+        toggleTunetable(`td:nth-child(4)`);
       } 
     }
   });
@@ -1546,20 +1559,16 @@ function initButtons() {
 
         if (window.screen.width < 720) {
 
-          shrinkTunetable(".t-cell");
+          shrinkTunetable("td");
 
-        } else if (window.screen.width > 720) {
-
-          shrinkTunetable(`td:nth-child(4) .t-cell`);
-          expandTunetable(`td:nth-child(2) .t-cell`);
-        }
+        } 
         
       } else if (event.target.type === "landscape-primary" || event.target.type === "landscape-secondary") {
       
         if (window.screen.width >= 720) {
 
-          shrinkTunetable(`td:nth-child(4) .t-cell`);
-          expandTunetable(`td:nth-child(2) .t-cell`);
+          shrinkTunetable(`td:nth-child(4)`);
+          expandTunetable(`td:nth-child(2)`);
         }
 
       } else {
