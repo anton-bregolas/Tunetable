@@ -404,6 +404,7 @@ tbody tr:nth-child(odd) {
 .t-btn-text {
   color: black;
   margin-right: 0.5rem;
+  position: relative;
 }
 
 .t-gen-btn-icon, .t-sort-btn-icon {
@@ -467,8 +468,18 @@ input[name="sortstyle"], .t-checkbox {
   flex-basis: 100%;
 }
 
-.r-go-sort-icon {
+.r-go-sort-btn-icon {
+  opacity: 0.85;
+}
 
+.r-go-sort-icon {
+  width: 1.7rem;
+  height: 1.7rem;
+  position: absolute;
+  left: calc(100% + 0.1rem);
+  top: 1%;
+  opacity: 0;
+  transition: opacity 0.33s ease-in-out;
 }
 
 .r-hide-sort-btn {
@@ -580,11 +591,11 @@ input[name="sortstyle"], .t-checkbox {
 }
 
 .help-menu-subhead:active > .plus-icon {
-  transform: rotate(135deg);
+  transform: rotate(180deg);
 }
 
 .acc-wrapper.unwrapped * .plus-icon {
-  transform: rotate(180deg);
+  transform: rotate(225deg);
 }
 
 

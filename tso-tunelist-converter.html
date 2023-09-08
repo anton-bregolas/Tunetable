@@ -61,8 +61,9 @@
                 <svg class="app-icon"><use href="icons.svg#t-sort-btn-icon"></use></svg>
               </div>
               <div class="help-menu-text">
-                <p>When the Tunetable is ready, press the <a href="#sort" tabindex="-1"><b>Sort</b></a> button once to open sorting menu, select the preferred sorting style
-                   and press the button again to confirm. Your tunes / sets can either be left in the default TSO order or be sorted anew in alphabetical order.
+                <p>When the Tunetable is ready, press the <a href="#sort" tabindex="-1"><b>Sort</b></a> button to open the sorting menu,
+                   select the preferred style and options and press the <b>Work away!</b> button to confirm.</p>
+                <p>Your tunes / sets can either be left in the default TSO order or be sorted anew (alphabetically or by tune type).
                    Depending on the options picked, Sort will also (re)move the articles in tune titles to make skimming through the list easier.</p>
               </div>
             </div>
@@ -79,6 +80,30 @@
                   If you want to save the data as .json, press the <a href=#t-head-no tabindex="-1"><b>Index (#)</b></a> button on the Tunetable.</p>
                 <p>Should you wish to revert your tune titles to TSO defaults before saving the Tunetable, press the <a href="#revert" tabindex="-1"><b>Revert</b></a> button to the right of
                   Tunetable Name.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-wrapper">
+            <div class="acc-item-content">
+              <div class="help-menu-subhead glowing">
+                <div class="plus-icon">+</div>
+                How to add ABCs
+                <svg class="app-icon"><use href="icons.svg#n-abc-icon"></use></svg>
+              </div>
+              <div class="help-menu-text">
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-wrapper">
+            <div class="acc-item-content">
+              <div class="help-menu-subhead glowing">
+                <div class="plus-icon">+</div>
+                Mobile view tips
+                <svg class="app-icon"><use href="icons.svg#n-mobile-icon"></use></svg>
+              </div>
+              <div class="help-menu-text">
+                <p></p>
               </div>
             </div>
           </div>
@@ -135,10 +160,12 @@
           </label>
         </div>
         <button class="t-btn r-go-sort-btn" title="Apply the selected Sort menu settings">
-          <div class="t-btn-text">Work away!</div>
-          <!-- <div class="r-go-sort-btn-icon"> -->
-            <!-- <svg class="app-icon r-go-sort-icon"><use href="icons.svg#r-go-sort-icon"></use></svg> -->
-          <!-- </div> -->
+          <div class="t-btn-text">Work away!
+            <div class="r-go-sort-btn-icon">
+              <svg class="app-icon r-go-sort-icon active"><use href="icons.svg#r-go-sort-icon"></use></svg>
+              <svg class="app-icon r-go-sort-icon"><use href="icons.svg#r-go-sort-active-icon"></use></svg>
+            </div>
+          </div>
         </button>
       </form>
       <div class="info-box"></div>

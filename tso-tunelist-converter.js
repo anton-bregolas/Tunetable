@@ -45,6 +45,7 @@ const generateTunetableBtn = document.querySelector('.t-gen-btn');
 const clearTunetableBtn = document.querySelector('.t-clr-btn');
 const sortTunetableBtn = document.querySelector('.t-sort-btn');
 const goSortBtn = document.querySelector('.r-go-sort-btn');
+const goSortIcon = document.querySelectorAll('.r-go-sort-icon');
 const hideSortMenuBtn = document.querySelector('.r-hide-sort-btn');
 const radioBox = document.querySelector('.radio-container');
 const inputLabel = document.querySelector('.input-label');
@@ -65,9 +66,6 @@ const idMeterTxt = tableWrapper.querySelector("#t-head-id > button");
 const tuneTableUrlBtn = tableWrapper.querySelector("#t-head-url");
 const urlAbcTxt = tableWrapper.querySelector("#t-head-url > button");
 const revertBtn = tableWrapper.querySelector('.t-revert-btn');
-const tuneCellsName = document.querySelectorAll('tbody td:nth-child(2) .t-cell-span');
-const tuneCellsAbc = document.querySelectorAll('tbody td:nth-child(4) .t-cell-span');
-const tuneCellsNameAbc = document.querySelectorAll('tbody td:nth-child(even) .t-cell-span');
 
 // Infobox elements
 
@@ -557,8 +555,6 @@ function createTuneTable(myJson) {
 
       const cellSpan = document.createElement("span");
       cellSpan.classList.add("t-cell-span");
-
-      cellSpan.addEventListener('click', expandTuneNames);
       
       let myDataId = showMeter? getTuneMeter(myJson, i) : myData[i].id;
 
@@ -631,6 +627,7 @@ function createTuneTable(myJson) {
     }
 
     tuneTable.appendChild(tuneRow);
+    tuneTable.addEventListener('click', expandTuneNames);
   }
 
   showInfoMsg("Hup!");
@@ -1546,6 +1543,17 @@ function initButtons() {
 
     showInfoMsg("Wait for Tunetable to load!", 1);
 
+  });
+
+  // Toggle active icon for Work away! button
+
+  ['mouseover', 'mouseout'].forEach(event => {
+
+    goSortBtn.addEventListener(event, () => {
+      goSortIcon.forEach(icon => {
+        icon.classList.toggle('active');
+      });
+    });
   });
 
   // Expand or collapse Tunetable automatically on 
