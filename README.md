@@ -14,6 +14,10 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.7.1]
+
++ 
+
 [v.1.7]
 
 + Added an apply Sort settings button (‘Work away!’) to make sorting more intuitive.
