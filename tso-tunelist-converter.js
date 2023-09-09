@@ -1562,19 +1562,37 @@ function initButtons() {
 
   // Trigger animations / transitions of selected buttons & their elements
 
-  ['mouseover', 'mouseout', 'focusin', 'focusout'].forEach(event => {
+  ['mouseover', 'focusin'].forEach(event => {
 
     allBtn.forEach(btn => {
 
       btn.addEventListener(event, () => {
 
-        btn.classList.toggle('hovered');
+        btn.classList.add('hovered');
 
         let btnText = btn.querySelector('.t-btn-text');
         let btnIcon = btn.querySelector('.app-icon');
 
-        btnText?.classList.toggle('enlarged');
-        btnIcon?.classList.toggle('enlarged');
+        btnText?.classList.add('enlarged');
+        btnIcon?.classList.add('enlarged');
+
+      })
+    });
+  });
+
+  ['mouseout', 'focusout'].forEach(event => {
+
+    allBtn.forEach(btn => {
+
+      btn.addEventListener(event, () => {
+
+        btn.classList.remove('hovered');
+
+        let btnText = btn.querySelector('.t-btn-text');
+        let btnIcon = btn.querySelector('.app-icon');
+
+        btnText?.classList.remove('enlarged');
+        btnIcon?.classList.remove('enlarged');
 
       })
     });
