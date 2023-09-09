@@ -24,6 +24,7 @@ const saveIcon = saveBtn.querySelector('.n-save-icon');
 const helpIcon = helpBtn.querySelector('.n-help-icon');
 const sunIcon = themeBtn.querySelector('.n-theme-icon-sun');
 const moonIcon = themeBtn.querySelector('.n-theme-icon-moon');
+const allBtn = document.querySelectorAll('.t-btn');
 const exampleTunebook = document.querySelector('.example-tunebook');
 const exampleTunelist = document.querySelector('.example-tunelist');
 const exampleSetbook = document.querySelector('.example-setbook');
@@ -60,7 +61,7 @@ const tableWrapper = document.querySelector('#tunetable');
 const tuneTable = tableWrapper.querySelector('#t-tunes');
 const tuneTableHeaders = tableWrapper.querySelector('#t-headers');
 const saveJsonBtn = tableWrapper.querySelector('#t-head-no');
-const tuneTableNameBtn = tableWrapper.querySelector("#t-head-name");
+const tuneTableNameBtn = tableWrapper.querySelector(".t-head-name-btn");
 const tuneTableIdBtn = tableWrapper.querySelector("#t-head-id");
 const idMeterTxt = tableWrapper.querySelector("#t-head-id > button");
 const tuneTableUrlBtn = tableWrapper.querySelector("#t-head-url");
@@ -446,6 +447,9 @@ async function loadAbcIncipits() {
     return;
   }
 
+  appBusy = 1;
+  disableButtons();
+
   const abcJson = await fetchData("https://raw.githubusercontent.com/anton-bregolas/TSO-Tunelist-Converter/deploy/abc.json", "json");
 
   if (checkIfJsonHasTunes(myJson)) {
@@ -505,10 +509,14 @@ async function loadAbcIncipits() {
 
     showInfoMsg("No tune data found!", 1);
     console.error("Failed to preload ABC incipits!");
+    appBusy = 0;
+    enableButtons();
     return;
   }
 
   showInfoMsg("ABC incipits preloaded");
+  appBusy = 0;
+  enableButtons();
   return;
 }
 
@@ -1238,25 +1246,32 @@ function initButtons() {
 
     event.preventDefault();
 
-    if (!checkIfJsonHasTunes(importJson) && !checkIfJsonHasSets(importJson)) {
+    if (!appBusy) {
 
-      return showInfoMsg("No tunes to sort!", 1);
- 
-    } else if (noThe > 0) {
+      if (!checkIfJsonHasTunes(importJson) && !checkIfJsonHasSets(importJson)) {
 
-      hideSortMenu();
-      createTuneTable(sortTunetable(importJson));
-      showInfoMsg("Sorted!");
-      return;
+        return showInfoMsg("No tunes to sort!", 1);
+  
+      } else if (noThe > 0) {
 
-    } else if (noThe === 0) {
-    
-      showInfoMsg("Select sorting method!");
-      return;
+        hideSortMenu();
+        createTuneTable(sortTunetable(importJson));
+        showInfoMsg("Sorted!");
+        return;
+
+      } else if (noThe === 0) {
+      
+        showInfoMsg("Select sorting method!");
+        return;
+
+      } else {
+
+        return;
+      }
 
     } else {
 
-      return;
+      showInfoMsg("Wait for tune data to load!", 1);
     }
   });
 
@@ -1545,14 +1560,23 @@ function initButtons() {
 
   });
 
-  // Toggle active icon for Work away! button
+  // Trigger animations / transitions of selected buttons & their elements
 
-  ['mouseover', 'mouseout'].forEach(event => {
+  ['mouseover', 'mouseout', 'focusin', 'focusout'].forEach(event => {
 
-    goSortBtn.addEventListener(event, () => {
-      goSortIcon.forEach(icon => {
-        icon.classList.toggle('active');
-      });
+    allBtn.forEach(btn => {
+
+      btn.addEventListener(event, () => {
+
+        btn.classList.toggle('hovered');
+
+        let btnText = btn.querySelector('.t-btn-text');
+        let btnIcon = btn.querySelector('.app-icon');
+
+        btnText?.classList.toggle('enlarged');
+        btnIcon?.classList.toggle('enlarged');
+
+      })
     });
   });
 

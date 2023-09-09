@@ -14,6 +14,11 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.7.2]
+
++ Added basic animations for buttons and their elements on mouse over and focus events.
++ Minor HTML / CSS changes and optimizations.
+
 [v.1.7.1]
 
 + Added new icons for buttons and help menu sections.
