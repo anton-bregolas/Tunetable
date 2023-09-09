@@ -162,8 +162,7 @@
         <button class="t-btn r-go-sort-btn" title="Apply the selected Sort menu settings">
           <div class="t-btn-text">Work away!
             <div class="r-go-sort-btn-icon">
-              <svg class="app-icon r-go-sort-icon active"><use href="icons.svg#r-go-sort-icon"></use></svg>
-              <svg class="app-icon r-go-sort-icon"><use href="icons.svg#r-go-sort-active-icon"></use></svg>
+              <svg class="app-icon r-go-sort-icon"><use href="icons.svg#r-go-sort-icon"></use></svg>
             </div>
           </div>
         </button>
@@ -174,10 +173,13 @@
           <thead>
             <tr id="t-headers">
               <th id="t-head-no"><button title="Tunetable Index Number | Click to download Tune data .json">#</button></th>
-              <th class="t-head-name-cell"><button id="t-head-name" role="button" title="Tune Title | Click to expand or shrink Tunetable">Name</button>
-                <button class="t-revert-btn" id="revert" title="Revert Tunetable & data to unsorted original">
-                  <svg class="app-icon t-revert-icon"><use href="icons.svg#t-revert-icon"></use></svg>
-                </button>
+              <th id="t-head-name">
+                <div class="t-head-name-container">
+                  <button class="t-head-name-btn" title="Tune Title | Click to expand or shrink Tunetable">Name</button>
+                  <button class="t-revert-btn" id="revert" title="Revert Tunetable & data to unsorted original">
+                    <svg class="app-icon t-revert-icon"><use href="icons.svg#t-revert-icon"></use></svg>
+                  </button>
+                </div>
               </th>
               <th id="t-head-id"><button title="TSO Tune ID / Meter | Click to toggle">ID</button></th>
               <th id="t-head-url"><button title="Links to TSO | Click to expand or shrink Tunetable">URL</button></th>
