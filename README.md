@@ -14,6 +14,10 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.8.1]
+
++ Fixed Keys not loading for tunelists (no keys in TSO .json, need to be created from ABC incipits).
+
 [v.1.8]
 
 + Sort menu has been rewritten and is now made up of clear groups of settings: 
