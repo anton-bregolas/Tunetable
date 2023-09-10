@@ -383,20 +383,20 @@ async function fetchAbcIncipit(tuneId) {
 
   try {
 
-    showInfoMsg(`Fetching ABC from TSO...`);
+    showInfoMsg(`Fetching data from TSO...`);
     console.log(`Fetching ABC from ${tuneUrl}...`);
 
     const tsoTuneData = await fetchData(tuneUrl, "json");
 
     if (Array.isArray(tsoTuneData.settings) && tsoTuneData.settings.length > 0) {
 
-      console.log("Extracting ABC incipit from TSO tune...");
+      console.log("Extracting ABC incipit and key from TSO tune...");
 
       const abc = tsoTuneData.settings[0].abc;
       const key = tsoTuneData.settings[0].key.slice(0, 4);
       const abcBars = cleanTsoAbc(abc);
       const incipit = `[${key}] ${abcBars}`;
-      console.log("Done fetching ABC incipit");
+      console.log("Done fetching ABC incipit and tune key");
 
       appBusy = 0;
       enableButtons();
@@ -414,9 +414,9 @@ async function fetchAbcIncipit(tuneId) {
   catch (error) {
 
     errorMessage = error.message === "Failed to fetch"? "Network error, check your connection!" :
-     error.message || "Fetching ABCs failed, try again!";
+     error.message || "Fetching data failed, try again!";
 
-    console.error("Error fetching ABC incipits from The Session:", error);
+    console.error("Error fetching ABC incipits and keys from The Session:", error);
     
     showInfoMsg(errorMessage, 1);
 
@@ -460,7 +460,7 @@ async function loadAbcIncipits() {
 
     if (!myJson.tunes[0].abc) {
 
-      console.log("Loading incipits from local ABC JSON...");
+      console.log("Loading incipits and keys from local ABC JSON...");
 
       for (let l = 0; l < myJson.tunes.length; l++) {
 
@@ -478,7 +478,7 @@ async function loadAbcIncipits() {
         }
       }
 
-      console.log("ABC incipits added to Tune JSON");
+      console.log("ABC incipits and keys added to Tune JSON");
     }
 
   } else if (checkIfJsonHasSets(myJson)) {
@@ -518,7 +518,15 @@ async function loadAbcIncipits() {
     return;
   }
 
-  showInfoMsg("ABC incipits preloaded");
+  if (showKeys === 1 && checkIfJsonHasTunes(myJson)) {
+
+    showInfoMsg("ABC incipits & keys preloaded");
+
+  } else {
+
+    showInfoMsg("ABC incipits preloaded");
+  }
+
   appBusy = 0;
   enableButtons();
   return;
@@ -1334,7 +1342,14 @@ function initButtons() {
 
     if (!appBusy) {   
 
-      return showKeys = event.currentTarget.checked? 1 : 0;
+      if (checkIfJsonHasTunes(importJson) && !checkIfJsonHasAbc(importJson)) {
+
+        loadAbcIncipits();
+      }
+
+      showKeys = event.currentTarget.checked? 1 : 0;
+
+      return;
 
     } else {
 
@@ -1353,8 +1368,10 @@ function initButtons() {
         showAbc = 1;
 
         if (!checkIfJsonHasAbc(importJson)) {
+
           loadAbcIncipits();
         }
+
         return;
 
       } else {
