@@ -77,9 +77,13 @@
               </div>
               <div class="help-menu-text">
                 <p>Use the <a href="#save" tabindex="-1"><b>Download</b></a> button to save your Tunetable in plain text (.txt) format.
-                  If you want to save the data as .json, press the <a href=#t-head-no tabindex="-1"><b>Index (#)</b></a> button on the Tunetable.</p>
-                <p>Should you wish to revert your tune titles to TSO defaults before saving the Tunetable, press the <a href="#revert" tabindex="-1"><b>Revert</b></a> button to the right of
-                  Tunetable Name.</p>
+                   If you want to save the data as .json, press the <a href=#t-head-no tabindex="-1"><b>Index (#)</b></a> button on the Tunetable.</p>
+                <p>The exported Tunetable will only contain the data you see on the screen, including the tune keys and types which can be added
+                   in <a href="#sort" tabindex="-1"><b>Sort</b></a> menu options. If you want to have tune meters in place of IDs or vice versa,
+                   click on the header of the <a href=#t-head-no tabindex="-1"><b>ID/M</b></a> column any time before saving. If you need 
+                   a few bars of ABCs in place of URLs, select the ‘ABC’ option before sorting your Tunetable.</p>
+                <p>Should you wish to revert your tune titles to TSO defaults, press the <a href="#revert" tabindex="-1"><b>Revert</b></a> button 
+                   to the right of the Name column.</p>
               </div>
             </div>
           </div>
@@ -91,7 +95,19 @@
                 <svg class="app-icon"><use href="icons.svg#n-abc-icon"></use></svg>
               </div>
               <div class="help-menu-text">
-                <p></p>
+                <p>Whether you’re browsing through a long Tunebook or preparing a setlist for a gig, sometimes you need a few bars of notes
+                   to remember how a tune starts. With tunelists getting larger, adding ABCs or sheet music for each tune can get painful. Luckily,
+                   there’s an easy way to produce a text-only cheat sheet using The Session and this app.</p>
+                <p>Tick the ‘ABC’ checkbox at the bottom of the sorting options to change the default display of URLs to ABC incipits. This
+                   will immediately preload a compressed shortlist of incipits from a thoroughly filtered list of all the tunes on The Session (<&nbsp;1&nbsp;MB).
+                   Any freshly-added tunes missing from the file will be fetched directly from The Session (this may take a few seconds).</p>
+                <p>The ABCs will be inserted in your Tunetable after you sort it with preferred settings by pressing the Work away! button.
+                   For easier viewing, press the ABC column header to expand it horizontally or click anywhere in the Tunetable to expand all the rows 
+                   vertically.</p>
+                <p>Note that the ABC shortlist is made up of first settings of tunes on The Session in whatever key and version they happen to have been added in.
+                   If you wish to see specific tune settings in your list, as is currently possible in TSO Setbooks and setlists, there will be a separate
+                   option for doing so. It will fetch a larger file (2.5&nbsp;MB) and might take a bit longer to complete but the resulting ABCs will be in
+                   exact versions and keys as listed in each set.</p>
               </div>
             </div>
           </div>
@@ -110,7 +126,6 @@
         </div>
       </div>
       <form class="input-container">
-        <!-- <label for="input-form" class="input-label">Input a link to The Session or press “?” for help</label> -->
         <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session or press “?”" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off" autofocus>
         <div class="btn-container">
           <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
@@ -124,7 +139,6 @@
               <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-clr-btn-icon"></use></svg>
             </div>
           </button>
-          <!-- <button class="t-btn t-sort-btn" id="sort" title="Press once to open Sort Menu, select options, press again to sort"> -->
           <button class="t-btn t-sort-btn" id="sort" title="Press to open or close the Sort Menu">
             <div class="t-btn-text">Sort</div>
             <div class="t-sort-btn-icon">
@@ -133,31 +147,53 @@
           </button>
         </div> 
       </form>
-      <form class="radio-container">
-        <label for="keep-the-btn" class="radio-label">Move ‘The’, use default order</label>
-        <input type="radio" id="keep-the-btn" class="radio-btn" name="sortstyle" value=1 title="Example: An Puncan [...] Magic Slipper, The">
-        <label for="cut-the-btn" class="radio-label">Cut ‘The’, use default order</label>
-        <input type="radio" id="cut-the-btn" class="radio-btn" name="sortstyle" value=2 title="Example: An Puncan [...] Magic Slipper">
-        <label for="keep-the-an-btn" class="radio-label">Reorder list, move ‘The’ & ‘An’</label>
-        <input type="radio" id="keep-the-an-btn" class="radio-btn" name="sortstyle" value=3 title="Example: Magic Slipper, The [...] Puncan, An">
-        <label for="cut-the-an-btn" class="radio-label">Reorder list, cut ‘The’ & ‘An’</label>
-        <input type="radio" id="cut-the-an-btn" class="radio-btn" name="sortstyle" value=4 title="Example: Magic Slipper [...] Puncan">
-        <label for="sort-by-m-btn" class="radio-label">Sort by tune type, move ‘The’</label>
-        <input type="radio" id="sort-by-m-btn" class="radio-btn" name="sortstyle" value=5 title="Example: John Walsh’s (polka) [...] Star Above The Garter, The (slide)">
-        <div class="checkbox-container">
-          <span class="checkbox-intro">Show: </span>
-          <label for="add-type" class="checkbox-label">Type
-            <input type="checkbox" id="add-type" name="type" class="t-checkbox" value="1">
-            <span class="checkbox-btn"></span>
-          </label>
-          <label for="add-keys" class="checkbox-label">Keys
-            <input type="checkbox" id="add-keys" name="keys" class="t-checkbox" value="1">
-            <span class="checkbox-btn"></span>
-          </label>
-          <label for="add-abc" class="checkbox-label">ABC
-            <input type="checkbox" id="add-abc" name="abc" class="t-checkbox" value="1">
-            <span class="checkbox-btn"></span>
-          </label>
+      <form class="sort-menu-container">
+        <div class="radio-container">
+          <div class="radio-wrapper">
+            <label for="sort-default-btn" class="radio-label"><b>Sorting style:</b> Default order</label>
+            <input type="radio" id="sort-default-btn" class="radio-btn" name="sortstyle" value=1 title="Example: An Seanchai Muimhneach [...] The Ballydesmond [...] Denis Murphy's">
+          </div>
+          <div class="radio-wrapper">
+            <label for="sort-reorder-btn" class="radio-label"><b>Sorting style:</b> Sort by Name</label>
+            <input type="radio" id="sort-reorder-btn" class="radio-btn" name="sortstyle" value=2 title="Example: Ballydesmond [...] Denis Murphy's [...] Seanchai Muimhneach">
+          </div>
+          <div class="radio-wrapper">
+            <label for="sort-by-type-btn" class="radio-label"><b>Sorting style:</b> Sort by Type</label>
+            <input type="radio" id="sort-by-type-btn" class="radio-btn" name="sortstyle" value=3 title="Example: Seanchai Muimhneach (Jig) [...] Ballydesmond (Polka) [...] Denis Murphy's (Slide)">
+          </div>
+          <div class="radio-wrapper">
+            <span class="radio-intro">The: </span>
+            <label for="keep-the-btn" class="radio-label">Keep
+            <input type="radio" id="keep-the-btn" class="radio-btn" name="nothestyle" value=0 title="Example: The Magic Slipper" checked></label>
+            <label for="move-the-btn" class="radio-label">Move
+            <input type="radio" id="move-the-btn" class="radio-btn" name="nothestyle" value=1 title="Example: Magic Slipper, The"></label>
+            <label for="cut-the-btn" class="radio-label">Cut
+            <input type="radio" id="cut-the-btn" class="radio-btn" name="nothestyle" value=2 title="Example: Magic Slipper"></label>
+          </div>
+          <div class="radio-wrapper">
+            <span class="radio-intro">An:&nbsp;&nbsp;</span>
+            <label for="keep-an-btn" class="radio-label">Keep
+            <input type="radio" id="keep-an-btn" class="radio-btn" name="noanstyle" value=0 title="Example: An Puncan" checked></label>
+            <label for="move-an-btn" class="radio-label">Move
+            <input type="radio" id="move-an-btn" class="radio-btn" name="noanstyle" value=1 title="Example: Puncan, An"></label>
+            <label for="cut-an-btn" class="radio-label">Cut
+            <input type="radio" id="cut-an-btn" class="radio-btn" name="noanstyle" value=2 title="Example: Puncan"></label>
+          </div>
+          <div class="checkbox-container">
+            <span class="radio-intro">Show: </span>
+            <label for="add-type" class="checkbox-label">Type
+              <input type="checkbox" id="add-type" name="type" class="t-checkbox" value="1">
+              <span class="checkbox-btn"></span>
+            </label>
+            <label for="add-keys" class="checkbox-label">Keys
+              <input type="checkbox" id="add-keys" name="keys" class="t-checkbox" value="1">
+              <span class="checkbox-btn"></span>
+            </label>
+            <label for="add-abc" class="checkbox-label">ABC
+              <input type="checkbox" id="add-abc" name="abc" class="t-checkbox" value="1">
+              <span class="checkbox-btn"></span>
+            </label>
+          </div>
         </div>
         <button class="t-btn r-go-sort-btn" title="Apply the selected Sort menu settings">
           <div class="t-btn-text">Work away!

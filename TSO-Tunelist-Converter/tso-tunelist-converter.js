@@ -5,6 +5,8 @@ import { cleanTsoAbc } from './modules/abc-cleaner.js';
 //////////////////////////////////////////////
 
 let noThe = 0;
+let noAn = 0;
+let sortStyle = 0;
 let tDelay = 0;
 let appBusy = 0;
 let showMeter = 0;
@@ -46,11 +48,13 @@ const generateTunetableBtn = document.querySelector('.t-gen-btn');
 const clearTunetableBtn = document.querySelector('.t-clr-btn');
 const sortTunetableBtn = document.querySelector('.t-sort-btn');
 const goSortBtn = document.querySelector('.r-go-sort-btn');
-const goSortIcon = document.querySelectorAll('.r-go-sort-icon');
 const hideSortMenuBtn = document.querySelector('.r-hide-sort-btn');
+const sortMenu = document.querySelector('.sort-menu-container');
 const radioBox = document.querySelector('.radio-container');
 const inputLabel = document.querySelector('.input-label');
-const radioBtn = document.querySelectorAll('input[name="sortstyle"]');
+const radioBtnOrder = document.querySelectorAll('input[name="sortstyle"]');
+const radioBtnNoThe = document.querySelectorAll('input[name="nothestyle"]');
+const radioBtnNoAn = document.querySelectorAll('input[name="noanstyle"]');
 const showTypeBox = document.querySelector('#add-type');
 const showKeysBox = document.querySelector('#add-keys');
 const showAbcBox = document.querySelector('#add-abc');
@@ -755,14 +759,15 @@ function sortTunetable(myJson) {
     return;
   }
 
-  if (noThe > 2 && noThe < 5) {
+  if (sortStyle > 1) {
 
     myData.sort((a, b) => {
     
       return a.name.localeCompare(b.name);
     });
-
-  } else if (noThe === 5) {
+  } 
+  
+  if (sortStyle === 3) {
 
     showMeter = 1;
     idMeterTxt.textContent = "M";
@@ -796,33 +801,46 @@ function processTuneTitle(title, type, key) {
 
     if (title.startsWith("The ")) {
 
-      if (noThe === 1 || noThe === 3 || noThe === 5) {
+      if (noThe === 1) {
 
         newTitle = title.slice(4) + ', The';
 
-      } else if (noThe === 2 || noThe === 4) {
+      } else if (noThe === 2) {
 
         newTitle = title.slice(4);
       }
+    }
+  }
 
-    } else if (title.startsWith("An ") && noThe === 3) {
+  if (noAn > 0) {
 
-      newTitle = title.slice(3) + ', An' ;
+    if (title.startsWith("An ")) {
 
-    } else if (title.startsWith("An ") && noThe === 4) {
+      if (noAn === 1) {
 
-      newTitle = title.slice(3);
+        newTitle = title.slice(3) + ', An' ;
+      
+      } else if (noAn === 2) {
 
-    } else if (title.startsWith("A ")) {
+        newTitle = title.slice(3);
+      }
+    }
+  }
 
-      if (noThe === 1 || noThe === 3) {
+  if (noThe > 0 || noAn > 0) {
+
+    if (title.startsWith("A ")) {
+
+      if (noThe === 1 || noAn === 1) {
 
         newTitle = title.slice(2) + ', A';
-      } 
 
-      newTitle = title.slice(2);
+      } else {
+
+        newTitle = title.slice(2);
+      }
     }
-  } 
+  }
   
   if (showType === 1) {
 
@@ -1086,10 +1104,10 @@ function clearCheckboxData() {
 
 function clearSortMenu() {
 
-  if (noThe > 0) {
-    noThe = 0;
+  if (sortStyle > 0) {
+    sortStyle = 0;
     document.querySelector('input[name="sortstyle"]:checked').checked = false;
-    console.log("Sorting menu cleared");
+    console.log("Sorting style cleared");
   }
 }
 
@@ -1106,9 +1124,9 @@ function toggleHelpMenu() {
 
 function hideSortMenu() {
 
-  if (radioBox.classList.contains("displayed-flex")) {
+  if (sortMenu.classList.contains("displayed")) {
     
-    radioBox.classList.remove("displayed-flex");
+    sortMenu.classList.remove("displayed");
   }
 }
 
@@ -1229,14 +1247,14 @@ function initButtons() {
 
       return showInfoMsg("No tunes to sort!", 1);
  
-    } else if (radioBox.classList.contains("displayed-flex")) {
+    } else if (sortMenu.classList.contains("displayed")) {
 
       hideSortMenu();
       return;
 
     } else {
 
-      radioBox.classList.add("displayed-flex");
+      sortMenu.classList.add("displayed");
     }
   });
 
@@ -1252,14 +1270,14 @@ function initButtons() {
 
         return showInfoMsg("No tunes to sort!", 1);
   
-      } else if (noThe > 0) {
+      } else if (sortStyle > 0) {
 
         hideSortMenu();
         createTuneTable(sortTunetable(importJson));
         showInfoMsg("Sorted!");
         return;
 
-      } else if (noThe === 0) {
+      } else if (sortStyle === 0) {
       
         showInfoMsg("Select sorting method!");
         return;
@@ -1277,10 +1295,22 @@ function initButtons() {
 
   // Toggle Sort menu options with radio buttons
 
-  for (let k = 0; k < 5; k++) {
-    radioBtn[k].addEventListener("change", function() {
+  for (let s = 0; s < 3; s++) {
+    radioBtnOrder[s].addEventListener("change", function() {
       showInfoMsg(`Sorting style: #${this.value}. Sort?`);
+      return sortStyle = +this.value;
+    });
+  }
+
+  for (let t = 0; t < 3; t++) {
+    radioBtnNoThe[t].addEventListener("change", function() {
       return noThe = +this.value;
+    });
+  }
+
+  for (let u = 0; u < 3; u++) {
+    radioBtnNoAn[u].addEventListener("change", function() {
+      return noAn = +this.value;
     });
   }
 

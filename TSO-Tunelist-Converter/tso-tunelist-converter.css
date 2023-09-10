@@ -125,10 +125,9 @@ ul {
   justify-content: center;
 }
 
-.n-save-btn, .n-help-btn, .n-theme-btn, 
 .example-tunebook, .example-tunelist, 
 .example-setbook, .example-setlist, 
-.t-revert-btn, h2, .help-menu-subhead:hover {
+.help-menu-subhead:hover {
   cursor: pointer;
 }
 
@@ -215,8 +214,9 @@ tbody td {
   padding: 0.3rem;
 }
 
-tbody td:nth-child(even) .t-cell-span:hover {
-  cursor: row-resize;
+tbody td:hover {
+  /* cursor: ns-resize; */
+  cursor: pointer;
 }
 
 tbody tr:nth-child(odd) {
@@ -373,17 +373,16 @@ tbody tr:nth-child(odd) {
   border-radius: 0.5rem;
 }
 
-.t-btn, .radio-btn, .radio-label, .checkbox-label, .r-hide-sort-btn, .t-checkbox,
-.checkbox-btn, #t-head-no, .t-head-name-btn, #t-head-id, #t-head-url:hover {
+.radio-btn, .radio-label, .checkbox-label, .t-checkbox,
+.checkbox-btn, #t-head-no, #t-head-id:hover {
   cursor: pointer;
 }
 
-/* .t-btn:hover {
-  box-shadow: 0px 0px 0px 0.1875rem var(--alt-accent-color);
-  opacity: 1;
-} */
+.t-head-name-btn:hover, #t-head-url, #t-head-url button:hover {
+  cursor: ew-resize;
+}
 
-.t-btn, .t-checkbox:disabled:hover {
+.t-btn:disabled:hover, .t-checkbox:disabled:hover {
   cursor: wait;
 }
 
@@ -430,8 +429,9 @@ tbody tr:nth-child(odd) {
   margin-left: -0.9rem;
 }
 
-input[name="sortstyle"], .t-checkbox {
-  margin: 0.2rem 1.5rem 1.5rem 0;
+input[name="sortstyle"], input[name="nothestyle"], input[name="noanstyle"], .t-checkbox {
+  margin-top: 0.2rem;
+  margin-left: 1rem;
   height: 1rem;
   width: 1rem;
 }
@@ -445,24 +445,37 @@ input[name="sortstyle"], .t-checkbox {
   box-shadow: 0 0 0 1px var(--alt-accent-color);
 }
 
+input[name="sortstyle"] {
+  box-shadow: 0 0 0 1px var(--highlight-color);
+}
+
 .radio-btn:checked {
 
   box-shadow: 0 0 0 1px var(--alt-accent-color);
-  background-color: var(--text-color);
+  background-color: var(--header-color);
   border: 0.2rem solid var(--bg-color);
   border-width: 0.2rem;
 }
 
-.radio-label, .checkbox-label, .checkbox-intro {
+input[name="sortstyle"]:checked {
+  box-shadow: 0 0 0 1px var(--highlight-color);
+  background-color: var(--menu-color);
+}
+
+.radio-label, .radio-intro, .checkbox-label {
   font-weight: bold;
   font-size: var(--font-base);
   color: var(--menu-color);
   margin-bottom: 1.5rem;
 }
 
+.sort-style-label {
+  color: var(--highlight-color);
+}
+
 .r-go-sort-btn {
   justify-content: center;
-  flex-basis: 100%;
+  width: 100%;
 }
 
 .r-go-sort-btn-icon {
@@ -475,7 +488,6 @@ input[name="sortstyle"], .t-checkbox {
   position: absolute;
   left: calc(100% + 0.1rem);
   top: 1%;
-  /* opacity: 0.5; */
   transition: all 0.33s ease-in-out;
 }
 
@@ -497,7 +509,6 @@ input[name="sortstyle"], .t-checkbox {
 }
 
 .checkbox-label {
-  margin-left: 0.5rem;
   text-align: right;
 }
 
@@ -514,7 +525,8 @@ input[name="sortstyle"], .t-checkbox {
   background: var(--bg-color);
   color: var(--header-color);
   align-items: center;
-  margin: 0 0.5rem;
+  margin-right: 0.13rem;
+  margin-left: 1.2rem;
 }
 
 .checkbox-btn::before{
@@ -595,7 +607,6 @@ input[name="sortstyle"], .t-checkbox {
   transform: rotate(225deg);
 }
 
-
 /* Info message box styles */
 
 .info-box {
@@ -613,23 +624,47 @@ input[name="sortstyle"], .t-checkbox {
 
 /* Container settings */
 
-.main-container {
+.main-container, .t-container, .btn-container,
+.radio-wrapper, .checkbox-container, .options-container,
+.t-head-name-container, .input-container, .nav-container {
   display: flex;
+}
+
+.main-container, .radio-container, .input-container {
   flex-flow: column;
+}
+
+.main-container, .t-container {
   justify-content: center;
+}
+
+.btn-container, .radio-wrapper, .checkbox-container,
+.options-container, .t-head-name-container, .nav-container {
+  justify-content: space-between;
+}
+
+.main-container {
   max-width: 33.4375rem;
   min-width: 25.2rem;
   margin: 0 auto;
 }
 
-.t-container, .btn-container, .radio-container {
-  display: flex;
+.t-container, .btn-container, .sort-menu-container {
   margin: 0 1.2rem;
 }
 
-.btn-container, .radio-container {
+.sort-menu-container {
+  display: none;
+}
+
+.radio-container {
+  display: flex;
+  padding-left: 1rem;
+  padding-right: 1.5rem;
+}
+
+.btn-container {
   flex-flow: row wrap;
-  justify-content: space-between;
 }
 
 .btn-container {  
@@ -637,44 +672,21 @@ input[name="sortstyle"], .t-checkbox {
   margin-top: 0.1rem;
 }
 
-.radio-container {
-  padding-left: 1rem;
-  display: none;
-}
-
 .checkbox-container {
-  display: flex;
   flex: 1;
-  justify-content: space-between;
-  padding-right: 0.94rem;
 }
 
 .options-container {
-  display: flex;
   flex-basis: 100%;
-  justify-content: space-between;
   padding-right: 0.94rem;
 }
 
-.t-container {
-  justify-content: center;
-}
-
 .t-head-name-container {
-  display: flex;
-  justify-content: space-between;
   position: relative;
 }
 
-.input-container {
-  display: flex;
-  flex-flow: column;
-}
-
 .nav-container {
-  display: flex;
   flex-direction: row;
-  justify-content: space-between;
   margin: 0.5rem 1.2rem;
   padding: 0 0.2rem;
 }
