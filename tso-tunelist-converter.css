@@ -510,6 +510,7 @@ input[name="sortstyle"]:checked {
 
 .checkbox-label {
   text-align: right;
+  margin-left: 0.4rem;
 }
 
 .t-checkbox {
@@ -526,7 +527,7 @@ input[name="sortstyle"]:checked {
   color: var(--header-color);
   align-items: center;
   margin-right: 0.13rem;
-  margin-left: 1.2rem;
+  margin-left: 0.8rem;
 }
 
 .checkbox-btn::before{
