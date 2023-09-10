@@ -518,7 +518,7 @@ async function loadAbcIncipits() {
     return;
   }
 
-  if (showKeys === 1 && checkIfJsonHasTunes(myJson)) {
+  if (checkIfJsonHasTunes(myJson)) {
 
     showInfoMsg("ABC incipits & keys preloaded");
 
@@ -1342,14 +1342,22 @@ function initButtons() {
 
     if (!appBusy) {   
 
+      if (event.currentTarget.checked) {
+
+      showKeys = 1;
+
       if (checkIfJsonHasTunes(importJson) && !checkIfJsonHasAbc(importJson)) {
 
         loadAbcIncipits();
       }
 
-      showKeys = event.currentTarget.checked? 1 : 0;
-
       return;
+
+      } else {
+
+        showKeys = 0;
+        return;
+      }
 
     } else {
 
