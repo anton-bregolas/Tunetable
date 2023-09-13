@@ -40,7 +40,7 @@
               </div>
               <div class="help-menu-text">
                 <p>Valid TSO links must end with /tunes or /tunebook as well as /sets or /tunesets.
-                  Note that you may need to manually add /tunes or /tunesets at the end of the URL.</p>
+                  Note that you may need to manually add /tunes or /tunesets at the end of the base URL.</p>
                 <ul>
                   <li><span role="button" class="example-tunebook" title="Example Tunebook"><b>Input example Tunebook</b></span>
                   </li><br>
@@ -50,6 +50,9 @@
                   </li><br>
                   <li><span role="button" class="example-setlist" title="Example setlist"><b>Input example setlist</b></span></li>
                 </ul>
+
+                <p><b>NB:</b> You can use sorting queries such as ?orderby=newest as long as the base URL before ‘?’
+                    meets the above conditions.</p>
               </div>
             </div>
           </div>
@@ -63,8 +66,9 @@
               <div class="help-menu-text">
                 <p>When the Tunetable is ready, press the <a href="#sort" tabindex="-1"><b>Sort</b></a> button to open the sorting menu,
                    select the preferred style and options and press the <b>Work away!</b> button to confirm.</p>
-                <p>Your tunes / sets can either be left in the default TSO order or be sorted anew (alphabetically or by tune type).
-                   Depending on the options picked, Sort will also (re)move the articles in tune titles to make skimming through the list easier.</p>
+                <p>While picking an order-by style is required, other settings are optional. Your tunes / sets can either be left in the 
+                   default TSO order or be sorted anew (alphabetically or by tune type). You can also append tune type and key to names and replace URLs with ABC incipits.</p>
+                <p>Depending on the options picked, Sort will also (re)move the articles in tune titles to make skimming through the list easier.</p>
               </div>
             </div>
           </div>
@@ -191,6 +195,17 @@
             </label>
             <label for="add-abc" class="checkbox-label">ABC
               <input type="checkbox" id="add-abc" name="abc" class="t-checkbox" value="1">
+              <span class="checkbox-btn"></span>
+            </label>
+          </div>
+          <button class="adv-options-btn">Show advanced options</button>
+          <div class="adv-options-wrapper hidden">
+            <label for="use-abc-settings" class="checkbox-label">Use exact settings for sets ABC
+              <input type="checkbox" id="use-abc-settings" name="useabcsettings" class="t-checkbox" value="useAbcSettings">
+              <span class="checkbox-btn"></span>
+            </label>
+            <label for="use-abc-default" class="checkbox-label">Load ABCs instead of URLs by default
+              <input type="checkbox" id="use-abc-default" name="useabcdefault" class="t-checkbox" value="useAbcDefault">
               <span class="checkbox-btn"></span>
             </label>
           </div>

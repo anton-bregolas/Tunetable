@@ -13,7 +13,6 @@ let showMeter = 0;
 let showType = 0;
 let showKeys = 0;
 let showAbc = 0;
-let tsoJson = {};
 let importJson = {};
 let sortedJson = {};
 
@@ -58,6 +57,10 @@ const radioBtnNoAn = document.querySelectorAll('input[name="noanstyle"]');
 const showTypeBox = document.querySelector('#add-type');
 const showKeysBox = document.querySelector('#add-keys');
 const showAbcBox = document.querySelector('#add-abc');
+const advOptionsBtn = document.querySelector('.adv-options-btn');
+const advOptionsBox = document.querySelector('.adv-options-wrapper');
+const useAbcSettingsBox = document.querySelector('#use-abc-settings');
+const useAbcDefaultBox = document.querySelector('#use-abc-default');
 
 // Tunetable elements
 
@@ -100,21 +103,45 @@ function showInfoMsg(msg, err) {
 
 function validateTsoUrl() {
 
-  let tsoUrl = inputForm.value.trim();
+  const inputUrl = inputForm.value.trim().split("?");
+  const tsoUrl = inputUrl[0];
+  const tsoUrlQuery = inputUrl[1];
 
   const validTunelist = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btags\b\/.+\/\btunes\b\/?$/;
   const validTunebook = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btunebook\b\/?$/;
   const validSetbook = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\bsets\b\/?$/;
   const validSetlist = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btags\b\/.+\/\btunesets\b\/?$/;
+  const validQuery = /^[a-z0-9&=]*$/;
 
-  if (validTunelist.test(tsoUrl) || validTunebook.test(tsoUrl) || 
-  validSetbook.test(tsoUrl) || validSetlist.test(tsoUrl)) {
+  if (inputUrl.length <= 2) {
+    
+    if (validTunelist.test(tsoUrl) || validTunebook.test(tsoUrl) || 
+    validSetbook.test(tsoUrl) || validSetlist.test(tsoUrl)) {
 
-    console.log('URL passed validation');
-    return true;
+      if (tsoUrlQuery == null || validQuery.test(tsoUrlQuery)) {
+
+        console.log('URL passed validation');
+        return true;
+      }
+    }
   }
   
   console.log('URL failed validation');
+  return false;
+}
+
+// Check if The Session URL contains list of tunes
+
+function checkIfTunesUrl(url) {
+
+  let checkUrl = url.split("?")[0];
+
+  if (checkUrl.endsWith("/tunes") || checkUrl.endsWith("/tunes/") ||
+  checkUrl.endsWith("/tunebook") || checkUrl.endsWith("/tunebook/")) {
+
+    return true;
+  }
+
   return false;
 }
 
@@ -122,13 +149,44 @@ function validateTsoUrl() {
 
 function checkIfSetsUrl(url) {
 
-  if (url.endsWith("/sets") || url.endsWith("/sets/") ||
-  url.endsWith("/tunesets") || url.endsWith("/tunesets/")) {
+  let checkUrl = url.split("?")[0];
+
+  if (checkUrl.endsWith("/sets") || checkUrl.endsWith("/sets/") ||
+  checkUrl.endsWith("/tunesets") || checkUrl.endsWith("/tunesets/")) {
 
     return true;
   }
 
   return false;
+}
+
+// 
+
+function makeJsonQuery(url) {
+
+  if (url.startsWith("http:")) {
+
+    url = url.replace("http:", "https:");
+  }
+
+  if (url.endsWith("/tunebook") || url.endsWith("/tunebook/")) {
+
+    return `${url}?format=json`;
+
+  } else if (url.endsWith("/tunes") || url.endsWith("/tunes/") ||
+      url.endsWith("/sets") || url.endsWith("/tunesets") || 
+        url.endsWith("/sets/") || url.endsWith("/tunesets/")) {
+
+    return `${url}?format=json&perpage=50`;
+
+  } else if (url.includes("/tunebook")) {
+
+    return `${url}&format=json`;
+
+  } else {
+
+    return `${url}&format=json&perpage=50`;
+  }
 }
 
 // Disable input form buttons
@@ -219,14 +277,7 @@ async function fetchTheSessionJson(url) {
   appBusy = 1;
   disableButtons();
 
-  jsonUrl = url.endsWith("/tunes") || url.endsWith("/tunes/") || checkIfSetsUrl(url) ?
-  `${url}?format=json&perpage=50` :
-  `${url}?format=json`;
-
-  if (url.startsWith("http:")) {
-
-    jsonUrl = jsonUrl.replace("http:", "https:");
-  }
+  jsonUrl = makeJsonQuery(url);
 
   showInfoMsg("Fetching tunes from TSO...");
   console.log(`Fetching ${jsonUrl}`);
@@ -239,6 +290,7 @@ async function fetchTheSessionJson(url) {
 
       clearJsonData();
       clearTunetable();
+      clearSortMenu();
       clearCheckboxData();
 
       if (!checkIfSetsUrl(url)) {
@@ -849,16 +901,16 @@ function processTuneTitle(title, type, key) {
       }
     }
   }
+
+  if (showKeys === 1) {
+
+    newTitle += ` (${key})`;
+  }
   
   if (showType === 1) {
 
     newTitle += ` (${type.charAt(0).toUpperCase() + type.slice(1)})`;
   } 
-  
-  if (showKeys === 1) {
-
-    newTitle += ` (${key})`;
-  }
   
   return newTitle;
 }
@@ -1556,6 +1608,15 @@ function initButtons() {
         accMenuIntro.classList.add("unwrapped");
       }
     });
+  });
+
+  // Show / hide advanced options button
+
+  advOptionsBtn.addEventListener('click', (event) => {
+
+    event.preventDefault();
+
+    advOptionsBox.classList.toggle("displayed-flex");
   });
 
   // Input example Tunebook button

@@ -46,7 +46,7 @@ body.light {
   --border-color: #ffdc18b8;
   --alt-border-color: #ffdc18de;
   --header-cell-color: #551a8b;
-  --alt-cell-color: #ffe44b81;
+  --alt-cell-color: #ffe44b85;
 }
 
 body * {
@@ -373,8 +373,8 @@ tbody tr:nth-child(odd) {
   border-radius: 0.5rem;
 }
 
-.radio-btn, .radio-label, .checkbox-label, .t-checkbox,
-.checkbox-btn, #t-head-no, #t-head-id:hover {
+.radio-btn, .radio-label, .checkbox-label, .adv-options-btn,
+.t-checkbox, .checkbox-btn, #t-head-no, #t-head-id:hover {
   cursor: pointer;
 }
 
@@ -462,7 +462,7 @@ input[name="sortstyle"]:checked {
   background-color: var(--menu-color);
 }
 
-.radio-label, .radio-intro, .checkbox-label {
+.radio-label, .radio-intro, .checkbox-label, .adv-options-btn, .adv-options-wrapper {
   font-weight: bold;
   font-size: var(--font-base);
   color: var(--menu-color);
@@ -489,6 +489,10 @@ input[name="sortstyle"]:checked {
   left: calc(100% + 0.1rem);
   top: 1%;
   transition: all 0.33s ease-in-out;
+}
+
+.adv-options-btn {
+  text-align: center;
 }
 
 .r-hide-sort-btn {
@@ -627,11 +631,13 @@ input[name="sortstyle"]:checked {
 
 .main-container, .t-container, .btn-container,
 .radio-wrapper, .checkbox-container, .options-container,
-.t-head-name-container, .input-container, .nav-container {
+.t-head-name-container, .input-container, .nav-container,
+.adv-options-wrapper {
   display: flex;
 }
 
-.main-container, .radio-container, .input-container {
+.main-container, .radio-container, .input-container,
+.adv-options-wrapper {
   flex-flow: column;
 }
 
@@ -680,6 +686,10 @@ input[name="sortstyle"]:checked {
 .options-container {
   flex-basis: 100%;
   padding-right: 0.94rem;
+}
+
+.adv-options-wrapper {
+  align-items: center;
 }
 
 .t-head-name-container {
