@@ -14,6 +14,13 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.8.2]
+
++ TSO URL validation tweaked to include queries such as ?orderby=newest.
++ TSO JSON fetching function is now able to fetch .jsons with queries such as ?orderby=newest.
++ Sort menu expanded with Show advanced options button and hidden menu.
++ Help menu has been further expanded (some sections are a work in progress).
+
 [v.1.8.1]
 
 + Fixed Keys not loading for tunelists (no keys in TSO .json, need to be created from ABC incipits).
