@@ -10,9 +10,6 @@ let sortStyle = 0;
 let tDelay = 0;
 let appBusy = 0;
 let showMeter = 0;
-let showType = 0;
-let showKeys = 0;
-let showAbc = 0;
 let importJson = {};
 let sortedJson = {};
 
@@ -35,7 +32,6 @@ const exampleSetlist = document.querySelector('.example-setlist');
 
 const accMainWrapper = document.querySelector('#acc-main-wrapper');
 const accMainHeader = document.querySelector('#acc-main-wrapper h2');
-const accSubHeader = document.querySelectorAll('.help-menu-subhead');
 const accHelpMenu = document.querySelector('.acc-help-menu');
 const accMenuIntro = document.querySelector('.acc-menu-intro');
 const accWrappers = document.querySelectorAll('.acc-wrapper');
@@ -47,10 +43,8 @@ const generateTunetableBtn = document.querySelector('.t-gen-btn');
 const clearTunetableBtn = document.querySelector('.t-clr-btn');
 const sortTunetableBtn = document.querySelector('.t-sort-btn');
 const goSortBtn = document.querySelector('.r-go-sort-btn');
-const hideSortMenuBtn = document.querySelector('.r-hide-sort-btn');
 const sortMenu = document.querySelector('.sort-menu-container');
 const radioBox = document.querySelector('.radio-container');
-const inputLabel = document.querySelector('.input-label');
 const radioBtnOrder = document.querySelectorAll('input[name="sortstyle"]');
 const radioBtnNoThe = document.querySelectorAll('input[name="nothestyle"]');
 const radioBtnNoAn = document.querySelectorAll('input[name="noanstyle"]');
@@ -59,8 +53,10 @@ const showKeysBox = document.querySelector('#add-keys');
 const showAbcBox = document.querySelector('#add-abc');
 const advOptionsBtn = document.querySelector('.adv-options-btn');
 const advOptionsBox = document.querySelector('.adv-options-wrapper');
-const useAbcSettingsBox = document.querySelector('#use-abc-settings');
-const useAbcDefaultBox = document.querySelector('#use-abc-default');
+const useShorterAbcBox = document.querySelector('#use-shorter-abc');
+const alwaysUseAbcBox = document.querySelector('#use-abc-default');
+const alwaysUseKeysBox = document.querySelector('#use-keys-default');
+const alwaysUseTypeBox = document.querySelector('#use-type-default');
 
 // Tunetable elements
 
@@ -200,6 +196,9 @@ function disableButtons() {
   showTypeBox.setAttribute("disabled", '');
   showKeysBox.setAttribute("disabled", '');
   showAbcBox.setAttribute("disabled", '');
+  useShorterAbcBox.setAttribute("disabled", '');
+  alwaysUseAbcBox.setAttribute("disabled", '');
+  revertBtn.setAttribute("disabled", '');
 }
 
 // Reactivate input form buttons
@@ -210,9 +209,24 @@ function enableButtons() {
   clearTunetableBtn.removeAttribute("disabled");
   sortTunetableBtn.removeAttribute("disabled");
   goSortBtn.removeAttribute("disabled");
-  showTypeBox.removeAttribute("disabled");
-  showKeysBox.removeAttribute("disabled");
-  showAbcBox.removeAttribute("disabled");
+  useShorterAbcBox.removeAttribute("disabled");
+  alwaysUseAbcBox.removeAttribute("disabled");
+  revertBtn.removeAttribute("disabled");
+
+  if (!alwaysUseTypeBox.checked) {
+
+    showTypeBox.removeAttribute("disabled");
+  }
+
+  if (!alwaysUseKeysBox.checked) {
+
+    showKeysBox.removeAttribute("disabled");
+  }
+
+  if (!alwaysUseAbcBox.checked) {
+
+    showAbcBox.removeAttribute("disabled");
+  }
 }
 
 // Make a standard fetch request, throw an error if it fails
@@ -387,6 +401,12 @@ async function fetchTheSessionJson(url) {
 
     const timeStamp2 = Date.now();
     console.log(`Estimated delay: ${tDelay}ms, actual delay: ${timeStamp2 - timeStamp1}ms`);
+
+    if (alwaysUseAbcBox.checked || alwaysUseKeysBox.checked) {
+
+      await loadAbcIncipits();
+    }
+
     createTuneTable(importJson);
 
     inputForm.value = "";
@@ -506,7 +526,20 @@ async function loadAbcIncipits() {
   appBusy = 1;
   disableButtons();
 
-  const abcJson = await fetchData("https://raw.githubusercontent.com/anton-bregolas/TSO-Tunelist-Converter/deploy/abc.json", "json");
+  let abcUrl;
+  
+  if (checkIfJsonHasTunes(importJson)) {
+
+    abcUrl = "https://raw.githubusercontent.com/anton-bregolas/TSO-Tunelist-Converter/deploy/abc.json";
+
+  } else if (checkIfJsonHasSets(importJson)) {
+
+    abcUrl = "https://raw.githubusercontent.com/anton-bregolas/TSO-Tunelist-Converter/deploy/abc-settings.json"
+  }
+
+  showInfoMsg("Loading ABC incipits...");
+
+  const abcJson = await fetchData(abcUrl, "json");
 
   if (checkIfJsonHasTunes(myJson)) {
 
@@ -516,7 +549,7 @@ async function loadAbcIncipits() {
 
       for (let l = 0; l < myJson.tunes.length; l++) {
 
-        let tune = myJson.tunes[l];
+        const tune = myJson.tunes[l];
         const tuneId = tune.id;
         let incipit = abcJson[tuneId] === undefined? await fetchAbcIncipit(tuneId) : abcJson[tuneId];
         const key = incipit.slice(1, 5);
@@ -543,17 +576,16 @@ async function loadAbcIncipits() {
 
         for (let n = 0; n < myJson.sets[m].settings.length; n++) {
 
-            let tune = myJson.sets[m].settings[n];
-            const setTuneUrl = tune.url.split("#", 1)[0];
-            const tuneId = setTuneUrl.split("/")[4];
-            const incipit = abcJson[tuneId] === undefined? await fetchAbcIncipit(tuneId) : abcJson[tuneId];
-            const abcSetBars = incipit.slice(7);
+            const setting = myJson.sets[m].settings[n];
+            const settingId = setting.id;
+            let incipit = abcJson[settingId] === undefined? await fetchAbcIncipit(settingId) : abcJson[settingId];
+            let abcSetBars = incipit.slice(7);
 
-            if (!tune.abc) {
-              tune["abc"] = abcSetBars;
+            if (!setting.abc) {
+              setting["abc"] = abcSetBars;
             }
-            if (!tune.key) {
-              tune["key"] = incipit.slice(1, 5);
+            if (!setting.key) {
+              setting["key"] = incipit.slice(1, 5);
             }
         }
       }
@@ -621,7 +653,7 @@ function createTuneTable(myJson) {
         j === 0? "t-cell-no" :
         j === 1? "t-cell-name" :
         j === 2? "t-cell-id" : 
-        showAbc === 1? "t-cell-abc" : "t-cell-url";
+        showAbcBox.checked? "t-cell-abc" : "t-cell-url";
 
       tuneCell.classList.add(cellType);
 
@@ -640,10 +672,32 @@ function createTuneTable(myJson) {
   
           let tuneName = myData[i].settings[k].name;
           let tuneKey = myData[i].settings[k].key;
+          let tuneType = myData[i].settings[k].type;
+          let nameAdditions = alwaysUseTypeBox.checked? 
+            ` (${tuneKey}) (${tuneType.charAt(0).toUpperCase() + tuneType.slice(1)})` : 
+              ` (${tuneKey})`;
   
-          myDataName += k === (myData[i].settings.length - 1)? tuneName + ` (${tuneKey})` : 
-          tuneName + ` (${tuneKey})` + " / ";
+          myDataName += k === (myData[i].settings.length - 1)? tuneName + nameAdditions : 
+          tuneName + nameAdditions + " / ";
         }
+
+      } else if (checkIfJsonHasTunes(myJson) && myJson === importJson) {
+
+        let tuneKey = myData[i].key;
+        let tuneType = myData[i].type;
+        let nameAdditions = "";
+
+        if (alwaysUseKeysBox.checked) {
+
+          nameAdditions += ` (${tuneKey})`;
+        }
+
+        if (alwaysUseTypeBox.checked) {
+
+          nameAdditions += ` (${tuneType.charAt(0).toUpperCase() + tuneType.slice(1)})`;
+        }
+
+        myDataName = myData[i].name + nameAdditions;
 
       } else {
 
@@ -652,7 +706,7 @@ function createTuneTable(myJson) {
 
       let myDataUrlAbc = '';
 
-      if (showAbc === 1) {
+      if (showAbcBox.checked || alwaysUseAbcBox.checked) {
 
         urlAbcTxt.textContent = "ABC";
 
@@ -663,9 +717,16 @@ function createTuneTable(myJson) {
         } else if (checkIfJsonHasSets(myJson)) {
 
           for (let l = 0; l < myData[i].settings.length; l++) {
+
+            let tuneAbc = myData[i].settings[l].abc;
+
+            if (useShorterAbcBox.checked) {
+
+              tuneAbc = tuneAbc?.split("|", 2).join("|");
+            }
   
             myDataUrlAbc += l === (myData[i].settings.length - 1)? 
-            myData[i].settings[l].abc : myData[i].settings[l].abc + ' // ';
+            tuneAbc : tuneAbc + ' // ';
   
           }
         }
@@ -681,7 +742,7 @@ function createTuneTable(myJson) {
         j === 1 ? myDataName :
         j === 2 ? myDataId : myDataUrlAbc;
       
-      if (j === 3 && showAbc === 0) {
+      if (j === 3 && !showAbcBox.checked && !alwaysUseAbcBox.checked) {
 
         const cellLink = document.createElement("a");
         cellLink.setAttribute("href", cellContent);
@@ -902,12 +963,12 @@ function processTuneTitle(title, type, key) {
     }
   }
 
-  if (showKeys === 1) {
+  if (showKeysBox.checked || alwaysUseKeysBox.checked) {
 
     newTitle += ` (${key})`;
   }
   
-  if (showType === 1) {
+  if (showTypeBox.checked || alwaysUseTypeBox.checked) {
 
     newTitle += ` (${type.charAt(0).toUpperCase() + type.slice(1)})`;
   } 
@@ -1151,13 +1212,20 @@ function radioChecked() {
 
 function clearCheckboxData() {
 
-  showTypeBox.checked = false;
-  showKeysBox.checked = false;
-  showAbcBox.checked = false;
+  if (!alwaysUseTypeBox.checked) {
 
-  showType = 0;
-  showKeys = 0;
-  showAbc = 0;
+    showTypeBox.checked = false;
+  }
+
+  if (!alwaysUseKeysBox.checked) {
+
+    showKeysBox.checked = false;
+  }
+
+  if (!alwaysUseAbcBox.checked) {
+
+    showAbcBox.checked = false;
+  }
 }
 
 // Clear checked radio button and sorting style value
@@ -1339,7 +1407,7 @@ function initButtons() {
 
       } else if (sortStyle === 0) {
       
-        showInfoMsg("Select sorting method!");
+        showInfoMsg("Select sorting style!", 1);
         return;
 
       } else {
@@ -1374,85 +1442,113 @@ function initButtons() {
     });
   }
 
-  // Toggle tune type display option for the Tunetable 
-
-  showTypeBox.addEventListener("change", (event) => {
-  
-    if (!appBusy) {
-
-      return showType = event.currentTarget.checked? 1 : 0;
-
-    } else {
-
-      showInfoMsg("Wait for tune data to load!", 1);
-    }
-  });
-
-  // Toggle tune key display option for the Tunetable 
+  // Preload ABC incipits with keys when Keys box is ticked for the first time (only for tune jsons)
 
   showKeysBox.addEventListener("change", (event) => {
 
-    if (!appBusy) {   
-
-      if (event.currentTarget.checked) {
-
-      showKeys = 1;
+    if (event.target.checked && !alwaysUseKeysBox.checked) {
 
       if (checkIfJsonHasTunes(importJson) && !checkIfJsonHasAbc(importJson)) {
 
         loadAbcIncipits();
       }
-
-      return;
-
-      } else {
-
-        showKeys = 0;
-        return;
-      }
-
-    } else {
-
-      showInfoMsg("Wait for tune data to load!", 1);
     }
   });
 
-  // Toggle ABC incipits option for the Tunetable 
+  // Preload ABC incipits with keys when ABC box is ticked for the first time
 
   showAbcBox.addEventListener("change", (event) => {
 
-    if (!appBusy) {
+    if (event.target.checked && !alwaysUseAbcBox.checked) {
+  
+      if (!checkIfJsonHasAbc(importJson)) {
 
-      if (event.currentTarget.checked) {
+        loadAbcIncipits();
+      }
+    }
+  });
 
-        showAbc = 1;
+  // Set Type display option to default (always show)
+
+  alwaysUseTypeBox.addEventListener("change", (event) => {
+
+    let checkboxType = showTypeBox.nextElementSibling;
+
+    if (event.target.checked) {
+
+      showTypeBox.setAttribute("disabled", '');
+      checkboxType.setAttribute("style", "border-color: var(--highlight-color)");
+
+      if (!showTypeBox.checked) {
+
+        showTypeBox.checked = true;
+      }
+
+    } else {
+      
+      showTypeBox.removeAttribute("disabled");
+      checkboxType.removeAttribute("style");
+      showTypeBox.checked = false;
+    }
+  });
+
+  // Set ABC incipits option to default (always show)
+
+  alwaysUseAbcBox.addEventListener("change", (event) => {
+
+    let checkboxAbc = showAbcBox.nextElementSibling;
+
+    if (event.target.checked) {
+
+      showAbcBox.setAttribute("disabled", '');
+      checkboxAbc.setAttribute("style", "border-color: var(--highlight-color)");
+
+      if (!showAbcBox.checked) {
 
         if (!checkIfJsonHasAbc(importJson)) {
 
           loadAbcIncipits();
         }
 
-        return;
-
-      } else {
-
-        showAbc = 0;
-        return;
+        showAbcBox.checked = true;
       }
 
     } else {
-
-      showInfoMsg("Wait for tune data to load!", 1);
+      
+      showAbcBox.removeAttribute("disabled");
+      checkboxAbc.removeAttribute("style");
+      showAbcBox.checked = false;
     }
   });
 
-  // Hide Sort menu options
+  // Set Keys display option to default (always show)
 
-  // hideSortMenuBtn.addEventListener('click', (event) => {
+  alwaysUseKeysBox.addEventListener("change", (event) => {
 
-  //   event.preventDefault();
-  //   hideSortMenu();
-  // });
+    let checkboxKeys = showKeysBox.nextElementSibling;
+
+    if (event.target.checked) {
+
+      showKeysBox.setAttribute("disabled", '');
+      checkboxKeys.setAttribute("style", "border-color: var(--highlight-color)");
+
+      if (!showKeysBox.checked) {
+
+        if (!checkIfJsonHasAbc(importJson)) {
+
+          loadAbcIncipits();
+        }
+
+        showKeysBox.checked = true;
+      }
+
+    } else {
+      
+      showKeysBox.removeAttribute("disabled");
+      checkboxKeys.removeAttribute("style");
+      showKeysBox.checked = false;
+    }
+  });
 
   // Expand / shrink Tunetable's Name column on click
 
@@ -1655,26 +1751,29 @@ function initButtons() {
 
   revertBtn.addEventListener('click', () => {
 
-    if (!appBusy) {
+    if (!checkIfTableEmpty()) {
 
-      if (!checkIfTableEmpty()) {
+      clearSortMenu();
+      sortedJson = {};
 
-        clearSortMenu();
-        sortedJson = {};
-        createTuneTable(importJson);
-        showInfoMsg("Reverted to TSO defaults!");
-        return;
+      if (alwaysUseKeysBox.checked) {
+        alwaysUseKeysBox.click();
+      } 
 
-      } else {
+      if (alwaysUseTypeBox.checked) {
+        alwaysUseTypeBox.click();
+      } 
 
-        showInfoMsg("No tune data found!", 1);
-        return;
-      }
+      createTuneTable(importJson);
+      showInfoMsg("Reverted to TSO defaults!");
+      return;
+
+    } else {
+
+      showInfoMsg("No tune data found!", 1);
+      return;
     }
-
-    showInfoMsg("Wait for Tunetable to load!", 1);
-
-  });
+});
 
   // Trigger animations / transitions of selected buttons & their elements
 

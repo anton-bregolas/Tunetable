@@ -32,7 +32,8 @@ export function cleanTsoAbc(abc) {
   .replace(/\r\n|\r|\t/g, '')
 
   // Remove invisible spaces added via unicode
-  .replace(/\u0000|\u0008|\u0009|\u000A|\u000B|\u000C|\u000D|\u001A|\u007F|\u0014/gi, '')
+  .replace(/[\u{0000}-\u{001F}]/gu, '')
+
   // Replace double spaces with spaces
   .replace(/\s\s/g, ' ')
   // Remove all shorthand decoration symbols
@@ -42,6 +43,8 @@ export function cleanTsoAbc(abc) {
   .replace(/^(\|:)?(^\|*)?/, '')
   // Remove all the remaining repeat symbols
   .replace(/:/g, '')
+  // Replace double barlines with a single barline
+  .replace(/\|\|/g, '|')
 
   // Take 3 bars of ABC, including pickup bars
   .split('|', 3).join('|').trim();
