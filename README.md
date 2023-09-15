@@ -14,6 +14,13 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.8.3]
+
++ Checkboxes rewritten, variables ditched in favour of simple checks.
++ Sticky settings for checkboxes added under Show more options.
++ ABC preload function now chooses between tunes .json (< 1MB) and settings .json (2 MB) for sets.
++ ABC tunes/settings .json is now preloaded if sticky ABC / Keys settings are enabled.
+
 [v.1.8.2]
 
 + TSO URL validation tweaked to include queries such as ?orderby=newest.

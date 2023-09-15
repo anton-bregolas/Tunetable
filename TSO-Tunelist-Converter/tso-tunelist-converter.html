@@ -66,9 +66,11 @@
               <div class="help-menu-text">
                 <p>When the Tunetable is ready, press the <a href="#sort" tabindex="-1"><b>Sort</b></a> button to open the sorting menu,
                    select the preferred style and options and press the <b>Work away!</b> button to confirm.</p>
-                <p>While picking an order-by style is required, other settings are optional. Your tunes / sets can either be left in the 
-                   default TSO order or be sorted anew (alphabetically or by tune type). You can also append tune type and key to names and replace URLs with ABC incipits.</p>
+                <p>While picking a <b>Style</b> (order-by) is required, other settings are optional. Your tunes / sets can either be left in the 
+                   default TSO order or be sorted anew, alphabetically or by tune type.</p>
                 <p>Depending on the options picked, Sort will also (re)move the articles in tune titles to make skimming through the list easier.</p>
+                <p>You can also append tune type and key to names and replace URLs with ABC incipits. If you’re converting several lists and want
+                   some of these settings to stick for the entire session, click <b>Show more options</b> and check additional boxes for ABC, Keys or Type.</p>
               </div>
             </div>
           </div>
@@ -110,7 +112,7 @@
                    vertically.</p>
                 <p>Note that the ABC shortlist is made up of first settings of tunes on The Session in whatever key and version they happen to have been added in.
                    If you wish to see specific tune settings in your list, as is currently possible in TSO Setbooks and setlists, there will be a separate
-                   option for doing so. It will fetch a larger file (2.5&nbsp;MB) and might take a bit longer to complete but the resulting ABCs will be in
+                   option for doing so. It will fetch a larger file (~3&nbsp;MB) and might take a bit longer to complete but the resulting ABCs will be in
                    exact versions and keys as listed in each set.</p>
               </div>
             </div>
@@ -198,14 +200,22 @@
               <span class="checkbox-btn"></span>
             </label>
           </div>
-          <button class="adv-options-btn">Show advanced options</button>
+          <button class="adv-options-btn"><b>Show more options</b></button>
           <div class="adv-options-wrapper hidden">
-            <label for="use-abc-settings" class="checkbox-label">Use exact settings for sets ABC
-              <input type="checkbox" id="use-abc-settings" name="useabcsettings" class="t-checkbox" value="useAbcSettings">
+            <label for="use-shorter-abc" class="checkbox-label">Shorter ABC incipits
+              <input type="checkbox" id="use-shorter-abc" name="useshorterabc" class="t-checkbox" value="useShorterAbc">
               <span class="checkbox-btn"></span>
             </label>
-            <label for="use-abc-default" class="checkbox-label">Load ABCs instead of URLs by default
+            <label for="use-type-default" class="checkbox-label">Always add tune type
+              <input type="checkbox" id="use-type-default" name="usetypedefault" class="t-checkbox" value="useTypeDefault">
+              <span class="checkbox-btn"></span>
+            </label>
+            <label for="use-abc-default" class="checkbox-label">Always load & show ABC
               <input type="checkbox" id="use-abc-default" name="useabcdefault" class="t-checkbox" value="useAbcDefault">
+              <span class="checkbox-btn"></span>
+            </label>
+            <label for="use-keys-default" class="checkbox-label">Always load ABC & show keys
+              <input type="checkbox" id="use-keys-default" name="usekeysdefault" class="t-checkbox" value="useKeysDefault">
               <span class="checkbox-btn"></span>
             </label>
           </div>
@@ -232,8 +242,8 @@
                   </button>
                 </div>
               </th>
-              <th id="t-head-id"><button title="TSO Tune ID / Meter | Click to toggle">ID</button></th>
-              <th id="t-head-url"><button title="Links to TSO | Click to expand or shrink Tunetable">URL</button></th>
+              <th id="t-head-id"><button title="TSO Tune ID (Set ID) / Meter | Click to toggle">ID</button></th>
+              <th id="t-head-url"><button title="Link to TSO Tune (Set) / ABC incipit | Click to expand or shrink Tunetable">URL</button></th>
             </tr>
           </thead>
           <tbody id="t-tunes"></tbody>
