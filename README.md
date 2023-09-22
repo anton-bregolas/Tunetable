@@ -9,10 +9,12 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 ## TO DO:
 
 - Collect initial feedback, fix more bugs.
-- Make menu elements more accessible.
-- Brainstorm additional sorting options.
 
 ## DONE: 
+
+[v.1.8.4]
+
++ ARIA-states added to expandable hidden menus (Help menu and Sort menu) to make them accessible.
 
 [v.1.8.3]
 
