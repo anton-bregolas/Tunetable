@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Session Tunelist to Tunetable Converter</title>
     <link rel="stylesheet" type="text/css" href="tso-tunelist-converter.css">
-    <script defer type="module" src="tso-tunelist-converter.js"></script>
+    <script type="module" src="tso-tunelist-converter.js"></script>
   </head>
   <body>
     <div class="main-container">
@@ -23,34 +23,41 @@
         </button>
       </div>
       <div id="acc-main-wrapper">
-        <div class="acc-help-menu">
+        <div id="help-menu-accordion" class="acc-help-menu" role="region" aria-labelledby="help-menu-opener" aria-hidden="true">
           <div class="acc-menu-intro unwrapped">
             <div class="acc-item-content">
-              <h2><span class="glowing">Read</span> <span class="glowing">me</span> <span class="glowing">for</span> <span class="glowing">more</span></h2>
-              <p>Get a link to a tunelist posted on <a href="https://thesession.org/" target="_blank" title="https://thesession.org/" tabindex="-1"><b>The&nbsp;Session</b></a>,
-                paste it into the input form below and then press the big Generate button and wait a wee bit. A&nbsp;neat <a href="#tunetable" tabindex="-1"><b>Tunetable</b></a> will appear below.
+              <h2>
+                <button id="help-menu-opener" aria-expanded="false" aria-controls="help-menu-accordion">
+                  <span class="glowing">Read</span> <span class="glowing">me</span> <span class="glowing">for</span> <span class="glowing">more</span>
+                </button>
+              </h2>
+              <div id="help-menu-intro" class="help-menu-text" aria-hidden="true">
+                <p>Get a link to a tunelist posted on <a href="https://thesession.org/" target="_blank" title="https://thesession.org/" tabindex="-1"><b>The&nbsp;Session</b></a>,
+                  paste it into the input form below and then press the big Generate button and wait a wee bit. A&nbsp;neat <a href="#tunetable" tabindex="-1"><b>Tunetable</b></a> will appear below.</p>
+              </div>
             </div>
           </div>
           <div class="acc-wrapper">
             <div class="acc-item-content">
-              <div class="help-menu-subhead glowing">
-                <span class="plus-icon">+</span>
-                Links you can use
-                <svg class="app-icon"><use href="icons.svg#t-gen-btn-ico"></use></svg>
-              </div>
-              <div class="help-menu-text">
+              <h3>
+                <button id="help-menu-links" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-links-content">
+                  <span class="plus-icon">+</span>
+                  Links you can use
+                  <svg class="app-icon"><use href="icons.svg#t-gen-btn-ico"></use></svg>
+                </button>
+              </h3>
+              <div id="help-links-content" class="help-menu-text" role="region" aria-labelledby="help-menu-links" aria-hidden="true">
                 <p>Valid TSO links must end with /tunes or /tunebook as well as /sets or /tunesets.
                   Note that you may need to manually add /tunes or /tunesets at the end of the base URL.</p>
                 <ul>
-                  <li><span role="button" class="example-tunebook" title="Example Tunebook"><b>Input example Tunebook</b></span>
-                  </li><br>
-                  <li><span role="button" class="example-tunelist" title="Example tunelist"><b>Input example tunelist</b></span>
-                  </li><br>
-                  <li><span role="button" class="example-setbook" title="Example Setbook"><b>Input example Setbook</b></span>
-                  </li><br>
-                  <li><span role="button" class="example-setlist" title="Example setlist"><b>Input example setlist</b></span></li>
+                  <li><button class="example-link" id="example-tunebook" title="Example Tunebook"><b>Input example Tunebook</b></button>
+                  </li>
+                  <li><button class="example-link" id="example-tunelist" title="Example tunelist"><b>Input example tunelist</b></button>
+                  </li>
+                  <li><button class="example-link" id="example-setbook" title="Example Setbook"><b>Input example Setbook</b></button>
+                  </li>
+                  <li><button class="example-link" id="example-setlist" title="Example setlist"><b>Input example setlist</b></button></li>
                 </ul>
-
                 <p><b>NB:</b> You can use sorting queries such as ?orderby=newest as long as the base URL before ‘?’
                     meets the above conditions.</p>
               </div>
@@ -58,12 +65,14 @@
           </div>
           <div class="acc-wrapper">
             <div class="acc-item-content">
-              <div class="help-menu-subhead glowing">
-                <div class="plus-icon">+</div>
-                How to sort tunes
-                <svg class="app-icon"><use href="icons.svg#t-sort-btn-icon"></use></svg>
-              </div>
-              <div class="help-menu-text">
+              <h3>
+                <button id="help-menu-sorting" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-sorting-content">
+                  <span class="plus-icon">+</span>
+                  How to sort tunes
+                  <svg class="app-icon"><use href="icons.svg#t-sort-btn-icon"></use></svg>
+                </button>
+              </h3>
+              <div id="help-sorting-content" class="help-menu-text" role="region" aria-labelledby="help-menu-sorting" aria-hidden="true">
                 <p>When the Tunetable is ready, press the <a href="#sort" tabindex="-1"><b>Sort</b></a> button to open the sorting menu,
                    select the preferred style and options and press the <b>Work away!</b> button to confirm.</p>
                 <p>While picking a <b>Style</b> (order-by) is required, other settings are optional. Your tunes / sets can either be left in the 
@@ -76,12 +85,14 @@
           </div>
           <div class="acc-wrapper">
             <div class="acc-item-content">
-              <div class="help-menu-subhead glowing">
-                <div class="plus-icon">+</div>
-                How to save tunes
-                <svg class="app-icon"><use href="icons.svg#n-save-icon"></use></svg>
-              </div>
-              <div class="help-menu-text">
+              <h3>
+                <button id="help-menu-export" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-export-content">
+                  <span class="plus-icon">+</span>
+                  How to save tunes
+                  <svg class="app-icon"><use href="icons.svg#n-save-icon"></use></svg>
+                </button>
+              </h3>
+              <div id="help-export-content" class="help-menu-text" role="region" aria-labelledby="help-menu-export" aria-hidden="true">
                 <p>Use the <a href="#save" tabindex="-1"><b>Download</b></a> button to save your Tunetable in plain text (.txt) format.
                    If you want to save the data as .json, press the <a href=#t-head-no tabindex="-1"><b>Index (#)</b></a> button on the Tunetable.</p>
                 <p>The exported Tunetable will only contain the data you see on the screen, including the tune keys and types which can be added
@@ -95,36 +106,39 @@
           </div>
           <div class="acc-wrapper">
             <div class="acc-item-content">
-              <div class="help-menu-subhead glowing">
-                <div class="plus-icon">+</div>
-                How to add ABCs
-                <svg class="app-icon"><use href="icons.svg#n-abc-icon"></use></svg>
-              </div>
-              <div class="help-menu-text">
+              <h3>
+                <button id="help-menu-abc-incipits" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-abc-incipits-content">
+                  <span class="plus-icon">+</span>
+                  How to add ABCs
+                  <svg class="app-icon"><use href="icons.svg#n-abc-icon"></use></svg>
+                </button>
+              </h3>
+              <div id="help-abc-incipits-content" class="help-menu-text" role="region" aria-labelledby="help-menu-abc-incipits" aria-hidden="true">
                 <p>Whether you’re browsing through a long Tunebook or preparing a setlist for a gig, sometimes you need a few bars of notes
                    to remember how a tune starts. With tunelists getting larger, adding ABCs or sheet music for each tune can get painful. Luckily,
                    there’s an easy way to produce a text-only cheat sheet using The Session and this app.</p>
                 <p>Tick the ‘ABC’ checkbox at the bottom of the sorting options to change the default display of URLs to ABC incipits. This
-                   will immediately preload a compressed shortlist of incipits from a thoroughly filtered list of all the tunes on The Session (<&nbsp;1&nbsp;MB).
-                   Any freshly-added tunes missing from the file will be fetched directly from The Session (this may take a few seconds).</p>
+                   will immediately preload a compressed shortlist of incipits from a thoroughly filtered list of all the tunes on The Session
+                   (&lt;&nbsp;1&nbsp;MB for tunelists, &lt;&nbsp;3&nbsp;MB for setlists). Any freshly-added tunes missing from the file will be fetched directly
+                   from The Session (this may take a few seconds).</p>
                 <p>The ABCs will be inserted in your Tunetable after you sort it with preferred settings by pressing the Work away! button.
                    For easier viewing, press the ABC column header to expand it horizontally or click anywhere in the Tunetable to expand all the rows 
                    vertically.</p>
-                <p>Note that the ABC shortlist is made up of first settings of tunes on The Session in whatever key and version they happen to have been added in.
-                   If you wish to see specific tune settings in your list, as is currently possible in TSO Setbooks and setlists, there will be a separate
-                   option for doing so. It will fetch a larger file (~3&nbsp;MB) and might take a bit longer to complete but the resulting ABCs will be in
-                   exact versions and keys as listed in each set.</p>
+                <p>Note that the ABC file for tunelists is made up of top settings of tunes on The Session in whatever key and version they happen 
+                   to have been added in. If you wish to make a list from specific tune settings, it is currently possible to do so in TSO Setbooks and setlists.</p>
               </div>
             </div>
           </div>
           <div class="acc-wrapper">
             <div class="acc-item-content">
-              <div class="help-menu-subhead glowing">
-                <div class="plus-icon">+</div>
-                Mobile view tips
-                <svg class="app-icon"><use href="icons.svg#n-mobile-icon"></use></svg>
-              </div>
-              <div class="help-menu-text">
+              <h3>
+                <button id="help-menu-mobile-view" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-mobile-view-content">
+                  <span class="plus-icon">+</span>
+                  Mobile view tips
+                  <svg class="app-icon"><use href="icons.svg#n-mobile-icon"></use></svg>
+                </button>
+              </h3>
+              <div id="help-mobile-view-content" class="help-menu-text" role="region" aria-labelledby="help-menu-mobile-view" aria-hidden="true">
                 <p></p>
               </div>
             </div>
@@ -132,24 +146,24 @@
         </div>
       </div>
       <form class="input-container">
-        <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session or press “?”" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" autocomplete="off" autofocus>
+        <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session or press “?”" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" aria-label="Input form for links to The Session" autocomplete="off" autofocus>
         <div class="btn-container">
           <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
-            <div class="t-btn-text">Generate Tunetable</div>
-            <div class="t-gen-btn-icon">
+            <span class="t-btn-text">Generate Tunetable</span>
+            <span class="t-gen-btn-icon">
               <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-gen-btn-ico"></use></svg>
-            </div>
+            </span>
           </button>
           <button class="t-btn t-clr-btn" title="Clear Tunetable and all data">
-            <div class="t-clr-btn-icon">
+            <span class="t-clr-btn-icon">
               <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-clr-btn-icon"></use></svg>
-            </div>
+            </span>
           </button>
           <button class="t-btn t-sort-btn" id="sort" title="Press to open or close the Sort Menu">
-            <div class="t-btn-text">Sort</div>
-            <div class="t-sort-btn-icon">
+            <span class="t-btn-text">Sort</span>
+            <span class="t-sort-btn-icon">
               <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-sort-btn-icon"></use></svg>
-            </div>
+            </span>
           </button>
         </div> 
       </form>
@@ -188,44 +202,37 @@
           <div class="checkbox-container">
             <span class="radio-intro">Show: </span>
             <label for="add-type" class="checkbox-label">Type
-              <input type="checkbox" id="add-type" name="type" class="t-checkbox" value="1">
-              <span class="checkbox-btn"></span>
+              <input type="checkbox" id="add-type" name="type" class="checkbox-btn" value="1">
             </label>
             <label for="add-keys" class="checkbox-label">Keys
-              <input type="checkbox" id="add-keys" name="keys" class="t-checkbox" value="1">
-              <span class="checkbox-btn"></span>
+              <input type="checkbox" id="add-keys" name="keys" class="checkbox-btn" value="1">
             </label>
             <label for="add-abc" class="checkbox-label">ABC
-              <input type="checkbox" id="add-abc" name="abc" class="t-checkbox" value="1">
-              <span class="checkbox-btn"></span>
+              <input type="checkbox" id="add-abc" name="abc" class="checkbox-btn" value="1">
             </label>
           </div>
           <button class="adv-options-btn"><b>Show more options</b></button>
           <div class="adv-options-wrapper hidden">
             <label for="use-shorter-abc" class="checkbox-label">Shorter ABC incipits
-              <input type="checkbox" id="use-shorter-abc" name="useshorterabc" class="t-checkbox" value="useShorterAbc">
-              <span class="checkbox-btn"></span>
+              <input type="checkbox" id="use-shorter-abc" name="useshorterabc" class="checkbox-btn" value="useShorterAbc">
             </label>
             <label for="use-type-default" class="checkbox-label">Always add tune type
-              <input type="checkbox" id="use-type-default" name="usetypedefault" class="t-checkbox" value="useTypeDefault">
-              <span class="checkbox-btn"></span>
+              <input type="checkbox" id="use-type-default" name="usetypedefault" class="checkbox-btn" value="useTypeDefault">
             </label>
             <label for="use-abc-default" class="checkbox-label">Always load & show ABC
-              <input type="checkbox" id="use-abc-default" name="useabcdefault" class="t-checkbox" value="useAbcDefault">
-              <span class="checkbox-btn"></span>
+              <input type="checkbox" id="use-abc-default" name="useabcdefault" class="checkbox-btn" value="useAbcDefault">
             </label>
             <label for="use-keys-default" class="checkbox-label">Always load ABC & show keys
-              <input type="checkbox" id="use-keys-default" name="usekeysdefault" class="t-checkbox" value="useKeysDefault">
-              <span class="checkbox-btn"></span>
+              <input type="checkbox" id="use-keys-default" name="usekeysdefault" class="checkbox-btn" value="useKeysDefault">
             </label>
           </div>
         </div>
         <button class="t-btn r-go-sort-btn" title="Apply the selected Sort menu settings">
-          <div class="t-btn-text">Work away!
-            <div class="r-go-sort-btn-icon">
+          <span class="t-btn-text">Work away!
+            <span class="r-go-sort-btn-icon">
               <svg class="app-icon r-go-sort-icon"><use href="icons.svg#r-go-sort-icon"></use></svg>
-            </div>
-          </div>
+            </span>
+          </span>
         </button>
       </form>
       <div class="info-box"></div>
@@ -250,6 +257,5 @@
         </table>
       </div>
     </div>
-    <!-- <script src="tso-tunelist-converter.js"></script> -->
   </body>
 </html>

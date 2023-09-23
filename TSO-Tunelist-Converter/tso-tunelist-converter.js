@@ -23,16 +23,16 @@ const helpIcon = helpBtn.querySelector('.n-help-icon');
 const sunIcon = themeBtn.querySelector('.n-theme-icon-sun');
 const moonIcon = themeBtn.querySelector('.n-theme-icon-moon');
 const allBtn = document.querySelectorAll('.t-btn');
-const exampleTunebook = document.querySelector('.example-tunebook');
-const exampleTunelist = document.querySelector('.example-tunelist');
-const exampleSetbook = document.querySelector('.example-setbook');
-const exampleSetlist = document.querySelector('.example-setlist');
+const exampleTunebook = document.querySelector('#example-tunebook');
+const exampleTunelist = document.querySelector('#example-tunelist');
+const exampleSetbook = document.querySelector('#example-setbook');
+const exampleSetlist = document.querySelector('#example-setlist');
 
 // Accordion menu elements
 
 const accMainWrapper = document.querySelector('#acc-main-wrapper');
-const accMainHeader = document.querySelector('#acc-main-wrapper h2');
-const accHelpMenu = document.querySelector('.acc-help-menu');
+const accMainHeader = document.querySelector('#help-menu-opener');
+const accHelpMenu = document.querySelector('#help-menu-accordion');
 const accMenuIntro = document.querySelector('.acc-menu-intro');
 const accWrappers = document.querySelectorAll('.acc-wrapper');
 
@@ -44,7 +44,7 @@ const clearTunetableBtn = document.querySelector('.t-clr-btn');
 const sortTunetableBtn = document.querySelector('.t-sort-btn');
 const goSortBtn = document.querySelector('.r-go-sort-btn');
 const sortMenu = document.querySelector('.sort-menu-container');
-const radioBox = document.querySelector('.radio-container');
+const radioForm = document.querySelector('.radio-container');
 const radioBtnOrder = document.querySelectorAll('input[name="sortstyle"]');
 const radioBtnNoThe = document.querySelectorAll('input[name="nothestyle"]');
 const radioBtnNoAn = document.querySelectorAll('input[name="noanstyle"]');
@@ -156,9 +156,9 @@ function checkIfSetsUrl(url) {
   return false;
 }
 
-// 
+// Process TSO link and add a necessary JSON query variant depending on the content
 
-function makeJsonQuery(url) {
+function makeJsonQueryLink(url) {
 
   if (url.startsWith("http:")) {
 
@@ -199,6 +199,7 @@ function disableButtons() {
   useShorterAbcBox.setAttribute("disabled", '');
   alwaysUseAbcBox.setAttribute("disabled", '');
   revertBtn.setAttribute("disabled", '');
+  saveIcon.removeAttribute("style");
 }
 
 // Reactivate input form buttons
@@ -291,7 +292,7 @@ async function fetchTheSessionJson(url) {
   appBusy = 1;
   disableButtons();
 
-  jsonUrl = makeJsonQuery(url);
+  jsonUrl = makeJsonQueryLink(url);
 
   showInfoMsg("Fetching tunes from TSO...");
   console.log(`Fetching ${jsonUrl}`);
@@ -410,8 +411,6 @@ async function fetchTheSessionJson(url) {
     createTuneTable(importJson);
 
     inputForm.value = "";
-    saveIcon.setAttribute("style", "opacity: 1");
-
     appBusy = 0;
     enableButtons();
   } 
@@ -449,10 +448,6 @@ async function fetchAbcIncipit(tuneId) {
 
   let errorMessage;
 
-  appBusy = 1;
-  disableButtons();
-  saveIcon.setAttribute("style", "opacity: 0.5");
-
   try {
 
     showInfoMsg(`Fetching data from TSO...`);
@@ -469,10 +464,6 @@ async function fetchAbcIncipit(tuneId) {
       const abcBars = cleanTsoAbc(abc);
       const incipit = `[${key}] ${abcBars}`;
       console.log("Done fetching ABC incipit and tune key");
-
-      appBusy = 0;
-      enableButtons();
-      saveIcon.removeAttribute("style");
 
       return incipit;
 
@@ -494,7 +485,6 @@ async function fetchAbcIncipit(tuneId) {
 
     appBusy = 0;
     enableButtons();
-    saveIcon.removeAttribute("style");
 
     return;
   }
@@ -599,6 +589,7 @@ async function loadAbcIncipits() {
     console.error("Failed to preload ABC incipits!");
     appBusy = 0;
     enableButtons();
+    saveIcon.setAttribute("style", "opacity: 1");
     return;
   }
 
@@ -613,6 +604,7 @@ async function loadAbcIncipits() {
 
   appBusy = 0;
   enableButtons();
+  saveIcon.setAttribute("style", "opacity: 1");
   return;
 }
 
@@ -765,6 +757,7 @@ function createTuneTable(myJson) {
 
   showInfoMsg("Hup!");
   console.log('Tunetable created');
+  saveIcon.setAttribute("style", "opacity: 1");
   appBusy = 0;
 }
 
@@ -1108,7 +1101,7 @@ function clearJsonData() {
 
   importJson = {};
   sortedJson = {};
-  saveIcon.setAttribute("style", "opacity: 0.5");
+  saveIcon.removeAttribute("style");
   console.log("Tune data cleared");
 
 }
@@ -1239,6 +1232,32 @@ function clearSortMenu() {
   }
 }
 
+// Toggle the ARIA-expanded state of an element.
+
+function toggleAriaExpanded(element) {
+
+  if (element.getAttribute("aria-expanded") === "false") {
+
+    element.setAttribute("aria-expanded", true);
+    return;
+  } 
+  
+  element.setAttribute("aria-expanded", false);
+}
+
+// Toggle the ARIA-hidden state of an element.
+
+function toggleAriaHidden(element) {
+
+  if (element.getAttribute("aria-hidden") === "true") {
+
+    element.setAttribute("aria-hidden", false);
+    return;
+  } 
+  
+  element.setAttribute("aria-hidden", true);
+}
+
 // Show or hide help menu
 
 function toggleHelpMenu() {
@@ -1246,6 +1265,8 @@ function toggleHelpMenu() {
   hideSortMenu();
   helpIcon.classList.toggle("active");
   accMainWrapper.classList.toggle("unwrapped");
+  toggleAriaExpanded(accMainHeader);
+  toggleAriaHidden(accHelpMenu);
 }
 
 // Hide Sort options menu
@@ -1472,12 +1493,10 @@ function initButtons() {
 
   alwaysUseTypeBox.addEventListener("change", (event) => {
 
-    let checkboxType = showTypeBox.nextElementSibling;
-
     if (event.target.checked) {
 
       showTypeBox.setAttribute("disabled", '');
-      checkboxType.setAttribute("style", "border-color: var(--highlight-color)");
+      showTypeBox.setAttribute("style", "border-color: var(--highlight-color)");
 
       if (!showTypeBox.checked) {
 
@@ -1487,7 +1506,7 @@ function initButtons() {
     } else {
       
       showTypeBox.removeAttribute("disabled");
-      checkboxType.removeAttribute("style");
+      showTypeBox.removeAttribute("style");
       showTypeBox.checked = false;
     }
   });
@@ -1496,12 +1515,10 @@ function initButtons() {
 
   alwaysUseAbcBox.addEventListener("change", (event) => {
 
-    let checkboxAbc = showAbcBox.nextElementSibling;
-
     if (event.target.checked) {
 
       showAbcBox.setAttribute("disabled", '');
-      checkboxAbc.setAttribute("style", "border-color: var(--highlight-color)");
+      showAbcBox.setAttribute("style", "border-color: var(--highlight-color)");
 
       if (!showAbcBox.checked) {
 
@@ -1516,7 +1533,7 @@ function initButtons() {
     } else {
       
       showAbcBox.removeAttribute("disabled");
-      checkboxAbc.removeAttribute("style");
+      showAbcBox.removeAttribute("style");
       showAbcBox.checked = false;
     }
   });
@@ -1525,12 +1542,10 @@ function initButtons() {
 
   alwaysUseKeysBox.addEventListener("change", (event) => {
 
-    let checkboxKeys = showKeysBox.nextElementSibling;
-
     if (event.target.checked) {
 
       showKeysBox.setAttribute("disabled", '');
-      checkboxKeys.setAttribute("style", "border-color: var(--highlight-color)");
+      showKeysBox.setAttribute("style", "border-color: var(--highlight-color)");
 
       if (!showKeysBox.checked) {
 
@@ -1545,7 +1560,7 @@ function initButtons() {
     } else {
       
       showKeysBox.removeAttribute("disabled");
-      checkboxKeys.removeAttribute("style");
+      showKeysBox.removeAttribute("style");
       showKeysBox.checked = false;
     }
   });
@@ -1680,6 +1695,7 @@ function initButtons() {
 
       if (accMenuIntro.classList.contains("unwrapped")) {
         accMenuIntro.classList.remove("unwrapped");
+        accMenuIntro.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", true);
       }
 
       accWrappers.forEach(wrapper => {
@@ -1689,6 +1705,8 @@ function initButtons() {
         if (wrapper.classList.contains("unwrapped") && wrapper !== myWrapper) {
           wrapper.classList.remove("unwrapped");
           menuSubhead.classList.remove("highlighted");
+          wrapper.getElementsByClassName("help-menu-subhead")[0].setAttribute("aria-expanded", false);
+          wrapper.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", true);
         }
       });
 
@@ -1696,12 +1714,17 @@ function initButtons() {
 
         myWrapper.classList.add("unwrapped");
         myMenuSubhead.classList.add("highlighted");
+        myWrapper.getElementsByClassName("help-menu-subhead")[0].setAttribute("aria-expanded", true);
+        myWrapper.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", false);
 
       } else {
 
         myWrapper.classList.remove("unwrapped");
         myMenuSubhead.classList.remove("highlighted");
         accMenuIntro.classList.add("unwrapped");
+        accMenuIntro.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", false);
+        myWrapper.getElementsByClassName("help-menu-subhead")[0].setAttribute("aria-expanded", false);
+        myWrapper.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", true);
       }
     });
   });

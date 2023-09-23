@@ -14,7 +14,10 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 [v.1.8.4]
 
-+ ARIA-states added to expandable hidden menus (Help menu and Sort menu) to make them accessible.
++ ARIA-states added to the accordion Help menu for accessibility. Full arrow-control is work in progress.
++ Checkboxes fully restyled for better accessibility and easier key control using modern CSS.
++ Outlines for selected elements partly restyled with improved visibility.
++ Buttons fixed to conform with modern HTML model requirements.
 
 [v.1.8.3]
 
