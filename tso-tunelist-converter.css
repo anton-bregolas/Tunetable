@@ -68,6 +68,7 @@ b {
 }
 
 button {
+  width: 100%;
   appearance: none;
   border: none;
   box-shadow: none;
@@ -79,6 +80,7 @@ button {
   font-weight: inherit;
   text-align: inherit;
   padding: 0;
+  margin: 0;
 }
 
 button:hover {
@@ -110,10 +112,15 @@ h2 {
 h3 {
   color: var(--header-color);
   text-align: center;
+  margin: 0;
 }
 
 ul {
   padding-left: 1.4rem;
+}
+
+li {
+  margin-top: 1.5rem;
 }
 
 /* Nav menu buttons and icons */
@@ -123,12 +130,6 @@ ul {
   height: 3.5rem;
   display: flex;
   justify-content: center;
-}
-
-.example-tunebook, .example-tunelist, 
-.example-setbook, .example-setlist, 
-.help-menu-subhead:hover {
-  cursor: pointer;
 }
 
 .n-help-btn:hover > *, .n-theme-btn:hover > *, .t-revert-btn:hover > * {
@@ -517,21 +518,22 @@ input[name="sortstyle"]:checked {
   margin-left: 0.4rem;
 }
 
-.t-checkbox {
-  display: none;
-}
-
 .checkbox-btn {
+  -webkit-appearance: none;
+  appearance: none;
   display: inline-flex;
   width: 1.17rem;
   height: 1.17rem;
   border: 0.1rem solid var(--accent-color);
   border-radius: 0.12rem;
   background: var(--bg-color);
+  font: inherit;
   color: var(--header-color);
   align-items: center;
   margin-right: 0.13rem;
   margin-left: 0.8rem;
+  vertical-align: text-top;
+  transform: translateY(-0.1rem);
 }
 
 .checkbox-btn::before{
@@ -540,7 +542,7 @@ input[name="sortstyle"]:checked {
   transition: opacity 0.2s ease-in-out;
 }
 
-.t-checkbox:checked + .checkbox-btn::before{
+.checkbox-btn:checked::before{
   opacity: 1;
 }
 
@@ -600,12 +602,31 @@ input[name="sortstyle"]:checked {
   transition: transform 1s ease-in-out;
 }
 
+#help-menu-opener:focus-visible {
+  outline: 0.19rem solid var(--alt-accent-color);
+  outline-offset: -0.19rem;
+}
+
 .help-menu-subhead:active {
   color: var(--highlight-color);
 }
 
 .help-menu-subhead:active > .plus-icon {
   transform: rotate(180deg);
+}
+
+.example-link {
+  width: fit-content;
+}
+
+.example-link:focus-visible {
+  outline: 0.2rem solid var(--alt-accent-color);
+  outline-offset: 0.15rem;
+}
+
+.help-menu-subhead:focus-visible {
+  outline: 0.15rem solid var(--alt-accent-color);
+  outline-offset: -0.15rem;
 }
 
 .acc-wrapper.unwrapped * .plus-icon {
@@ -738,7 +759,7 @@ input[name="sortstyle"]:checked {
 }
 
 .enlarged {
-  transform: scale(107%);
+  transform: scale(1.07);
 }
 
 @media screen and (max-width: 435px) {
