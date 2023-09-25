@@ -12,6 +12,11 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.8.5]
+
++ Added functions for making wrapped up links and buttons non-selectable / selectable via their TabIndex. 
++ Added functions for bulk-changing ARIA-states.
+
 [v.1.8.4]
 
 + ARIA-states added to the accordion Help menu for accessibility. Full arrow-control is work in progress.
