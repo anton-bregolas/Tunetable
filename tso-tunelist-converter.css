@@ -369,12 +369,18 @@ tbody tr:nth-child(odd) {
 } 
 
 .t-btn:focus-visible {
-  outline: 0.2rem solid var(--header-color);
   outline-offset: 0.05rem;
   border-radius: 0.5rem;
 }
 
-.radio-btn, .radio-label, .checkbox-label, .adv-options-btn,
+input[type="checkbox"]:focus-visible {
+  outline: 0.15rem solid var(--text-color);
+  outline-style: solid;
+  outline-offset: 0.25rem;
+  /* border-radius: 0.5rem; */
+}
+
+.radio-btn, .radio-label, .checkbox-label,
 .t-checkbox, .checkbox-btn, #t-head-no, #t-head-id:hover {
   cursor: pointer;
 }
@@ -574,13 +580,19 @@ input[name="sortstyle"]:checked {
   font-size: var(--font-mid);
   color: var(--text-color);
   margin: 1.2rem 1.2rem 0.3rem 1.2rem;
-  padding: 0 10%;
+  padding: 0 10% 0.5rem;
   border: 0.3125rem solid var(--header-color);
   border-radius: 0.5rem;
   min-height: 4rem;
   overflow: hidden;
   transition: opacity 0.5s ease-in-out;
   opacity: 0.75;
+}
+
+.acc-help-menu a:focus-visible {
+  outline: 0.15rem solid var(--alt-accent-color);
+  outline-offset: -0.1rem;
+  border-radius: 0.4rem;
 }
 
 .acc-item-content {
@@ -596,10 +608,15 @@ input[name="sortstyle"]:checked {
   font-size: var(--font-subhead);
   font-weight: bold;
   padding-right: 10%;
+  line-height: 1.7;
 }
 
 .plus-icon {
   transition: transform 1s ease-in-out;
+}
+
+#help-menu-opener {
+  line-height: 1.15;
 }
 
 #help-menu-opener:focus-visible {
@@ -625,8 +642,8 @@ input[name="sortstyle"]:checked {
 }
 
 .help-menu-subhead:focus-visible {
-  outline: 0.15rem solid var(--alt-accent-color);
-  outline-offset: -0.15rem;
+  outline: 0.2rem solid var(--alt-accent-color);
+  outline-offset: -0.2rem;
 }
 
 .acc-wrapper.unwrapped * .plus-icon {

@@ -31,7 +31,7 @@
                   <span class="glowing">Read</span> <span class="glowing">me</span> <span class="glowing">for</span> <span class="glowing">more</span>
                 </button>
               </h2>
-              <div id="help-menu-intro" class="help-menu-text" aria-hidden="true">
+              <div id="help-menu-intro-content" class="help-menu-text" aria-hidden="true">
                 <p>Get a link to a tunelist posted on <a href="https://thesession.org/" target="_blank" title="https://thesession.org/" tabindex="-1"><b>The&nbsp;Session</b></a>,
                   paste it into the input form below and then press the big Generate button and wait a wee bit. A&nbsp;neat <a href="#tunetable" tabindex="-1"><b>Tunetable</b></a> will appear below.</p>
               </div>
@@ -40,7 +40,7 @@
           <div class="acc-wrapper">
             <div class="acc-item-content">
               <h3>
-                <button id="help-menu-links" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-links-content">
+                <button id="help-menu-links" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-links-content" tabindex="-1">
                   <span class="plus-icon">+</span>
                   Links you can use
                   <svg class="app-icon"><use href="icons.svg#t-gen-btn-ico"></use></svg>
@@ -50,13 +50,13 @@
                 <p>Valid TSO links must end with /tunes or /tunebook as well as /sets or /tunesets.
                   Note that you may need to manually add /tunes or /tunesets at the end of the base URL.</p>
                 <ul>
-                  <li><button class="example-link" id="example-tunebook" title="Example Tunebook"><b>Input example Tunebook</b></button>
+                  <li><button class="example-link" id="example-tunebook" title="Example Tunebook" tabindex="-1"><b>Input example Tunebook</b></button>
                   </li>
-                  <li><button class="example-link" id="example-tunelist" title="Example tunelist"><b>Input example tunelist</b></button>
+                  <li><button class="example-link" id="example-tunelist" title="Example tunelist" tabindex="-1"><b>Input example tunelist</b></button>
                   </li>
-                  <li><button class="example-link" id="example-setbook" title="Example Setbook"><b>Input example Setbook</b></button>
+                  <li><button class="example-link" id="example-setbook" title="Example Setbook" tabindex="-1"><b>Input example Setbook</b></button>
                   </li>
-                  <li><button class="example-link" id="example-setlist" title="Example setlist"><b>Input example setlist</b></button></li>
+                  <li><button class="example-link" id="example-setlist" title="Example setlist" tabindex="-1"><b>Input example setlist</b></button></li>
                 </ul>
                 <p><b>NB:</b> You can use sorting queries such as ?orderby=newest as long as the base URL before ‘?’
                     meets the above conditions.</p>
@@ -66,7 +66,7 @@
           <div class="acc-wrapper">
             <div class="acc-item-content">
               <h3>
-                <button id="help-menu-sorting" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-sorting-content">
+                <button id="help-menu-sorting" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-sorting-content" tabindex="-1">
                   <span class="plus-icon">+</span>
                   How to sort tunes
                   <svg class="app-icon"><use href="icons.svg#t-sort-btn-icon"></use></svg>
@@ -86,7 +86,7 @@
           <div class="acc-wrapper">
             <div class="acc-item-content">
               <h3>
-                <button id="help-menu-export" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-export-content">
+                <button id="help-menu-export" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-export-content" tabindex="-1">
                   <span class="plus-icon">+</span>
                   How to save tunes
                   <svg class="app-icon"><use href="icons.svg#n-save-icon"></use></svg>
@@ -107,7 +107,7 @@
           <div class="acc-wrapper">
             <div class="acc-item-content">
               <h3>
-                <button id="help-menu-abc-incipits" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-abc-incipits-content">
+                <button id="help-menu-abc-incipits" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-abc-incipits-content" tabindex="-1">
                   <span class="plus-icon">+</span>
                   How to add ABCs
                   <svg class="app-icon"><use href="icons.svg#n-abc-icon"></use></svg>
@@ -132,7 +132,7 @@
           <div class="acc-wrapper">
             <div class="acc-item-content">
               <h3>
-                <button id="help-menu-mobile-view" class="help-menu-subhead glowing" aria-expanded="false" aria-controls="help-mobile-view-content">
+                <button id="help-menu-mobile-view" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-mobile-view-content" tabindex="-1">
                   <span class="plus-icon">+</span>
                   Mobile view tips
                   <svg class="app-icon"><use href="icons.svg#n-mobile-icon"></use></svg>
@@ -159,7 +159,7 @@
               <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-clr-btn-icon"></use></svg>
             </span>
           </button>
-          <button class="t-btn t-sort-btn" id="sort" title="Press to open or close the Sort Menu">
+          <button class="t-btn t-sort-btn" id="sort" title="Press to open or close the Sort Menu" aria-expanded="false" aria-controls="sort-menu-options">
             <span class="t-btn-text">Sort</span>
             <span class="t-sort-btn-icon">
               <svg class="app-icon t-input-control-icon"><use href="icons.svg#t-sort-btn-icon"></use></svg>
@@ -167,7 +167,7 @@
           </button>
         </div> 
       </form>
-      <form class="sort-menu-container">
+      <form id="sort-menu-options" class="sort-menu-container" role="region" aria-labelledby="sort" aria-hidden="true">
         <div class="radio-container">
           <div class="radio-wrapper">
             <label for="sort-default-btn" class="radio-label"><b>Sorting style:</b> Default order</label>
@@ -202,17 +202,17 @@
           <div class="checkbox-container">
             <span class="radio-intro">Show: </span>
             <label for="add-type" class="checkbox-label">Type
-              <input type="checkbox" id="add-type" name="type" class="checkbox-btn" value="1">
+              <input type="checkbox" id="add-type" name="type" class="checkbox-btn" value="1" title="Example: John Walsh's (Polka)">
             </label>
             <label for="add-keys" class="checkbox-label">Keys
-              <input type="checkbox" id="add-keys" name="keys" class="checkbox-btn" value="1">
+              <input type="checkbox" id="add-keys" name="keys" class="checkbox-btn" value="1" title="Example: John Walsh's (Gmaj)">
             </label>
             <label for="add-abc" class="checkbox-label">ABC
-              <input type="checkbox" id="add-abc" name="abc" class="checkbox-btn" value="1">
+              <input type="checkbox" id="add-abc" name="abc" class="checkbox-btn" value="1" title="Example: D|G&gt;A BA|GE ED">
             </label>
           </div>
-          <button class="adv-options-btn"><b>Show more options</b></button>
-          <div class="adv-options-wrapper hidden">
+          <button id="sort-more-button" class="adv-options-btn" title="Show additional sorting options" aria-expanded="false" aria-controls="adv-options-wrapper"><b>Show more options</b></button>
+          <div id="sort-more-options" class="adv-options-wrapper hidden" aria-hidden="true" aria-labelledby="sort-more-options">
             <label for="use-shorter-abc" class="checkbox-label">Shorter ABC incipits
               <input type="checkbox" id="use-shorter-abc" name="useshorterabc" class="checkbox-btn" value="useShorterAbc">
             </label>
