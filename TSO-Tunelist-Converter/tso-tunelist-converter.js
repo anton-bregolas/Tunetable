@@ -34,7 +34,9 @@ const accMainWrapper = document.querySelector('#acc-main-wrapper');
 const accMainHeader = document.querySelector('#help-menu-opener');
 const accHelpMenu = document.querySelector('#help-menu-accordion');
 const accMenuIntro = document.querySelector('.acc-menu-intro');
+const accMenuIntroText = document.querySelector('#help-menu-intro-content');
 const accWrappers = document.querySelectorAll('.acc-wrapper');
+const accSubHeaders = document.querySelectorAll('.help-menu-subhead');
 
 // Input form elements
 
@@ -43,7 +45,7 @@ const generateTunetableBtn = document.querySelector('.t-gen-btn');
 const clearTunetableBtn = document.querySelector('.t-clr-btn');
 const sortTunetableBtn = document.querySelector('.t-sort-btn');
 const goSortBtn = document.querySelector('.r-go-sort-btn');
-const sortMenu = document.querySelector('.sort-menu-container');
+const sortMenu = document.querySelector('#sort-menu-options');
 const radioForm = document.querySelector('.radio-container');
 const radioBtnOrder = document.querySelectorAll('input[name="sortstyle"]');
 const radioBtnNoThe = document.querySelectorAll('input[name="nothestyle"]');
@@ -51,8 +53,8 @@ const radioBtnNoAn = document.querySelectorAll('input[name="noanstyle"]');
 const showTypeBox = document.querySelector('#add-type');
 const showKeysBox = document.querySelector('#add-keys');
 const showAbcBox = document.querySelector('#add-abc');
-const advOptionsBtn = document.querySelector('.adv-options-btn');
-const advOptionsBox = document.querySelector('.adv-options-wrapper');
+const advOptionsBtn = document.querySelector('#sort-more-button');
+const advOptionsBox = document.querySelector('#sort-more-options');
 const useShorterAbcBox = document.querySelector('#use-shorter-abc');
 const alwaysUseAbcBox = document.querySelector('#use-abc-default');
 const alwaysUseKeysBox = document.querySelector('#use-keys-default');
@@ -1232,7 +1234,7 @@ function clearSortMenu() {
   }
 }
 
-// Toggle the ARIA-expanded state of an element.
+// Toggle the ARIA-expanded state of an element
 
 function toggleAriaExpanded(element) {
 
@@ -1245,7 +1247,7 @@ function toggleAriaExpanded(element) {
   element.setAttribute("aria-expanded", false);
 }
 
-// Toggle the ARIA-hidden state of an element.
+// Toggle the ARIA-hidden state of an element
 
 function toggleAriaHidden(element) {
 
@@ -1258,6 +1260,63 @@ function toggleAriaHidden(element) {
   element.setAttribute("aria-hidden", true);
 }
 
+// Make links, buttons and inputs inside an element focusable / not focusable
+
+function toggleTabIndex(element) {
+
+  let focusableItems = ['a[href]', 'button:not([disabled]):not(.help-menu-subhead)', 'input:not([disabled])'];
+
+  focusableItems.forEach(itemType => {
+
+    element.querySelectorAll(itemType).forEach(item => {
+
+      let tabIndex = item.getAttribute("tabindex") === "0"? "-1" : "0";
+  
+      item.setAttribute("tabindex", tabIndex);
+    });
+  });
+}
+
+// Toggle states of the visible help menu items when the menu is wrapped / unwrapped
+
+function toggleAriaStatesHelp() {
+
+  toggleAriaExpanded(accMainHeader);
+  toggleAriaHidden(accHelpMenu);
+
+  if (accMenuIntro.classList.contains("unwrapped")) {
+    toggleAriaHidden(accMenuIntroText);
+    toggleTabIndex(accMenuIntroText);
+  }
+
+  accSubHeaders.forEach(subheader => {
+    
+    let tabIndex = subheader.getAttribute("tabindex") === "0"? "-1" : "0";
+    subheader.setAttribute("tabindex", tabIndex);
+    toggleAriaHidden(subheader);
+  });
+
+  accWrappers.forEach(wrapper => {
+    
+    if (wrapper.classList.contains("unwrapped")) {
+      toggleTabIndex(wrapper);
+    }
+  });
+
+}
+
+// Toggle states of the visible sort menu items when the menu is wrapped / unwrapped
+
+function toggleAriaStatesSort() {
+
+  toggleAriaExpanded(sortTunetableBtn);
+  toggleAriaHidden(sortMenu);
+
+  if (advOptionsBox.classList.contains("displayed-flex")) {
+    toggleAriaHidden(advOptionsBox);
+  }
+}
+
 // Show or hide help menu
 
 function toggleHelpMenu() {
@@ -1265,8 +1324,7 @@ function toggleHelpMenu() {
   hideSortMenu();
   helpIcon.classList.toggle("active");
   accMainWrapper.classList.toggle("unwrapped");
-  toggleAriaExpanded(accMainHeader);
-  toggleAriaHidden(accHelpMenu);
+  toggleAriaStatesHelp();
 }
 
 // Hide Sort options menu
@@ -1276,6 +1334,7 @@ function hideSortMenu() {
   if (sortMenu.classList.contains("displayed")) {
     
     sortMenu.classList.remove("displayed");
+    toggleAriaStatesSort();
   }
 }
 
@@ -1351,6 +1410,11 @@ function initButtons() {
 
     hideSortMenu();
 
+    if (accHelpMenu.parentElement.classList.contains("unwrapped")) {
+
+      toggleHelpMenu();
+    }
+
     if (inputForm.value) {
 
       if (validateTsoUrl()) {
@@ -1404,6 +1468,7 @@ function initButtons() {
     } else {
 
       sortMenu.classList.add("displayed");
+      toggleAriaStatesSort();
     }
   });
 
@@ -1685,7 +1750,7 @@ function initButtons() {
     });
   });
 
-  // Unwrap / wrap accordion menu item
+  // Wrap / unwrap accordion menu item and toggle states of its elements
 
   accWrappers.forEach(myWrapper => {
 
@@ -1695,7 +1760,8 @@ function initButtons() {
 
       if (accMenuIntro.classList.contains("unwrapped")) {
         accMenuIntro.classList.remove("unwrapped");
-        accMenuIntro.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", true);
+        toggleAriaHidden(accMenuIntroText);
+        toggleTabIndex(accMenuIntroText);
       }
 
       accWrappers.forEach(wrapper => {
@@ -1705,8 +1771,9 @@ function initButtons() {
         if (wrapper.classList.contains("unwrapped") && wrapper !== myWrapper) {
           wrapper.classList.remove("unwrapped");
           menuSubhead.classList.remove("highlighted");
-          wrapper.getElementsByClassName("help-menu-subhead")[0].setAttribute("aria-expanded", false);
-          wrapper.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", true);
+          toggleTabIndex(wrapper);
+          toggleAriaExpanded(wrapper.getElementsByClassName("help-menu-subhead")[0]);
+          toggleAriaHidden(wrapper.getElementsByClassName("help-menu-text")[0]);
         }
       });
 
@@ -1714,17 +1781,20 @@ function initButtons() {
 
         myWrapper.classList.add("unwrapped");
         myMenuSubhead.classList.add("highlighted");
-        myWrapper.getElementsByClassName("help-menu-subhead")[0].setAttribute("aria-expanded", true);
-        myWrapper.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", false);
+        toggleTabIndex(myWrapper);
+        toggleAriaExpanded(myWrapper.getElementsByClassName("help-menu-subhead")[0]);
+        toggleAriaHidden(myWrapper.getElementsByClassName("help-menu-text")[0]);
 
       } else {
 
         myWrapper.classList.remove("unwrapped");
         myMenuSubhead.classList.remove("highlighted");
         accMenuIntro.classList.add("unwrapped");
-        accMenuIntro.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", false);
-        myWrapper.getElementsByClassName("help-menu-subhead")[0].setAttribute("aria-expanded", false);
-        myWrapper.getElementsByClassName("help-menu-text")[0].setAttribute("aria-hidden", true);
+        toggleTabIndex(myWrapper);
+        toggleTabIndex(accMenuIntroText);
+        toggleAriaExpanded(myWrapper.getElementsByClassName("help-menu-subhead")[0]);
+        toggleAriaHidden(myWrapper.getElementsByClassName("help-menu-text")[0]);
+        toggleAriaHidden(accMenuIntro.getElementsByClassName("help-menu-text")[0]);
       }
     });
   });
@@ -1736,6 +1806,8 @@ function initButtons() {
     event.preventDefault();
 
     advOptionsBox.classList.toggle("displayed-flex");
+    toggleAriaExpanded(advOptionsBtn);
+    toggleAriaHidden(advOptionsBox);
   });
 
   // Input example Tunebook button
