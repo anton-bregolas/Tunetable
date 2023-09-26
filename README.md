@@ -14,6 +14,7 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 [v.1.8.5]
 
++ Both Help and Sort menus can now be fully navigated with default keyboard controls (Tab, Space, Enter, Arrows).
 + Added functions for making wrapped up links and buttons (non-)selectable with Tab key using TabIndex. 
 + Made main elements of the Sort menu ARIA-ready (redundant at this stage with display:none).
 + Added functions for bulk-changing ARIA-states.
