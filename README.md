@@ -12,6 +12,10 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.8.6]
+
++ ARIA labels added, some attributes fixed after testing the page with screenreaders.
+
 [v.1.8.5]
 
 + Both Help and Sort menus can now be fully navigated with default keyboard controls (Tab, Space, Enter, Arrows).
@@ -98,7 +102,7 @@ and checkbox options for adding extra content to the Tunetable (ABCs, keys, tune
 
 + Help menu updated with more instructions on sorting options.
 + Button-like divs replaced with buttons, tab focus indicators now appear for each button.
-- Rolled back ABC incipit fetching and checkboxes, attempting to fix CORS policy error.
++ Rolled back ABC incipit fetching and checkboxes, attempting to fix CORS policy error.
 
 [v.1.4]
 
