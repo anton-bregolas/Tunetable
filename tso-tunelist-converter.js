@@ -23,20 +23,21 @@ const helpIcon = helpBtn.querySelector('.n-help-icon');
 const sunIcon = themeBtn.querySelector('.n-theme-icon-sun');
 const moonIcon = themeBtn.querySelector('.n-theme-icon-moon');
 const allBtn = document.querySelectorAll('.t-btn');
-const exampleTunebook = document.querySelector('#example-tunebook');
-const exampleTunelist = document.querySelector('#example-tunelist');
-const exampleSetbook = document.querySelector('#example-setbook');
-const exampleSetlist = document.querySelector('#example-setlist');
 
-// Accordion menu elements
+// Accordion help menu elements
 
 const accMainWrapper = document.querySelector('#acc-main-wrapper');
-const accMainHeader = document.querySelector('#help-menu-opener');
-const accHelpMenu = document.querySelector('#help-menu-accordion');
-const accMenuIntro = document.querySelector('.acc-menu-intro');
-const accMenuIntroText = document.querySelector('#help-menu-intro-content');
-const accWrappers = document.querySelectorAll('.acc-wrapper');
-const accSubHeaders = document.querySelectorAll('.help-menu-subhead');
+const accMainHeader = accMainWrapper.querySelector('#help-menu-opener');
+const accHelpMenu = accMainWrapper.querySelector('#help-menu-accordion');
+const accMenuIntro = accMainWrapper.querySelector('.acc-menu-intro');
+const accMenuIntroText = accMainWrapper.querySelector('#help-menu-intro-content');
+const accWrappers = accMainWrapper.querySelectorAll('.acc-wrapper');
+const accSubHeaders = accMainWrapper.querySelectorAll('.help-menu-subhead');
+const exampleTunebook = accMainWrapper.querySelector('#example-tunebook');
+const exampleTunelist = accMainWrapper.querySelector('#example-tunelist');
+const exampleSetbook = accMainWrapper.querySelector('#example-setbook');
+const exampleSetlist = accMainWrapper.querySelector('#example-setlist');
+const accWrapBtn = accMainWrapper.querySelector('#help-menu-close');
 
 // Input form elements
 
@@ -50,6 +51,7 @@ const radioForm = document.querySelector('.radio-container');
 const radioBtnOrder = document.querySelectorAll('input[name="sortstyle"]');
 const radioBtnNoThe = document.querySelectorAll('input[name="nothestyle"]');
 const radioBtnNoAn = document.querySelectorAll('input[name="noanstyle"]');
+const sortStyleDefaultBtn = document.querySelector("#sort-default-btn");
 const showTypeBox = document.querySelector('#add-type');
 const showKeysBox = document.querySelector('#add-keys');
 const showAbcBox = document.querySelector('#add-abc');
@@ -757,7 +759,7 @@ function createTuneTable(myJson) {
     tuneTable.addEventListener('click', expandTuneNames);
   }
 
-  showInfoMsg("Hup!");
+  showInfoMsg("Hup! Tunetable is ready");
   console.log('Tunetable created');
   saveIcon.setAttribute("style", "opacity: 1");
   appBusy = 0;
@@ -1175,15 +1177,10 @@ function clearTunetable() {
   if (!checkIfTableEmpty()) {
 
     tuneTable.textContent = "";
-    showInfoMsg("Tunetable cleared!");
     console.log("Tunetable cleared");
-
-  } else {
-    infoBox.textContent = "";
-  }
+  } 
 
   inputForm.value = "";
-
 }
 
 // Check if any of the sorting styles are selected
@@ -1303,6 +1300,20 @@ function toggleAriaStatesHelp() {
     }
   });
 
+  let tabIndexWrapper = accWrapBtn.getAttribute("tabindex");
+
+  if (tabIndexWrapper === "0") {
+    
+    accWrapBtn.setAttribute("disabled", '');
+    accWrapBtn.setAttribute("tabindex", "-1");
+    inputForm.focus();
+
+  } else {
+    accWrapBtn.removeAttribute("disabled");
+    accWrapBtn.setAttribute("tabindex", "0");
+  }
+
+  toggleAriaHidden(accWrapBtn);
 }
 
 // Toggle states of the visible sort menu items when the menu is wrapped / unwrapped
@@ -1438,12 +1449,18 @@ function initButtons() {
 
     event.preventDefault();
 
+    if (!checkIfJsonHasTunes(importJson) && !checkIfJsonHasSets(importJson)) {
+
+      return showInfoMsg("No tune data found!", 1)
+    }
+
     hideSortMenu();
     clearSortMenu();
     clearTunetable();
     clearJsonData();
     clearCheckboxData();
-    
+
+    showInfoMsg("Tunetable cleared!");
   });
 
   // Open Sort Tunetable menu options button
@@ -1738,7 +1755,6 @@ function initButtons() {
     document.body.classList.toggle("light");
     sunIcon.classList.toggle("hidden");
     moonIcon.classList.toggle("displayed");
-
   });
 
   // Show / hide help menu button
@@ -1746,7 +1762,13 @@ function initButtons() {
   [accMainHeader, helpBtn].forEach(btn => {
     
     btn.addEventListener('click', () => {
+
       toggleHelpMenu();
+
+      if (accMainWrapper.classList.contains("unwrapped")) {
+
+        accMainHeader.focus();
+      }
     });
   });
 
@@ -1799,6 +1821,13 @@ function initButtons() {
     });
   });
 
+  // Wrap accordion menu button
+
+  accWrapBtn.addEventListener('click', () => {
+
+    toggleHelpMenu();
+  });
+
   // Show / hide advanced options button
 
   advOptionsBtn.addEventListener('click', (event) => {
@@ -1808,38 +1837,32 @@ function initButtons() {
     advOptionsBox.classList.toggle("displayed-flex");
     toggleAriaExpanded(advOptionsBtn);
     toggleAriaHidden(advOptionsBox);
+
+    if (advOptionsBox.classList.contains("displayed-flex")) {
+
+      useShorterAbcBox.focus();
+
+    } else {
+
+      goSortBtn.focus();
+    }
   });
 
-  // Input example Tunebook button
+  // Input example Tunebook / Tunelist / Setbook / Setlist buttons
 
-  exampleTunebook.addEventListener('click', () => {
+  [exampleTunebook, exampleTunelist, exampleSetbook, exampleSetlist].forEach(btn => {
 
-    inputForm.value = "https://thesession.org/members/1/tunebook";
-    toggleHelpMenu();
-  });
+    btn.addEventListener('click', () => {
 
-  // Input example Tunelist of tagged tunes button
+      inputForm.value = 
+      btn === exampleTunebook? "https://thesession.org/members/1/tunebook" :
+      btn === exampleTunelist? "https://thesession.org/members/1/tags/SliabhLuachra/tunes" :
+      btn === exampleSetbook? "https://thesession.org/members/1/sets" :
+      btn === exampleSetlist? "https://thesession.org/members/1/tags/StarAboveTheGarter/tunesets" : '';
 
-  exampleTunelist.addEventListener('click', () => {
-
-    inputForm.value = "https://thesession.org/members/1/tags/SliabhLuachra/tunes";
-    toggleHelpMenu();
-  });
-
-  // Input example Setbook button
-
-  exampleSetbook.addEventListener('click', () => {
-
-    inputForm.value = "https://thesession.org/members/1/sets";
-    toggleHelpMenu();
-  });
-
-  // Input example list of tagged sets button
-
-  exampleSetlist.addEventListener('click', () => {
-
-    inputForm.value = "https://thesession.org/members/1/tags/StarAboveTheGarter/tunesets";
-    toggleHelpMenu();
+      toggleHelpMenu();
+      inputForm.focus();
+    });
   });
 
   // Revert Tunetable & JSON data to unsorted original button
