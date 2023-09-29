@@ -14,7 +14,11 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 [v.1.8.6]
 
-+ ARIA labels added, some attributes fixed after testing the page with screenreaders.
++ ARIA labels added, some attributes fixed after testing the page with screen readers.
++ Infobox now has aria-live attribute, enabling it to announce messages via screen readers.
++ Close help menu button added to accordion menu for easier keyboard controls.
++ Cut unnecessary links in Help menu, refactored example links input.
++ On-focus outline styles further tweaked in selectable elements.
 
 [v.1.8.5]
 

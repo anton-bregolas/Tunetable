@@ -132,7 +132,7 @@ li {
   justify-content: center;
 }
 
-.n-help-btn:hover > *, .n-theme-btn:hover > *, .t-revert-btn:hover > * {
+.n-help-btn:is(:hover, :focus) > *, .n-theme-btn:is(:hover, :focus) > *, .t-revert-btn:is(:hover, :focus) > * {
   opacity: 1;
 }
 
@@ -337,7 +337,7 @@ tbody tr:nth-child(odd) {
   opacity: 0.5;
 }
 
-#input-form:hover{
+#input-form:is(:hover, :focus){
   box-shadow: 0px 0px 0px 0.1875rem black;
   opacity: 1;
 }
@@ -373,11 +373,16 @@ tbody tr:nth-child(odd) {
   border-radius: 0.5rem;
 }
 
+input[type="radio"]:focus-visible {
+  outline: 0.135rem solid var(--text-color);
+  outline-style: solid;
+  outline-offset: 0.345rem;
+}
+
 input[type="checkbox"]:focus-visible {
   outline: 0.15rem solid var(--text-color);
   outline-style: solid;
   outline-offset: 0.25rem;
-  /* border-radius: 0.5rem; */
 }
 
 .radio-btn, .radio-label, .checkbox-label,
@@ -564,7 +569,7 @@ input[name="sortstyle"]:checked {
   grid-template-rows: 0.3fr;
 }
 
-#acc-main-wrapper:hover > * {
+#acc-main-wrapper:is(:hover, :focus-within) > * {
   opacity: 1;
 }
 
@@ -587,6 +592,12 @@ input[name="sortstyle"]:checked {
   overflow: hidden;
   transition: opacity 0.5s ease-in-out;
   opacity: 0.75;
+}
+
+.acc-help-menu:is(:focus-visible, :focus-within)[aria-hidden="true"] {
+  outline: 0.16rem solid var(--alt-accent-color);
+  outline-offset: 0.07rem;
+  border-radius: 0.5rem;
 }
 
 .acc-help-menu a:focus-visible {
@@ -620,11 +631,17 @@ input[name="sortstyle"]:checked {
 }
 
 #help-menu-opener:focus-visible {
-  outline: 0.19rem solid var(--alt-accent-color);
-  outline-offset: -0.19rem;
+  outline: none;
+  color: var(--highlight-color);
 }
 
-.help-menu-subhead:active {
+#help-menu-opener:focus-visible[aria-expanded="true"] {
+  /* outline: 0.19rem solid var(--alt-accent-color);
+  outline-offset: -0.19rem; */
+  color: var(--highlight-color);
+}
+
+.help-menu-subhead:active, .acc-wrap-btn:is(:hover, :focus) > * {
   color: var(--highlight-color);
 }
 
@@ -641,13 +658,24 @@ input[name="sortstyle"]:checked {
   outline-offset: 0.15rem;
 }
 
-.help-menu-subhead:focus-visible {
+.help-menu-subhead:focus-visible, .acc-wrap-btn:focus-visible {
   outline: 0.2rem solid var(--alt-accent-color);
   outline-offset: -0.2rem;
 }
 
 .acc-wrapper.unwrapped * .plus-icon {
   transform: rotate(225deg);
+}
+
+.acc-wrap-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--header-color);
+}
+
+.acc-wrap-btn {
+  text-align: center;
+  margin-top: 0.25rem;
 }
 
 /* Info message box styles */
