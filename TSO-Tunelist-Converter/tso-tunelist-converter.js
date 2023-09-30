@@ -307,6 +307,7 @@ async function fetchTheSessionJson(url) {
 
     if (checkIfJsonHasTunes(tsoData) || checkIfJsonHasSets(tsoData)) {
 
+      inputForm.value = "";
       clearJsonData();
       clearTunetable();
       clearSortMenu();
@@ -417,6 +418,8 @@ async function fetchTheSessionJson(url) {
     inputForm.value = "";
     appBusy = 0;
     enableButtons();
+
+    sortTunetableBtn.focus();
   } 
 
   catch (error) {
@@ -889,6 +892,7 @@ function sortTunetable(myJson) {
 
     showMeter = 1;
     idMeterTxt.textContent = "M";
+    idMeterTxt.setAttribute("aria-label", "Tune meter");
     
     if (myData == sortedJson.tunes) {
 
@@ -1179,8 +1183,6 @@ function clearTunetable() {
     tuneTable.textContent = "";
     console.log("Tunetable cleared");
   } 
-
-  inputForm.value = "";
 }
 
 // Check if any of the sorting styles are selected
@@ -1394,17 +1396,20 @@ function shrinkTunetable(cells) {
 
 function expandTuneNames() {
 
-  tuneTable.querySelectorAll('td:nth-child(even) .t-cell-span').forEach(cellspan => {
+  if (window.getSelection().toString().length === 0) {
 
-    if (cellspan.hasAttribute("style")) {
+    tuneTable.querySelectorAll('td:nth-child(even) .t-cell-span').forEach(cellspan => {
 
-        cellspan.removeAttribute("style");
+      if (cellspan.hasAttribute("style")) {
 
-    } else {
+          cellspan.removeAttribute("style");
 
-        cellspan.setAttribute("style", "white-space: normal");
-    }
-  })
+      } else {
+
+          cellspan.setAttribute("style", "white-space: normal");
+      }
+    })
+  }
 }
 
 //////////////////////////////////////////////
@@ -1448,6 +1453,8 @@ function initButtons() {
   clearTunetableBtn.addEventListener('click', (event) => {
 
     event.preventDefault();
+
+    inputForm.value = "";
 
     if (!checkIfJsonHasTunes(importJson) && !checkIfJsonHasSets(importJson)) {
 
@@ -1506,6 +1513,7 @@ function initButtons() {
         hideSortMenu();
         createTuneTable(sortTunetable(importJson));
         showInfoMsg("Sorted!");
+        sortTunetableBtn.focus();
         return;
 
       } else if (sortStyle === 0) {
@@ -1528,7 +1536,7 @@ function initButtons() {
 
   for (let s = 0; s < 3; s++) {
     radioBtnOrder[s].addEventListener("change", function() {
-      showInfoMsg(`Sorting style: #${this.value}. Sort?`);
+      showInfoMsg(`Sorting style picked: #${this.value}`);
       return sortStyle = +this.value;
     });
   }
@@ -1682,7 +1690,10 @@ function initButtons() {
     if (!appBusy) {
     
       showMeter = !showMeter? 1 : 0;
+      let ariaLabel = !showMeter? "Tune ID" : "Tune meter";
       idMeterTxt.textContent = !showMeter? "ID" : "M";
+
+      idMeterTxt.setAttribute("aria-label", ariaLabel);
 
       if (!checkIfTableEmpty()) {
         
@@ -1752,6 +1763,9 @@ function initButtons() {
 
   themeBtn.addEventListener('click', () => {
     
+    let ariaLabel = document.body.classList.contains("light")? "Dark theme is on" : "Light theme is on";
+
+    themeBtn.setAttribute("aria-label", ariaLabel);
     document.body.classList.toggle("light");
     sunIcon.classList.toggle("hidden");
     moonIcon.classList.toggle("displayed");
@@ -1884,6 +1898,7 @@ function initButtons() {
 
       createTuneTable(importJson);
       showInfoMsg("Reverted to TSO defaults!");
+      sortTunetableBtn.focus();
       return;
 
     } else {

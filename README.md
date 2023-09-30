@@ -12,6 +12,15 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.8.7]
+
++ ARIA group labels for radio buttons added for easier screen reader navigation.
++ Toggling Tune ID/M and Dark/Light theme buttons now changes aria-label, triggering screen readers to announce new state.
++ Workaround for some screenreaders announcing names of all elements in each cell, rendering Name + Revert button column unusable.
+  Revert button had to be assigned aria-label "Reset" so that the affected screenreaders read "Name Reset column" and not
+  "Name Revert Tunetable & data to unsorted original column" due to button title. When tabbing to the button, full title is read.
++ Selection inside a Tunetable no longer triggers a click event, a single click with no selection expands rows as usual.
+
 [v.1.8.6]
 
 + ARIA labels added, some attributes fixed after testing the page with screen readers.
