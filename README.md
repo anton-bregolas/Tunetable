@@ -12,6 +12,11 @@ tagged tunes using a simple web app with a URL input and sorting options that ma
 
 ## DONE: 
 
+[v.1.8.9]
+
++ Favicons added with several fallbacks for browsers and operating systems (SVG, .ico, Chromium/Android, Apple Touch).
++ Web app manifest added with initial basic info about the website and paths to backup favicons.
+
 [v.1.8.8]
 
 + Mobile hints added to Help menu.
