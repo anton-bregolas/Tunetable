@@ -1,16 +1,32 @@
-The Session Tunelist to Tunetable Converter [v.1.8]
-===================================================
+Tunetable: Convert The Session tunelists to compact tables [v.1.9.0]
+====================================================================
 
 ## Overview
 
 Generate handy tunetables from [thesession.org](https://thesession.org/) tunebooks and lists of 
 tagged tunes using a simple web app with a URL input and sorting options that makes use of [The Session API](https://thesession.org/api).
 
+Contains [information](https://github.com/adactio/TheSession-data) from The Session, which is made available here under the Open Database License (ODbL).
+
+See Help menu (Read Me For More) for detailed instructions.
+
 ## TO DO:
 
 - Collect initial feedback, fix more bugs.
+- Expand capabilities of service worker.
 
 ## DONE: 
+
+[v.1.9.0]
+
++ Tunetable is now a Progressive Web App (PWA) and can be installed to an Android or Apple device via a browser.
++ Service worker capabilities included so far:
+  - Caching of TSO fetch responses for offline use (live versions priority, only for failed fetch requests)
+  - Caching of ABC incipits jsons for offline use and instant loading (cached versions priority)
+  - Re-caching of ABC incipits jsons if file aged >=7 days (upon new fetch request)
++ List of offline links to pick from gets generated below Infobox if fetch request fails.
++ Clicking on Infobox displays the Offline menu. It automatically unwraps if a fetch error is thrown.
++ Major refactoring of scripts, entry point script split into separate functional modules.
 
 [v.1.8.9]
 
