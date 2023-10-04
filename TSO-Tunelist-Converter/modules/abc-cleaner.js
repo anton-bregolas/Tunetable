@@ -3,7 +3,7 @@
 // if ABC incipit is > 32 chars long, cut the last bar;
 // if ABC incipit is still > 32 chars long, cut notes until empty space;
 // all the ABCs that end up empty or too short after all this should be 
-// considered broken and will be exported as "N/A".
+// considered broken and will be exported as "N/A" (this is very rare).
 
 export function cleanTsoAbc(abc) {
 

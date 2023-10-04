@@ -1,17 +1,17 @@
 {
-  "name": "TSO Tunelist to Tunetable Converter",
+  "name": "Tunetable",
   "short_name": "Tunetable",
-  "description": "Convert your Irish tune lists from The Session into neat Tunetables",
+  "description": "Convert your Irish music tunelists from The Session into neat Tunetables",
   "lang": "en",
   "icons": [
     {
-      "src": "icons/android-chrome-192x192.png?v=0",
+      "src": "assets/icons/android-chrome-192x192.png?v=0",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "icons/android-chrome-512x512.png?v=0",
+      "src": "assets/icons/android-chrome-512x512.png?v=0",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -26,6 +26,8 @@
   "theme_color": "#000000",
   "background_color": "#000000",
   "display": "standalone",
+  "categories": ["music"],
+  "orientation": "any",
   "scope": "/",
-  "start_url": "/"
+  "start_url": "/?homescreen"
 }

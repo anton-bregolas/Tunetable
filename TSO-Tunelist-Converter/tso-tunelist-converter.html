@@ -3,275 +3,304 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Session Tunelist to Tunetable Converter</title>
-    <link rel="stylesheet" type="text/css" href="tso-tunelist-converter.css">
+    <title>Tunetable: Convert The Session tunebooks, tunelists and sets to compact tables</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="icon" href="favicon.ico" sizes="48x48">
     <link rel="icon" href="favicon.svg" sizes="any" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=0">
-    <link rel="mask-icon" href="icons/safari-pinned-tab.svg?v=0" color="#000000">
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=0">
+    <link rel="mask-icon" href="assets/icons/safari-pinned-tab.svg?v=0" color="#000000">
     <link rel="manifest" href="site.webmanifest?v=0">
     <meta name="apple-mobile-web-app-title" content="Tunetable">
     <meta name="application-name" content="Tunetable">
-    <meta name="theme-color" content="#ffffff">
-    <script type="module" src="tso-tunelist-converter.js"></script>
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-config" content="assets/icons/browserconfig.xml">
+    <meta name="theme-color" content="#000000">
+    <script type="module" src="app.js"></script>
   </head>
   <body>
-    <div class="main-container">
-      <h1><span aria-label="The Session Dot Org Tunelist to Tunetable Converter"><b>TSO</b> <span class="glowing">Tunelist</span> <span class="glowing">to</span> <span class="glowing">Tunetable</span> <span class="glowing">Converter</span></span></h1>
-      <div class="nav-container">
-        <button class="n-save-btn" id="save" title="Download Tunetable">
-          <svg class="app-icon n-save-icon" aria-hidden="true"><use href="icons.svg#n-save-icon"></use></svg>
-        </button>
-        <button class="n-help-btn" title="Show help instructions" tabindex="0">
-          <svg class="app-icon n-help-icon" aria-hidden="true"><use href="icons.svg#n-help-icon"></use></svg>
-        </button>
-        <button class="n-theme-btn" title="Toggle between dark and light themes" aria-label="Dark theme is on">
-          <svg class="app-icon n-theme-icon-sun" aria-hidden="true"><use href="icons.svg#n-theme-icon-sun"></use></svg>
-          <svg class="app-icon n-theme-icon-moon" aria-hidden="true"><use href="icons.svg#n-theme-icon-moon"></use></svg>
-        </button>
-      </div>
-      <div id="acc-main-wrapper">
-        <div id="help-menu-accordion" class="acc-help-menu" role="region" aria-labelledby="help-menu-opener" aria-hidden="true">
-          <div class="acc-menu-intro unwrapped">
-            <div class="acc-item-content">
-              <h2>
-                <button id="help-menu-opener" aria-expanded="false" aria-controls="help-menu-accordion" aria-label="Read me for more details">
-                  <span><span class="glowing">Read</span> <span class="glowing">me</span> <span class="glowing">for</span> <span class="glowing">more</span></span>
-                </button>
-              </h2>
-              <div id="help-menu-intro-content" class="help-menu-text" aria-hidden="true">
-                <p>Get a link to a tunelist posted on <a href="https://thesession.org/" target="_blank" title="https://thesession.org/" tabindex="-1"><b>The&nbsp;Session</b></a>,
-                  paste it into the input form below and then press the big Generate button and wait a wee bit. A&nbsp;neat <b>Tunetable</b> will appear below.</p>
-              </div>
-            </div>
-          </div>
-          <div class="acc-wrapper">
-            <div class="acc-item-content">
-              <h3>
-                <button id="help-menu-links" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-links-content" tabindex="-1">
-                  <span class="plus-icon" aria-hidden="true">+</span>
-                  Links you can use
-                  <svg class="app-icon" aria-hidden="true"><use href="icons.svg#t-gen-btn-ico"></use></svg>
-                </button>
-              </h3>
-              <div id="help-links-content" class="help-menu-text" role="region" aria-labelledby="help-menu-links" aria-hidden="true">
-                <p>Valid TSO links must end with /tunes or /tunebook as well as /sets or /tunesets.
-                  Note that you may need to manually add /tunes or /tunesets at the end of the base URL.</p>
-                <ul>
-                  <li><button class="example-link" id="example-tunebook" title="Example Tunebook" tabindex="-1"><b>Input example Tunebook</b></button>
-                  </li>
-                  <li><button class="example-link" id="example-tunelist" title="Example tunelist" tabindex="-1"><b>Input example tunelist</b></button>
-                  </li>
-                  <li><button class="example-link" id="example-setbook" title="Example Setbook" tabindex="-1"><b>Input example Setbook</b></button>
-                  </li>
-                  <li><button class="example-link" id="example-setlist" title="Example setlist" tabindex="-1"><b>Input example setlist</b></button></li>
-                </ul>
-                <p><b>NB:</b> You can use sorting queries such as ?orderby=newest as long as the base URL before the query meets the above conditions.</p>
-              </div>
-            </div>
-          </div>
-          <div class="acc-wrapper">
-            <div class="acc-item-content">
-              <h3>
-                <button id="help-menu-sorting" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-sorting-content" tabindex="-1">
-                  <span class="plus-icon" aria-hidden="true">+</span>
-                  How to sort tunes
-                  <svg class="app-icon" aria-hidden="true"><use href="icons.svg#t-sort-btn-icon"></use></svg>
-                </button>
-              </h3>
-              <div id="help-sorting-content" class="help-menu-text" role="region" aria-labelledby="help-menu-sorting" aria-hidden="true">
-                <p>When the Tunetable is ready, press the <b>Sort</b> button to open the sorting menu,
-                   select the preferred style and options and press the <b>Work away!</b> button to confirm.</p>
-                <p>While picking a <b>Style</b> (order-by) is required, other settings are optional. Your tunes / sets can either be left in the 
-                   default TSO order or be sorted anew, alphabetically or by tune type.</p>
-                <p>Depending on the options picked, Sort will also (re)move the articles in tune titles to make skimming through the list easier.</p>
-                <p>You can also append tune type and key to names and replace URLs with ABC incipits. If you’re converting several lists and want
-                   some of these settings to stick for the entire session, click <b>Show more options</b> and check additional boxes for ABC, Keys or Type.</p>
-              </div>
-            </div>
-          </div>
-          <div class="acc-wrapper">
-            <div class="acc-item-content">
-              <h3>
-                <button id="help-menu-export" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-export-content" tabindex="-1">
-                  <span class="plus-icon" aria-hidden="true">+</span>
-                  How to save tunes
-                  <svg class="app-icon" aria-hidden="true"><use href="icons.svg#n-save-icon"></use></svg>
-                </button>
-              </h3>
-              <div id="help-export-content" class="help-menu-text" role="region" aria-labelledby="help-menu-export" aria-hidden="true">
-                <p>Use the <b>Download</b> button to save your Tunetable in plain text format.
-                   If you want to save the data as a JSON file, press the <b>Index (#)</b> button on the Tunetable.</p>
-                <p>The exported Tunetable will only contain the data you see on the screen, including the tune keys and types which can be added
-                   in <b>Sort</b> menu options. If you want to have tune meters in place of IDs or vice versa,
-                   click on the header of the <b>ID/M</b> column any time before saving. If you need 
-                   a few bars of ABCs in place of URLs, select the ‘ABC’ option before sorting your Tunetable.</p>
-                <p>Should you wish to revert your tune titles to TSO defaults, press the <b>Revert</b> button 
-                   to the right of the Name column.</p>
-              </div>
-            </div>
-          </div>
-          <div class="acc-wrapper">
-            <div class="acc-item-content">
-              <h3>
-                <button id="help-menu-abc-incipits" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-abc-incipits-content" tabindex="-1">
-                  <span class="plus-icon" aria-hidden="true">+</span>
-                  How to add ABCs
-                  <svg class="app-icon" aria-hidden="true"><use href="icons.svg#n-abc-icon"></use></svg>
-                </button>
-              </h3>
-              <div id="help-abc-incipits-content" class="help-menu-text" role="region" aria-labelledby="help-menu-abc-incipits" aria-hidden="true">
-                <p>Whether you’re browsing through a long Tunebook or preparing a setlist for a gig, sometimes you need a few bars of notes
-                   to remember how a tune starts. With tunelists getting larger, adding ABCs or sheet music for each tune can get painful. Luckily,
-                   there’s an easy way to produce a text-only cheat sheet using The Session and this app.</p>
-                <p>Tick the ‘ABC’ checkbox at the bottom of the sorting options to change the default display of URLs to ABC incipits. This
-                   will immediately preload a compressed shortlist of incipits from a thoroughly filtered list of all the tunes on The Session
-                   (&lt;&nbsp;1&nbsp;MB for tunelists, &lt;&nbsp;3&nbsp;MB for setlists). Any freshly-added tunes missing from the file will be fetched directly
-                   from The Session (this may take a few seconds).</p>
-                <p>The ABCs will be inserted in your Tunetable after you sort it with preferred settings by pressing the Work away! button.
-                   For easier viewing, press the ABC column header to expand it horizontally or click anywhere in the Tunetable to expand all the rows 
-                   vertically.</p>
-                <p>Note that the ABC file for tunelists is made up of top settings of tunes on The Session in whatever key and version they happen 
-                   to have been added in. If you wish to make a list from specific tune settings, it is currently possible to do so in TSO Setbooks and setlists.</p>
-              </div>
-            </div>
-          </div>
-          <div class="acc-wrapper">
-            <div class="acc-item-content">
-              <h3>
-                <button id="help-menu-mobile-view" class="help-menu-subhead glowing" aria-expanded="false" aria-hidden="true" aria-controls="help-mobile-view-content" tabindex="-1">
-                  <span class="plus-icon" aria-hidden="true">+</span>
-                  Mobile view tips
-                  <svg class="app-icon" aria-hidden="true"><use href="icons.svg#n-mobile-icon"></use></svg>
-                </button>
-              </h3>
-              <div id="help-mobile-view-content" class="help-menu-text" role="region" aria-labelledby="help-menu-mobile-view" aria-hidden="true">
-                <p>This page has been created with mobile devices in mind but you can further improve your experience by adjusting your Tunetable’s width.</p>
-                <p>When viewing the app from a phone, try rotating your device to landscape mode. Doing so will expand the tune titles automatically. 
-                   If you want to view links or ABC incipits instead, press the URL/ABC column header. Press the Name column header to expand tune titles again.</p>
-                <p>If your device’s screen is still too narrow or you prefer to scroll down your list in portrait mode, there’s an option for that too. 
-                   Press anywhere inside Tunetable to expand all the rows vertically, press again to return to a previously selected horizontal setting.</p>
-                <p>To copy the text from a Tunetable cell long press and hold until context menu appears, then press Copy. The same works if you’re using
-                   a mouse: left-click to expand rows, left-click and hold to make a selection.</p>
-              </div>
-            </div>
-          </div>
-          <button id="help-menu-close" class="acc-wrap-btn" title="Close help menu" aria-hidden="true" tabindex="-1">
-            <svg class="app-icon acc-wrap-icon glowing"><use href="icons.svg#wrap-icon"></use></svg>
-          </button>
+    <header>
+      <div class="header-container">  
+        <div class="logo tunetable-logo" title="Tunetable">
+          <img src="favicon.svg" class="logo-icon" aria-hidden="true" alt="Tunetable logo">
+          <a class="logo-link" href="https://anton-bregolas.github.io/Tunetable">T</a>
+        </div>
+        <div class="logo tso-logo" title="The Session">
+          <span class="logo-icon tso-icon" aria-hidden="true">S</span>
+          <a class="logo-link" href="https://thesession.org/" target="_blank">S</a>
         </div>
       </div>
-      <form class="input-container">
-        <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session & hit enter" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" aria-label="Input form for links to The Session" autocomplete="off" autofocus>
-        <div class="btn-container">
-          <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
-            <span class="t-btn-text">Generate Tunetable</span>
-            <span class="t-gen-btn-icon">
-              <svg class="app-icon t-input-control-icon" aria-hidden="true"><use href="icons.svg#t-gen-btn-ico"></use></svg>
-            </span>
+    </header>
+      <main>
+      <div class="main-container">
+        <h1><span aria-label="The Session Dot Org Tunelist to Tunetable Converter"><span class="glowing">Tunelist</span> <span class="glowing">to</span> <span class="glowing" title="v.1.9.0"><b>Tunetable</b></span> <span class="glowing">Converter</span></span></h1>
+        <nav class="nav-container">
+          <button class="n-save-btn" id="save" title="Download Tunetable">
+            <svg class="app-icon n-save-icon" aria-hidden="true"><use href="assets/icons/icons.svg#n-save-icon"></use></svg>
           </button>
-          <button class="t-btn t-clr-btn" title="Clear Tunetable and all data">
-            <span class="t-clr-btn-icon">
-              <svg class="app-icon t-input-control-icon" aria-hidden="true"><use href="icons.svg#t-clr-btn-icon"></use></svg>
-            </span>
+          <button class="n-help-btn" title="Show help instructions" tabindex="0">
+            <svg class="app-icon n-help-icon" aria-hidden="true"><use href="assets/icons/icons.svg#n-help-icon"></use></svg>
           </button>
-          <button class="t-btn t-sort-btn" id="sort" title="Press to open or close the Sort Menu" aria-expanded="false" aria-controls="sort-menu-options">
-            <span class="t-btn-text">Sort</span>
-            <span class="t-sort-btn-icon">
-              <svg class="app-icon t-input-control-icon" aria-hidden="true"><use href="icons.svg#t-sort-btn-icon"></use></svg>
-            </span>
+          <button class="n-theme-btn" title="Toggle between dark and light themes" aria-label="Dark theme is on">
+            <svg class="app-icon n-theme-icon-sun" aria-hidden="true"><use href="assets/icons/icons.svg#n-theme-icon-sun"></use></svg>
+            <svg class="app-icon n-theme-icon-moon" aria-hidden="true"><use href="assets/icons/icons.svg#n-theme-icon-moon"></use></svg>
           </button>
-        </div> 
-      </form>
-      <form id="sort-menu-options" class="sort-menu-container" role="region" aria-labelledby="sort" aria-hidden="true">
-        <div class="radio-container">
-          <div class="radio-wrapper" role="radiogroup" title="Select Tunetable sorting style">
-            <label for="sort-default-btn" class="radio-label"><b>Sorting style:</b> Default order</label>
-            <input type="radio" id="sort-default-btn" class="radio-btn" name="sortstyle" value=1 title="Example: An Seanchai Muimhneach [...] The Ballydesmond [...] Denis Murphy's">
-          </div>
-          <div class="radio-wrapper">
-            <label for="sort-reorder-btn" class="radio-label"><b>Sorting style:</b> Sort by Name</label>
-            <input type="radio" id="sort-reorder-btn" class="radio-btn" name="sortstyle" value=2 title="Example: Ballydesmond [...] Denis Murphy's [...] Seanchai Muimhneach">
-          </div>
-          <div class="radio-wrapper">
-            <label for="sort-by-type-btn" class="radio-label"><b>Sorting style:</b> Sort by Type</label>
-            <input type="radio" id="sort-by-type-btn" class="radio-btn" name="sortstyle" value=3 title="Example: Seanchai Muimhneach (Jig) [...] Ballydesmond (Polka) [...] Denis Murphy's (Slide)">
-          </div>
-          <div class="radio-wrapper" role="radiogroup" title="Choose what to do if the tune name begins with a definite article">
-            <span class="radio-intro">The: </span>
-            <label for="keep-the-btn" class="radio-label">Keep
-            <input type="radio" id="keep-the-btn" class="radio-btn" name="nothestyle" value=0 title="Example: The Magic Slipper" aria-label="Keep definite articles in tune names" checked></label>
-            <label for="move-the-btn" class="radio-label">Move
-            <input type="radio" id="move-the-btn" class="radio-btn" name="nothestyle" value=1 title="Example: Magic Slipper, The" aria-label="Move definite articles after tune names"></label>
-            <label for="cut-the-btn" class="radio-label">Cut
-            <input type="radio" id="cut-the-btn" class="radio-btn" name="nothestyle" value=2 title="Example: Magic Slipper" aria-label="Cut definite articles from tune names"></label>
-          </div>
-          <div class="radio-wrapper" role="radiogroup" title="Choose what to do if the tune name begins with an indefinite article or Irish definite article">
-            <span class="radio-intro">An:&nbsp;&nbsp;</span>
-            <label for="keep-an-btn" class="radio-label">Keep
-            <input type="radio" id="keep-an-btn" class="radio-btn" name="noanstyle" value=0 title="Example: An Puncan" aria-label="Keep indefinite articles or Irish definite articles in tune names" checked></label>
-            <label for="move-an-btn" class="radio-label">Move
-            <input type="radio" id="move-an-btn" class="radio-btn" name="noanstyle" value=1 title="Example: Puncan, An" aria-label="Move indefinite articles or Irish definite articles after tune names"></label>
-            <label for="cut-an-btn" class="radio-label">Cut
-            <input type="radio" id="cut-an-btn" class="radio-btn" name="noanstyle" value=2 title="Example: Puncan" aria-label="Cut indefinite articles or Irish definite articles from tune names"></label>
-          </div>
-          <div class="checkbox-container" role="radiogroup" title="Choose whether to display tune type, key or ABC incipit">
-            <span class="radio-intro">Show: </span>
-            <label for="add-type" class="checkbox-label">Type
-              <input type="checkbox" id="add-type" name="type" class="checkbox-btn" value="1" title="Example: John Walsh's (Polka)" aria-label="Show tune type after tune names">
-            </label>
-            <label for="add-keys" class="checkbox-label">Keys
-              <input type="checkbox" id="add-keys" name="keys" class="checkbox-btn" value="1" title="Example: John Walsh's (Gmaj)" aria-label="Show tune keys after tune names">
-            </label>
-            <label for="add-abc" class="checkbox-label">ABC
-              <input type="checkbox" id="add-abc" name="abc" class="checkbox-btn" value="1" title="Example: D|G&gt;A BA|GE ED" aria-label="Show ABC incipits in place of links to The Session">
-            </label>
-          </div>
-          <button id="sort-more-button" class="adv-options-btn" title="Show additional sorting options" aria-expanded="false" aria-controls="adv-options-wrapper"><b>Show more options</b></button>
-          <div id="sort-more-options" class="adv-options-wrapper hidden" aria-hidden="true" aria-labelledby="sort-more-options">
-            <label for="use-shorter-abc" class="checkbox-label">Shorter ABC incipits
-              <input type="checkbox" id="use-shorter-abc" name="useshorterabc" class="checkbox-btn" value="useShorterAbc">
-            </label>
-            <label for="use-type-default" class="checkbox-label">Always add tune type
-              <input type="checkbox" id="use-type-default" name="usetypedefault" class="checkbox-btn" value="useTypeDefault">
-            </label>
-            <label for="use-abc-default" class="checkbox-label">Always load & show ABC
-              <input type="checkbox" id="use-abc-default" name="useabcdefault" class="checkbox-btn" value="useAbcDefault">
-            </label>
-            <label for="use-keys-default" class="checkbox-label">Always load ABC & show keys
-              <input type="checkbox" id="use-keys-default" name="usekeysdefault" class="checkbox-btn" value="useKeysDefault">
-            </label>
-          </div>
-        </div>
-        <button class="t-btn r-go-sort-btn" title="Apply the selected Sort menu settings">
-          <span class="t-btn-text">Work away!
-            <span class="r-go-sort-btn-icon">
-              <svg class="app-icon r-go-sort-icon" aria-hidden="true"><use href="icons.svg#r-go-sort-icon"></use></svg>
-            </span>
-          </span>
-        </button>
-      </form>
-      <div class="info-box" aria-live="polite"></div>
-      <div class="t-container">
-        <table id="tunetable">
-          <thead>
-            <tr id="t-headers">
-              <th id="t-head-no" ><button title="Tunetable Index Number. Click to download Tune data">#</button></th>
-              <th id="t-head-name">
-                <div class="t-head-name-container">
-                  <button class="t-head-name-btn" title="Tune Title. Click to expand or shrink Tunetable">Name</button>
-                  <button class="t-revert-btn" id="revert" aria-label="Reset" title="Revert Tunetable & data to unsorted original">
-                    <svg class="app-icon t-revert-icon" aria-hidden="true"><use href="icons.svg#t-revert-icon"></use></svg>
+        </nav>
+        <div id="acc-main-wrapper">
+          <div id="help-menu-accordion" class="acc-help-menu" role="region" aria-labelledby="help-menu-opener" aria-hidden="true">
+            <div class="acc-menu-intro unwrapped">
+              <div class="acc-item-content">
+                <h2>
+                  <button id="help-menu-opener" class="wide" aria-expanded="false" aria-controls="help-menu-accordion" aria-label="Read me for more details">
+                    <span><span class="glowing">Read</span> <span class="glowing">me</span> <span class="glowing">for</span> <span class="glowing">more</span></span>
                   </button>
+                </h2>
+                <div id="help-menu-intro-content" class="help-menu-text" aria-hidden="true">
+                  <p>Get a link to a tunelist posted on <a href="https://thesession.org/" target="_blank" title="https://thesession.org/" tabindex="-1"><b>The&nbsp;Session</b></a>,
+                    paste it into the input form below and then press the big Generate button and wait a wee bit. A&nbsp;neat <b>Tunetable</b> will appear below.</p>
                 </div>
-              </th>
-              <th id="t-head-id"><button title="TSO Tune ID or Tune Meter. Click to toggle" aria-label="Tune ID">ID</button></th>
-              <th id="t-head-url"><button title="Default: Link to TSO Tune or Set. Alt: ABC incipit. Click to expand or shrink Tunetable">URL</button></th>
-            </tr>
-          </thead>
-          <tbody id="t-tunes"></tbody>
-        </table>
+              </div>
+            </div>
+            <div class="acc-wrapper">
+              <div class="acc-item-content">
+                <h3>
+                  <button id="help-menu-links" class="help-menu-subhead glowing wide" aria-expanded="false" aria-hidden="true" aria-controls="help-links-content" tabindex="-1">
+                    <span class="plus-icon" aria-hidden="true">+</span>
+                    Links you can use
+                    <svg class="app-icon" aria-hidden="true"><use href="assets/icons/icons.svg#t-gen-btn-icon"></use></svg>
+                  </button>
+                </h3>
+                <div id="help-links-content" class="help-menu-text" role="region" aria-labelledby="help-menu-links" aria-hidden="true">
+                  <p>Valid TSO links must end with /tunes or /tunebook as well as /sets or /tunesets.
+                    Note that you may need to manually add /tunes or /tunesets at the end of the base URL.</p>
+                  <ul>
+                    <li><button class="example-link" id="example-tunebook" title="Example Tunebook" tabindex="-1"><b>Input example Tunebook</b></button>
+                    </li>
+                    <li><button class="example-link" id="example-tunelist" title="Example tunelist" tabindex="-1"><b>Input example tunelist</b></button>
+                    </li>
+                    <li><button class="example-link" id="example-setbook" title="Example Setbook" tabindex="-1"><b>Input example Setbook</b></button>
+                    </li>
+                    <li><button class="example-link" id="example-setlist" title="Example setlist" tabindex="-1"><b>Input example setlist</b></button></li>
+                  </ul>
+                  <p><b>NB:</b> You can use sorting queries such as ?orderby=newest as long as the base URL before the query meets the above conditions.</p>
+                </div>
+              </div>
+            </div>
+            <div class="acc-wrapper">
+              <div class="acc-item-content">
+                <h3>
+                  <button id="help-menu-sorting" class="help-menu-subhead glowing wide" aria-expanded="false" aria-hidden="true" aria-controls="help-sorting-content" tabindex="-1">
+                    <span class="plus-icon" aria-hidden="true">+</span>
+                    How to sort tunes
+                    <svg class="app-icon" aria-hidden="true"><use href="assets/icons/icons.svg#t-sort-btn-icon"></use></svg>
+                  </button>
+                </h3>
+                <div id="help-sorting-content" class="help-menu-text" role="region" aria-labelledby="help-menu-sorting" aria-hidden="true">
+                  <p>When the Tunetable is ready, press the <b>Sort</b> button to open the sorting menu,
+                    select the preferred style and options and press the <b>Work away!</b> button to confirm.</p>
+                  <p>While picking a <b>Style</b> (order-by) is required, other settings are optional. Your tunes / sets can either be left in the 
+                    default TSO order or be sorted anew, alphabetically or by tune type.</p>
+                  <p>Depending on the options picked, Sort will also (re)move the articles in tune titles to make skimming through the list easier.</p>
+                  <p>You can also append tune type and key to names and replace URLs with ABC incipits. If you’re converting several lists and want
+                    some of these settings to stick for the entire session, click <b>Show more options</b> and check additional boxes for ABC, Keys or Type.</p>
+                </div>
+              </div>
+            </div>
+            <div class="acc-wrapper">
+              <div class="acc-item-content">
+                <h3>
+                  <button id="help-menu-export" class="help-menu-subhead glowing wide" aria-expanded="false" aria-hidden="true" aria-controls="help-export-content" tabindex="-1">
+                    <span class="plus-icon" aria-hidden="true">+</span>
+                    How to save tunes
+                    <svg class="app-icon" aria-hidden="true"><use href="assets/icons/icons.svg#n-save-icon"></use></svg>
+                  </button>
+                </h3>
+                <div id="help-export-content" class="help-menu-text" role="region" aria-labelledby="help-menu-export" aria-hidden="true">
+                  <p>Use the <b>Download</b> button to save your Tunetable in plain text format.
+                    If you want to save the data as a JSON file, press the <b>Index (#)</b> button on the Tunetable.</p>
+                  <p>The exported Tunetable will only contain the data you see on the screen, including the tune keys and types which can be added
+                    in <b>Sort</b> menu options. If you want to have tune meters in place of IDs or vice versa,
+                    click on the header of the <b>ID/M</b> column any time before saving. If you need 
+                    a few bars of ABCs in place of URLs, select the ‘ABC’ option before sorting your Tunetable.</p>
+                  <p>Should you wish to revert your tune titles to TSO defaults, press the <b>Revert</b> button 
+                    to the right of the Name column.</p>
+                </div>
+              </div>
+            </div>
+            <div class="acc-wrapper">
+              <div class="acc-item-content">
+                <h3>
+                  <button id="help-menu-abc-incipits" class="help-menu-subhead glowing wide" aria-expanded="false" aria-hidden="true" aria-controls="help-abc-incipits-content" tabindex="-1">
+                    <span class="plus-icon" aria-hidden="true">+</span>
+                    How to add ABCs
+                    <svg class="app-icon" aria-hidden="true"><use href="assets/icons/icons.svg#n-abc-icon"></use></svg>
+                  </button>
+                </h3>
+                <div id="help-abc-incipits-content" class="help-menu-text" role="region" aria-labelledby="help-menu-abc-incipits" aria-hidden="true">
+                  <p>Whether you’re browsing through a long Tunebook or preparing a setlist for a gig, sometimes you need a few bars of notes
+                    to remember how a tune starts. With tunelists getting larger, adding ABCs or sheet music for each tune can get painful. Luckily,
+                    there’s an easy way to produce a text-only cheat sheet using The Session and this app.</p>
+                  <p>Tick the ‘ABC’ checkbox at the bottom of the sorting options to change the default display of URLs to ABC incipits. This
+                    will immediately preload a compressed shortlist of incipits from a thoroughly filtered list of all the tunes on The Session
+                    (&lt;&nbsp;1&nbsp;MB for tunelists, &lt;&nbsp;3&nbsp;MB for setlists). Any freshly-added tunes missing from the file will be fetched directly
+                    from The Session (this may take a few seconds).</p>
+                  <p>The ABCs will be inserted in your Tunetable after you sort it with preferred settings by pressing the Work away! button.
+                    For easier viewing, press the ABC column header to expand it horizontally or click anywhere in the Tunetable to expand all the rows 
+                    vertically.</p>
+                  <p>Note that the ABC file for tunelists is made up of top settings of tunes on The Session in whatever key and version they happen 
+                    to have been added in. If you wish to make a list from specific tune settings, it is currently possible to do so in TSO Setbooks and setlists.</p>
+                </div>
+              </div>
+            </div>
+            <div class="acc-wrapper">
+              <div class="acc-item-content">
+                <h3>
+                  <button id="help-menu-mobile-view" class="help-menu-subhead glowing wide" aria-expanded="false" aria-hidden="true" aria-controls="help-mobile-view-content" tabindex="-1">
+                    <span class="plus-icon" aria-hidden="true">+</span>
+                    Mobile view tips
+                    <svg class="app-icon" aria-hidden="true"><use href="assets/icons/icons.svg#n-mobile-icon"></use></svg>
+                  </button>
+                </h3>
+                <div id="help-mobile-view-content" class="help-menu-text" role="region" aria-labelledby="help-menu-mobile-view" aria-hidden="true">
+                  <p>This app has been created with mobile devices in mind but you can further improve your experience by following the tips below.</p>
+                  <p>If you have an Android or Apple device, open Tunetable in Google Chrome or Safari and install it as a Progressive Web App (PWA).
+                    This will boost the app’s capabilities, enabling you to load cached tune data while offline. <b>NB</b>: This feature is a work in progress.
+                    Your feedback or bug reports are very much appreciated!</p>
+                  <p>When viewing the app from a phone, try rotating your device to landscape mode. Doing so will expand the tune titles automatically. 
+                    If you want to view links or ABC incipits instead, press the URL/ABC column header. Press the Name column header to expand tune titles again.</p>
+                  <p>If your device’s screen is still too narrow or you prefer to scroll down your list in portrait mode, there’s an option for that too. 
+                    Press anywhere inside Tunetable to expand all the rows vertically, press again to return to a previously selected horizontal setting.</p>
+                  <p>To copy the text from a Tunetable cell long press and hold until context menu appears, then press Copy. The same works if you’re using
+                    a mouse: left-click to expand rows, left-click and hold to make a selection.</p>
+                </div>
+              </div>
+            </div>
+            <button id="help-menu-close" class="acc-wrap-btn wide" title="Close help menu" aria-hidden="true" tabindex="-1">
+              <svg class="app-icon acc-wrap-icon glowing"><use href="assets/icons/icons.svg#wrap-icon"></use></svg>
+            </button>
+          </div>
+        </div>
+        <form class="input-container">
+          <input type="url" id="input-form" name="input-form" placeholder="Input a link to The Session & hit enter" title="Link example: https://thesession.org/members/26966/tags/Polkas101/tunes" aria-label="Input form for links to The Session" autocomplete="off" autofocus>
+          <div class="btn-container">
+            <button class="t-btn t-gen-btn" title="Press to create Tunetable from TheSession.org link">
+              <span class="t-btn-text">Generate Tunetable</span>
+              <span class="t-gen-btn-icon">
+                <svg class="app-icon t-input-control-icon" aria-hidden="true"><use href="assets/icons/icons.svg#t-gen-btn-icon"></use></svg>
+              </span>
+            </button>
+            <button class="t-btn t-clr-btn" title="Clear Tunetable data and all settings">
+              <span class="t-clr-btn-icon">
+                <svg class="app-icon t-input-control-icon" aria-hidden="true"><use href="assets/icons/icons.svg#t-clr-btn-icon"></use></svg>
+              </span>
+            </button>
+            <button class="t-btn t-sort-btn" id="sort" title="Press to open or close the Sort Menu" aria-expanded="false" aria-controls="sort-menu-options">
+              <span class="t-btn-text">Sort</span>
+              <span class="t-sort-btn-icon">
+                <svg class="app-icon t-input-control-icon" aria-hidden="true"><use href="assets/icons/icons.svg#t-sort-btn-icon"></use></svg>
+              </span>
+            </button>
+          </div> 
+        </form>
+        <form id="sort-menu-options" class="sort-menu-container" role="region" aria-labelledby="sort" aria-hidden="true">
+          <div class="radio-container">
+            <div class="radio-wrapper" role="radiogroup" title="Select Tunetable sorting style">
+              <label for="sort-default-btn" class="radio-label"><b>Sorting style:</b> Default order</label>
+              <input type="radio" id="sort-default-btn" class="radio-btn" name="sortstyle" value=1 title="Example: An Seanchai Muimhneach [...] The Ballydesmond [...] Denis Murphy's">
+            </div>
+            <div class="radio-wrapper">
+              <label for="sort-reorder-btn" class="radio-label"><b>Sorting style:</b> Sort by Name</label>
+              <input type="radio" id="sort-reorder-btn" class="radio-btn" name="sortstyle" value=2 title="Example: Ballydesmond [...] Denis Murphy's [...] Seanchai Muimhneach">
+            </div>
+            <div class="radio-wrapper">
+              <label for="sort-by-type-btn" class="radio-label"><b>Sorting style:</b> Sort by Type</label>
+              <input type="radio" id="sort-by-type-btn" class="radio-btn" name="sortstyle" value=3 title="Example: Seanchai Muimhneach (Jig) [...] Ballydesmond (Polka) [...] Denis Murphy's (Slide)">
+            </div>
+            <div class="radio-wrapper" role="radiogroup" title="Choose what to do if the tune name begins with a definite article">
+              <span class="radio-intro">The: </span>
+              <label for="keep-the-btn" class="radio-label">Keep
+              <input type="radio" id="keep-the-btn" class="radio-btn" name="nothestyle" value=0 title="Example: The Magic Slipper" aria-label="Keep definite articles in tune names" checked></label>
+              <label for="move-the-btn" class="radio-label">Move
+              <input type="radio" id="move-the-btn" class="radio-btn" name="nothestyle" value=1 title="Example: Magic Slipper, The" aria-label="Move definite articles after tune names"></label>
+              <label for="cut-the-btn" class="radio-label">Cut
+              <input type="radio" id="cut-the-btn" class="radio-btn" name="nothestyle" value=2 title="Example: Magic Slipper" aria-label="Cut definite articles from tune names"></label>
+            </div>
+            <div class="radio-wrapper" role="radiogroup" title="Choose what to do if the tune name begins with an indefinite article or Irish definite article">
+              <span class="radio-intro">An:&nbsp;&nbsp;</span>
+              <label for="keep-an-btn" class="radio-label">Keep
+              <input type="radio" id="keep-an-btn" class="radio-btn" name="noanstyle" value=0 title="Example: An Puncan" aria-label="Keep indefinite articles or Irish definite articles in tune names" checked></label>
+              <label for="move-an-btn" class="radio-label">Move
+              <input type="radio" id="move-an-btn" class="radio-btn" name="noanstyle" value=1 title="Example: Puncan, An" aria-label="Move indefinite articles or Irish definite articles after tune names"></label>
+              <label for="cut-an-btn" class="radio-label">Cut
+              <input type="radio" id="cut-an-btn" class="radio-btn" name="noanstyle" value=2 title="Example: Puncan" aria-label="Cut indefinite articles or Irish definite articles from tune names"></label>
+            </div>
+            <div class="checkbox-container" role="radiogroup" title="Choose whether to display tune type, key or ABC incipit">
+              <span class="radio-intro">Show: </span>
+              <label for="add-type" class="checkbox-label">Type
+                <input type="checkbox" id="add-type" name="type" class="checkbox-btn" value="1" title="Example: John Walsh's (Polka)" aria-label="Show tune type after tune names">
+              </label>
+              <label for="add-keys" class="checkbox-label">Keys
+                <input type="checkbox" id="add-keys" name="keys" class="checkbox-btn" value="1" title="Example: John Walsh's (Gmaj)" aria-label="Show tune keys after tune names">
+              </label>
+              <label for="add-abc" class="checkbox-label">ABC
+                <input type="checkbox" id="add-abc" name="abc" class="checkbox-btn" value="1" title="Example: D|G&gt;A BA|GE ED" aria-label="Show ABC incipits in place of links to The Session">
+              </label>
+            </div>
+            <button id="sort-more-button" class="adv-options-btn" title="Show additional sorting options" aria-expanded="false" aria-controls="adv-options-wrapper"><b>Show more options</b></button>
+            <div id="sort-more-options" class="adv-options-wrapper hidden" aria-hidden="true" aria-labelledby="sort-more-options">
+              <label for="use-shorter-abc" class="checkbox-label">Shorter ABC incipits
+                <input type="checkbox" id="use-shorter-abc" name="useshorterabc" class="checkbox-btn" value="useShorterAbc">
+              </label>
+              <label for="use-type-default" class="checkbox-label">Always add tune type
+                <input type="checkbox" id="use-type-default" name="usetypedefault" class="checkbox-btn" value="useTypeDefault">
+              </label>
+              <label for="use-abc-default" class="checkbox-label">Always load & show ABC
+                <input type="checkbox" id="use-abc-default" name="useabcdefault" class="checkbox-btn" value="useAbcDefault">
+              </label>
+              <label for="use-keys-default" class="checkbox-label">Always load ABC & show keys
+                <input type="checkbox" id="use-keys-default" name="usekeysdefault" class="checkbox-btn" value="useKeysDefault">
+              </label>
+            </div>
+          </div>
+          <button class="t-btn r-go-sort-btn wide" title="Apply the selected Sort menu settings">
+            <span class="t-btn-text">Work away!
+              <span class="r-go-sort-btn-icon">
+                <svg class="app-icon r-go-sort-icon" aria-hidden="true"><use href="assets/icons/icons.svg#r-go-sort-icon"></use></svg>
+              </span>
+            </span>
+          </button>
+        </form>
+        <button class="info-box" aria-live="polite" aria-expanded="false" title="Information box. Press to toggle Offline menu"></button>
+        <div class="offline-links-box hidden" aria-hidden="true"></div>
+        <div class="t-container">
+          <table id="tunetable">
+            <thead>
+              <tr id="t-headers">
+                <th id="t-head-no"><button class="wide" title="Tunetable Index Number. Click to download Tune data">#</button></th>
+                <th id="t-head-name">
+                  <div class="t-head-name-container">
+                    <button class="t-head-name-btn" title="Tune Title. Click to expand or shrink Tunetable">Name</button>
+                    <button class="t-revert-btn" id="revert" aria-label="Reset" title="Revert Tunetable & data to unsorted original">
+                      <svg class="app-icon t-revert-icon" aria-hidden="true"><use href="assets/icons/icons.svg#t-revert-icon"></use></svg>
+                    </button>
+                  </div>
+                </th>
+                <th id="t-head-id"><button class="wide" title="TSO Tune ID or Tune Meter. Click to toggle" aria-label="Tune ID">ID</button></th>
+                <th id="t-head-url"><button class="wide" title="Default: Link to TSO Tune or Set. Alt: ABC incipit. Click to expand or shrink Tunetable">URL</button></th>
+              </tr>
+            </thead>
+            <tbody id="t-tunes"></tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </main>
+    <footer>
+      <div class="footer-container">
+      <div class="logo github-logo" title="Tunetable on GitHub">
+        <svg class="logo-icon github-icon-dark" aria-hidden="true"><use href="assets/icons/icons.svg#github-icon"></use></svg>
+        <svg class="logo-icon github-icon-light" aria-hidden="true"><use href="assets/icons/icons.svg#github-icon"></use></svg>
+        <a class="logo-link" href="https://github.com/anton-bregolas/Tunetable" target="_blank">O</a>
+      </div>
+      </div>
+    </footer>
   </body>
 </html>

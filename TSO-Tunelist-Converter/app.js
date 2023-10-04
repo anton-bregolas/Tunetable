@@ -1,13 +1,28 @@
-import { cleanTsoAbc } from './modules/abc-cleaner.js';
+///////////////////////////////////////////////////////////////////////
+// Tunetable main module v.1.9.0 
+// 
+// Currently deployed version: 
+// https://github.com/anton-bregolas/TSO-Tunelist-Converter/tree/deploy
+//
+// Latest Tunetable version: 
+// https://github.com/anton-bregolas/TSO-Tunelist-Converter/tree/main
+// 
+///////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////
-// Declare global variables, create user JSONs
-//////////////////////////////////////////////
+import { fetchTheSessionJson, loadAbcIncipits } from './modules/abc-fetcher.js';
+import { toggleAriaExpanded, toggleAriaHidden, toggleTabIndex } from './modules/aria-tools.js';
+import { checkIfJsonHasAbc, checkIfJsonHasSets, checkIfJsonHasTunes, createDeepCopyJson } from './modules/json-tools.js';
+import { validateTsoUrl } from './modules/url-validator.js';
+
+//////////////////////////////////////////////////////////////////
+// Declare global variables and constants, set default user JSONs
+/////////////////////////////////////////////////////////////////
+
+const CACHE_NAME = 'tunetable-cache-v.1.9.0';
 
 let noThe = 0;
 let noAn = 0;
 let sortStyle = 0;
-let tDelay = 0;
 let appBusy = 0;
 let showMeter = 0;
 let importJson = {};
@@ -22,6 +37,8 @@ const saveIcon = saveBtn.querySelector('.n-save-icon');
 const helpIcon = helpBtn.querySelector('.n-help-icon');
 const sunIcon = themeBtn.querySelector('.n-theme-icon-sun');
 const moonIcon = themeBtn.querySelector('.n-theme-icon-moon');
+const githubDark = document.querySelector('.github-icon-dark');
+const githubLight = document.querySelector('.github-icon-light');
 const allBtn = document.querySelectorAll('.t-btn');
 
 // Accordion help menu elements
@@ -41,7 +58,7 @@ const accWrapBtn = accMainWrapper.querySelector('#help-menu-close');
 
 // Input form elements
 
-const inputForm = document.querySelector('#input-form');
+export const inputForm = document.querySelector('#input-form');
 const generateTunetableBtn = document.querySelector('.t-gen-btn');
 const clearTunetableBtn = document.querySelector('.t-clr-btn');
 const sortTunetableBtn = document.querySelector('.t-sort-btn');
@@ -58,8 +75,8 @@ const showAbcBox = document.querySelector('#add-abc');
 const advOptionsBtn = document.querySelector('#sort-more-button');
 const advOptionsBox = document.querySelector('#sort-more-options');
 const useShorterAbcBox = document.querySelector('#use-shorter-abc');
-const alwaysUseAbcBox = document.querySelector('#use-abc-default');
-const alwaysUseKeysBox = document.querySelector('#use-keys-default');
+export const alwaysUseAbcBox = document.querySelector('#use-abc-default');
+export const alwaysUseKeysBox = document.querySelector('#use-keys-default');
 const alwaysUseTypeBox = document.querySelector('#use-type-default');
 
 // Tunetable elements
@@ -79,13 +96,17 @@ const revertBtn = tableWrapper.querySelector('.t-revert-btn');
 
 const infoBox = document.querySelector('.info-box');
 
-//////////////////////////////////////////////////////////
-// Functions: Messages, checks, fetching, sorting, saving
-/////////////////////////////////////////////////////////
+// Cached link box elements
+
+const offlineBox = document.querySelector('.offline-links-box');
+
+////////////////////////////////////////////////////
+// General functions: Button actions, info messages
+///////////////////////////////////////////////////
 
 // Display Infobox message or warning
 
-function showInfoMsg(msg, err) {
+export function showInfoMsg(msg, err) {
 
   let infoMsg = document.createElement("span");
   infoMsg.textContent = msg;
@@ -99,99 +120,9 @@ function showInfoMsg(msg, err) {
 
 }
 
-// Validate The Session URL
-
-function validateTsoUrl() {
-
-  const inputUrl = inputForm.value.trim().split("?");
-  const tsoUrl = inputUrl[0];
-  const tsoUrlQuery = inputUrl[1];
-
-  const validTunelist = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btags\b\/.+\/\btunes\b\/?$/;
-  const validTunebook = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btunebook\b\/?$/;
-  const validSetbook = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\bsets\b\/?$/;
-  const validSetlist = /^(?:https?:\/\/)?(www\.)?\bthesession\.org\/members\/\b[0-9]+\/\btags\b\/.+\/\btunesets\b\/?$/;
-  const validQuery = /^[a-z0-9&=]*$/;
-
-  if (inputUrl.length <= 2) {
-    
-    if (validTunelist.test(tsoUrl) || validTunebook.test(tsoUrl) || 
-    validSetbook.test(tsoUrl) || validSetlist.test(tsoUrl)) {
-
-      if (tsoUrlQuery == null || validQuery.test(tsoUrlQuery)) {
-
-        console.log('URL passed validation');
-        return true;
-      }
-    }
-  }
-  
-  console.log('URL failed validation');
-  return false;
-}
-
-// Check if The Session URL contains list of tunes
-
-function checkIfTunesUrl(url) {
-
-  let checkUrl = url.split("?")[0];
-
-  if (checkUrl.endsWith("/tunes") || checkUrl.endsWith("/tunes/") ||
-  checkUrl.endsWith("/tunebook") || checkUrl.endsWith("/tunebook/")) {
-
-    return true;
-  }
-
-  return false;
-}
-
-// Check if The Session URL contains sets of tunes
-
-function checkIfSetsUrl(url) {
-
-  let checkUrl = url.split("?")[0];
-
-  if (checkUrl.endsWith("/sets") || checkUrl.endsWith("/sets/") ||
-  checkUrl.endsWith("/tunesets") || checkUrl.endsWith("/tunesets/")) {
-
-    return true;
-  }
-
-  return false;
-}
-
-// Process TSO link and add a necessary JSON query variant depending on the content
-
-function makeJsonQueryLink(url) {
-
-  if (url.startsWith("http:")) {
-
-    url = url.replace("http:", "https:");
-  }
-
-  if (url.endsWith("/tunebook") || url.endsWith("/tunebook/")) {
-
-    return `${url}?format=json`;
-
-  } else if (url.endsWith("/tunes") || url.endsWith("/tunes/") ||
-      url.endsWith("/sets") || url.endsWith("/tunesets") || 
-        url.endsWith("/sets/") || url.endsWith("/tunesets/")) {
-
-    return `${url}?format=json&perpage=50`;
-
-  } else if (url.includes("/tunebook")) {
-
-    return `${url}&format=json`;
-
-  } else {
-
-    return `${url}&format=json&perpage=50`;
-  }
-}
-
 // Disable input form buttons
 
-function disableButtons() {
+export function disableButtons() {
 
   generateTunetableBtn.setAttribute("disabled", '');
   clearTunetableBtn.setAttribute("disabled", '');
@@ -208,7 +139,7 @@ function disableButtons() {
 
 // Reactivate input form buttons
 
-function enableButtons() {
+export function enableButtons() {
 
   generateTunetableBtn.removeAttribute("disabled");
   clearTunetableBtn.removeAttribute("disabled");
@@ -234,390 +165,151 @@ function enableButtons() {
   }
 }
 
-// Make a standard fetch request, throw an error if it fails
+// Make fetch request, then create Tunetable on successful Generate button click
 
-async function fetchData(url, type) {
+async function generateTunetableSequence() {
+
   try {
-    const response = await fetch(url);
 
-    let data;
+    disableButtons();
 
-    if (!response.ok) {
+    importJson = await fetchTheSessionJson(inputForm.value.trim());
 
-      let errorMessage;
+    enableButtons();
 
-      if (response.status < 500) {
+    inputForm.value = "";
 
-        errorMessage = "Broken link or else, check URL!";
+    if (checkIfJsonHasTunes(importJson) || checkIfJsonHasSets(importJson)) {
 
-      } else {
+      createTuneTable(importJson);
 
-        errorMessage = "Server error. Give TSO a break!";
-      }
+      await generateOfflineLinks();
 
-      console.error("HTTP error code:", response.status);
+      sortTunetableBtn.focus();
 
-      showInfoMsg(errorMessage, 1);
-
-      throw new Error(errorMessage);
     }
 
-    if (type === "json") {
+  } catch (error) {
+    
+    console.error("Generate Tunetable sequence failed");
+    showInfoMsg(error.message || "No tunes loaded! Try again", 1);
+    displayOfflineMenu();
+    enableButtons();
+  }
+}
 
-      data = await response.json();
+// Preload ABC incipits as soon as ABC or Keys checkbox is checked
 
-    } else if (type === "text") {
+async function abcPreloadSequence() {
 
-      data = await response.text();
+  disableButtons();
+
+  try {
+
+    await loadAbcIncipits(importJson);
+
+    if (checkIfJsonHasTunes(importJson)) {
+
+      showInfoMsg("ABC incipits & keys preloaded");
 
     } else {
 
-      console.error("Invalid data type passed to Fetch!");
-      throw error;
+      showInfoMsg("ABC incipits preloaded");
     }
-
-    return data;
 
   } catch (error) {
 
-    console.error("Fetching data failed! Error rethrown.");
-    throw error;
-  }
-}
-
-// Retrieve JSON data from The Session using async fetch requests
-// Display bonus messages if tDelay > 3s, then call createTuneTable()
-
-async function fetchTheSessionJson(url) {
-
-  let jsonUrl;
-  let errorMessage;
-
-  appBusy = 1;
-  disableButtons();
-
-  jsonUrl = makeJsonQueryLink(url);
-
-  showInfoMsg("Fetching tunes from TSO...");
-  console.log(`Fetching ${jsonUrl}`);
-
-  try {
-
-    const tsoData = await fetchData(jsonUrl, "json");
-
-    if (checkIfJsonHasTunes(tsoData) || checkIfJsonHasSets(tsoData)) {
-
-      inputForm.value = "";
-      clearJsonData();
-      clearTunetable();
-      clearSortMenu();
-      clearCheckboxData();
-
-      if (!checkIfSetsUrl(url)) {
-      
-        importJson = { "tunes": [] };
-        
-        for (const tune of tsoData.tunes) {
-
-          const { id, name, url, type } = tune;
-          importJson.tunes.push({ id, name, url, type });
-        } 
-
-        console.log("Fetched page #1 of Tunes JSON");
-
-      } else if (checkIfSetsUrl(url)) {
-
-        importJson = { "sets": [] };
-
-        for (const set of tsoData.sets) {
-
-          const { id, name, url, settings } = set;
-          importJson.sets.push({ id, name, url, settings });
-        } 
-
-        console.log("Fetched page #1 of Sets JSON");
-
-      } else {
-
-        errorMessage = "No tunes or sets found! Check URL";
-        throw new Error(errorMessage);
-      }
-
-    } else {
-
-      console.error("Found empty tune/set array, link corrupted or list missing:", jsonUrl);
-      errorMessage = "No tune data found! Check URL";
-      throw new Error(errorMessage);
-    }
-
-    const timeStamp1 = Date.now();
-    tDelay = tsoData.pages > 1 ? Math.floor((+tsoData.pages - 1) / 2.6 * 1000) : 0;
-    console.log(`Table processing delay estimated at ${tDelay} ms`);
-
-    if (tsoData.pages > 1) {
-
-      const messagePromise = (async () => {
-
-        if (tDelay > 3000) {
-          showInfoMsg("Jaysus, that’s a long list!");
-          await msgDelay(1250);
-          showInfoMsg("Be patient now.");
-          await msgDelay(1250);
-          showInfoMsg("Creating Tunetable...");
-        } else {
-          showInfoMsg("Creating Tunetable...");
-        }
-      })();
-      
-      const fetchingPromise = (async () => {
-
-        const tunePages = [];
-      
-        for (let p = 2; p <= tsoData.pages; p++) {
-          let pageUrl = `${jsonUrl}&page=${p}`;
-          console.log(`Fetching ${jsonUrl}`);
-          tunePages.push(fetchData(pageUrl, "json"));
-        }
-      
-        const pageResponses = await Promise.all(tunePages);
-      
-        for (const pageData of pageResponses) {
-
-          if (checkIfJsonHasTunes(pageData)) {
-
-            for (const tune of pageData.tunes) {
-
-              const { id, name, url, type } = tune;
-              importJson.tunes.push({ id, name, url, type });
-            } 
-
-          } else if (checkIfJsonHasSets(pageData)) {
-
-            for (const set of pageData.sets) {
-
-              const { id, name, url, settings } = set;
-              importJson.sets.push({ id, name, url, settings });
-            }
-          }
-        }
-      })();
-      
-      await Promise.all([messagePromise, fetchingPromise]);
-    }
-
-    const timeStamp2 = Date.now();
-    console.log(`Estimated delay: ${tDelay}ms, actual delay: ${timeStamp2 - timeStamp1}ms`);
-
-    if (alwaysUseAbcBox.checked || alwaysUseKeysBox.checked) {
-
-      await loadAbcIncipits();
-    }
-
-    createTuneTable(importJson);
-
-    inputForm.value = "";
-    appBusy = 0;
-    enableButtons();
-
-    sortTunetableBtn.focus();
-  } 
-
-  catch (error) {
-
-    errorMessage = error.message === "Failed to fetch"? "Network error, check your connection!" :
-     error.message || "Fetching data failed, try again!";
-
-    console.error("Error fetching JSON from The Session:", error);
-    
-    showInfoMsg(errorMessage, 1);
-
-    appBusy = 0;
-
-    enableButtons();
-    
-    return;
-  }
-}
-
-// Delay the display of bonus messages using new Promise
-
-async function msgDelay(duration) {
-
-  await new Promise(resolve => setTimeout(resolve, duration));
-}
-
-// Retrieve JSON data from The Session using async fetch requests
-// Display bonus messages if tDelay > 3s, then call createTuneTable()
-
-async function fetchAbcIncipit(tuneId) {
-
-  let tuneUrl = `https://thesession.org/tunes/${tuneId}?format=json`
-
-  let errorMessage;
-
-  try {
-
-    showInfoMsg(`Fetching data from TSO...`);
-    console.log(`Fetching ABC from ${tuneUrl}...`);
-
-    const tsoTuneData = await fetchData(tuneUrl, "json");
-
-    if (Array.isArray(tsoTuneData.settings) && tsoTuneData.settings.length > 0) {
-
-      console.log("Extracting ABC incipit and key from TSO tune...");
-
-      const abc = tsoTuneData.settings[0].abc;
-      const key = tsoTuneData.settings[0].key.slice(0, 4);
-      const abcBars = cleanTsoAbc(abc);
-      const incipit = `[${key}] ${abcBars}`;
-      console.log("Done fetching ABC incipit and tune key");
-
-      return incipit;
-
-    } else {
-
-      errorMessage = "Tune ABC missing or empty!";
-      throw new Error(errorMessage);
-    }
+    console.error("ABC preload sequence failed");
+    showInfoMsg(error.message || "Something went wrong!", 1);
+    displayOfflineMenu();
   }
 
-  catch (error) {
-
-    errorMessage = error.message === "Failed to fetch"? "Network error, check your connection!" :
-     error.message || "Fetching data failed, try again!";
-
-    console.error("Error fetching ABC incipits and keys from The Session:", error);
-    
-    showInfoMsg(errorMessage, 1);
-
-    appBusy = 0;
-    enableButtons();
-
-    return;
-  }
-}
-
-// Preload ABC incipits into Tune JSON based on Tune ID and JSON type
-
-async function loadAbcIncipits() {
-
-  let myJson;
-  let dataType;
-  
-  if (checkIfJsonHasTunes(importJson)) {
-
-    myJson = importJson;
-    dataType = myJson.tunes;
-
-  } else if (checkIfJsonHasSets(importJson)) {
-
-    myJson = importJson;
-    dataType = myJson.sets;
-
-  } else {
-
-    showInfoMsg("No tune data found! Re-generate Tunetable", 1);
-    return;
-  }
-
-  appBusy = 1;
-  disableButtons();
-
-  let abcUrl;
-  
-  if (checkIfJsonHasTunes(importJson)) {
-
-    abcUrl = "https://raw.githubusercontent.com/anton-bregolas/TSO-Tunelist-Converter/deploy/abc.json";
-
-  } else if (checkIfJsonHasSets(importJson)) {
-
-    abcUrl = "https://raw.githubusercontent.com/anton-bregolas/TSO-Tunelist-Converter/deploy/abc-settings.json"
-  }
-
-  showInfoMsg("Loading ABC incipits...");
-
-  const abcJson = await fetchData(abcUrl, "json");
-
-  if (checkIfJsonHasTunes(myJson)) {
-
-    if (!myJson.tunes[0].abc) {
-
-      console.log("Loading incipits and keys from local ABC JSON...");
-
-      for (let l = 0; l < myJson.tunes.length; l++) {
-
-        const tune = myJson.tunes[l];
-        const tuneId = tune.id;
-        let incipit = abcJson[tuneId] === undefined? await fetchAbcIncipit(tuneId) : abcJson[tuneId];
-        const key = incipit.slice(1, 5);
-        const abcBars = incipit.slice(7);
-
-        if (!tune.key) {
-          tune["key"] = key;
-        }
-        if (!tune.abc) {
-          tune["abc"] = abcBars;
-        }
-      }
-
-      console.log("ABC incipits and keys added to Tune JSON");
-    }
-
-  } else if (checkIfJsonHasSets(myJson)) {
-
-    if (!myJson.sets[0].settings[0].abc) {
-
-      console.log("Loading incipits from local ABC JSON...");
-
-      for (let m = 0; m < myJson.sets.length; m++) {
-
-        for (let n = 0; n < myJson.sets[m].settings.length; n++) {
-
-            const setting = myJson.sets[m].settings[n];
-            const settingId = setting.id;
-            let incipit = abcJson[settingId] === undefined? await fetchAbcIncipit(settingId) : abcJson[settingId];
-            let abcSetBars = incipit.slice(7);
-
-            if (!setting.abc) {
-              setting["abc"] = abcSetBars;
-            }
-            if (!setting.key) {
-              setting["key"] = incipit.slice(1, 5);
-            }
-        }
-      }
-
-      console.log("ABC incipits added to Set JSON");
-    }
-
-  } else {
-
-    showInfoMsg("No tune data found!", 1);
-    console.error("Failed to preload ABC incipits!");
-    appBusy = 0;
-    enableButtons();
-    saveIcon.setAttribute("style", "opacity: 1");
-    return;
-  }
-
-  if (checkIfJsonHasTunes(myJson)) {
-
-    showInfoMsg("ABC incipits & keys preloaded");
-
-  } else {
-
-    showInfoMsg("ABC incipits preloaded");
-  }
-
-  appBusy = 0;
   enableButtons();
   saveIcon.setAttribute("style", "opacity: 1");
-  return;
 }
+
+// Create a list of tunelists available for offline use
+
+async function generateOfflineLinks() {
+
+  try {
+
+    const cache = await caches.open(CACHE_NAME);
+    const requests = await cache.keys();
+    const cachedLinks = new Set();
+
+    offlineBox.textContent = '';
+
+    console.log("Retrieving offline links from cache...")
+
+    requests.forEach((request) => {
+
+      const url = new URL(request.url);
+
+      if (url.origin === "https://thesession.org" && url.pathname.startsWith("/members")) {
+        cachedLinks.add(url.pathname.slice(8));
+      }
+    });
+
+    cachedLinks.forEach((link) => {
+      const buttonLink = document.createElement('button');
+      buttonLink.classList.add("offline-link", "glowing", "wide");
+      buttonLink.textContent = `\u2026${link}`;
+
+      buttonLink.addEventListener('click', () => {
+        inputForm.value = `https://thesession.org/members${link}`;
+        toggleOfflineMenu();
+        hideSortMenu();
+        inputForm.focus();
+      });
+
+      offlineBox.appendChild(buttonLink);
+    });
+
+    console.log("Offline links inserted below Infobox");
+
+  } catch (error) {
+
+    console.error('Error generating offline links:', error);
+  }
+}
+
+// Show or hide offline links menu
+
+function toggleOfflineMenu() {
+
+  if (offlineBox.classList.contains("displayed")) {
+
+    offlineBox.classList.remove("displayed");
+  
+  } else {
+
+    offlineBox.classList.add("displayed");
+  }
+
+  toggleAriaExpanded(infoBox);
+  toggleAriaHidden(offlineBox);
+}
+
+// Show offline links menu
+
+function displayOfflineMenu() {
+
+  if (!offlineBox.classList.contains("displayed")) {
+
+    offlineBox.classList.add("displayed");
+    toggleAriaExpanded(infoBox);
+    toggleAriaHidden(offlineBox);
+  }
+}
+
+//////////////////////////////////////////////////////////////
+// Tunetable functions: Creating, sorting, modifying contents
+/////////////////////////////////////////////////////////////
 
 // Create Tunetable from nested JSON array of tunes
 
-function createTuneTable(myJson) {
+export function createTuneTable(myJson) {
 
   tuneTable.textContent = "";
   console.log('Creating tunetable');
@@ -688,7 +380,7 @@ function createTuneTable(myJson) {
 
         if (alwaysUseKeysBox.checked) {
 
-          nameAdditions += ` (${tuneKey})`;
+          nameAdditions += tuneKey? ` (${tuneKey})` : '';
         }
 
         if (alwaysUseTypeBox.checked) {
@@ -711,22 +403,28 @@ function createTuneTable(myJson) {
 
         if (checkIfJsonHasTunes(myJson)) {
 
-          myDataUrlAbc = myData[i].abc;
+          myDataUrlAbc = myData[i].abc? myData[i].abc : "N/A";
 
         } else if (checkIfJsonHasSets(myJson)) {
 
           for (let l = 0; l < myData[i].settings.length; l++) {
 
-            let tuneAbc = myData[i].settings[l].abc;
+            if (myData[i].settings[l].abc) {
 
-            if (useShorterAbcBox.checked) {
+              let tuneAbc = myData[i].settings[l].abc;
 
-              tuneAbc = tuneAbc?.split("|", 2).join("|");
+              if (useShorterAbcBox.checked) {
+
+                tuneAbc = tuneAbc?.split("|", 2).join("|");
+              }
+    
+              myDataUrlAbc += l === (myData[i].settings.length - 1)? 
+              tuneAbc : tuneAbc + ' // ';
+
+            } else {
+
+              myDataUrlAbc = "N/A";
             }
-  
-            myDataUrlAbc += l === (myData[i].settings.length - 1)? 
-            tuneAbc : tuneAbc + ' // ';
-  
           }
         }
 
@@ -766,61 +464,6 @@ function createTuneTable(myJson) {
   console.log('Tunetable created');
   saveIcon.setAttribute("style", "opacity: 1");
   appBusy = 0;
-}
-
-// Check if a nested JSON array of tunes is missing or empty
-
-function checkIfJsonHasTunes(checkJson) {
-
-  if (Array.isArray(checkJson.tunes) && checkJson.tunes.length > 0) { 
-
-    return true; 
-  } 
-
-  return false; 
-}
-
-// Check if a nested JSON array of sets is missing or empty
-
-function checkIfJsonHasSets(checkJson) {
-
-  if (Array.isArray(checkJson.sets) && checkJson.sets.length > 0) { 
-
-    return true; 
-  } 
-
-  return false; 
-}
-
-// Check if a nested JSON array of tunes / sets has ABC incipits
-
-function checkIfJsonHasAbc(checkJson) {
-
-  if (checkIfJsonHasTunes(checkJson)) {
-
-    if (checkJson.tunes[0].abc) {
-      
-      return true; 
-    }
-  }
-
-  else if (checkIfJsonHasSets(checkJson)) { 
-
-    if (checkJson.sets[0].settings[0].abc) {
-      
-      return true; 
-    }
-  } 
-
-  return false; 
-}
-
-// Create a deep copy of the JSON specified
-
-function createDeepCopyJson(rawJson) {
-
-  return JSON.parse(JSON.stringify(rawJson));
-
 }
 
 function checkIfTableEmpty() {
@@ -966,7 +609,7 @@ function processTuneTitle(title, type, key) {
 
   if (showKeysBox.checked || alwaysUseKeysBox.checked) {
 
-    newTitle += ` (${key})`;
+    newTitle += key? ` (${key})` : '';
   }
   
   if (showTypeBox.checked || alwaysUseTypeBox.checked) {
@@ -1085,272 +728,6 @@ function toggleIdMeter() {
   }
 }
 
-// Export tune data in JSON format
-
-function exportTuneData(myJson) {
-
-  const currentJson = JSON.stringify(myJson, null, 2);
-  const fileName = "myTuneData.json"
-  let tuneBlob = new Blob([currentJson], { type: "application/json" });
-  let tuneLink = document.createElement("a");
-
-  tuneLink.href = URL.createObjectURL(tuneBlob);
-  tuneLink.download = fileName;
-  document.body.appendChild(tuneLink);
-
-  tuneLink.click();
-  document.body.removeChild(tuneLink);
-
-}
-
-// Clear local JSONs with tunes
-
-function clearJsonData() {
-
-  importJson = {};
-  sortedJson = {};
-  saveIcon.removeAttribute("style");
-  console.log("Tune data cleared");
-
-}
-
-// Export Tunetable in plain text format, adding relative indentation
-
-function exportTuneTable() {
-
-  const tableRows = tuneTable.getElementsByTagName('tr');
-  const tableWidths = new Array(tuneTable.rows[0].cells.length).fill(0);
-
-  let tableHeaders = "";
-  let headersList = !showMeter? ["#", "Name", "ID", "URL"] : ["#", "Name", "M", "URL"];
-
-  tableWidths[2] = 2;
-
-  for (let f = 0; f < tableRows.length; f++) {
-
-    const tableCells = tableRows[f].getElementsByTagName('td');
-
-    for (let g = 0; g < tableCells.length; g++) {
-
-      tableWidths[g] = Math.max(tableWidths[g], tableCells[g].textContent.length);
-    }
-  }
-
-  for (let h = 0; h < headersList.length; h++) {
-
-    const headerText = headersList[h];
-    const spacesToAdd = tableWidths[h] - headerText.length + 1;
-    tableHeaders += h === (headersList.length - 1)? headerText : 
-    headerText + ' '.repeat(spacesToAdd) + '\t';
-  }
-
-  let tableContent = tableHeaders + '\n\n';
-
-  for (let i = 0; i < tableRows.length; i++) {
-
-    const tableCells = tableRows[i].getElementsByTagName('td');
-
-    for (let j = 0; j < tableCells.length; j++) {
-
-      const cellText = tableCells[j].textContent;
-      const spacesToAdd = tableWidths[j] - cellText.length + 1;
-      tableContent += j === tableCells.length - 1? cellText : 
-      cellText + ' '.repeat(spacesToAdd) + '\t';
-    }
-
-    tableContent += '\n';
-  }
-
-  const txtName = "myTuneTable.txt";
-  let tuneTableBlob = new Blob([tableContent], { type: "text/plain" });
-  let tuneTableLink = document.createElement("a");
-
-  tuneTableLink.href = URL.createObjectURL(tuneTableBlob);
-  tuneTableLink.download = txtName;
-  document.body.appendChild(tuneTableLink);
-
-  tuneTableLink.click();
-  document.body.removeChild(tuneTableLink);
-
-}
-
-// Clear Tunetable if it exists, else clear Infobox
-
-function clearTunetable() {
-
-  if (!checkIfTableEmpty()) {
-
-    tuneTable.textContent = "";
-    console.log("Tunetable cleared");
-  } 
-}
-
-// Check if any of the sorting styles are selected
-
-function radioChecked() {
-
-  let sortOptions = document.getElementsByName("sortstyle");
-
-  for (let i = 0; i < sortOptions.length; i++) {
-  
-    if (sortOptions[i].checked) {
-
-        return true;
-    }
-  }
-
-  return false;
-}
-
-// Uncheck all sorting options checkboxes
-
-function clearCheckboxData() {
-
-  if (!alwaysUseTypeBox.checked) {
-
-    showTypeBox.checked = false;
-  }
-
-  if (!alwaysUseKeysBox.checked) {
-
-    showKeysBox.checked = false;
-  }
-
-  if (!alwaysUseAbcBox.checked) {
-
-    showAbcBox.checked = false;
-  }
-}
-
-// Clear checked radio button and sorting style value
-
-function clearSortMenu() {
-
-  if (sortStyle > 0) {
-    sortStyle = 0;
-    document.querySelector('input[name="sortstyle"]:checked').checked = false;
-    console.log("Sorting style cleared");
-  }
-}
-
-// Toggle the ARIA-expanded state of an element
-
-function toggleAriaExpanded(element) {
-
-  if (element.getAttribute("aria-expanded") === "false") {
-
-    element.setAttribute("aria-expanded", true);
-    return;
-  } 
-  
-  element.setAttribute("aria-expanded", false);
-}
-
-// Toggle the ARIA-hidden state of an element
-
-function toggleAriaHidden(element) {
-
-  if (element.getAttribute("aria-hidden") === "true") {
-
-    element.setAttribute("aria-hidden", false);
-    return;
-  } 
-  
-  element.setAttribute("aria-hidden", true);
-}
-
-// Make links, buttons and inputs inside an element focusable / not focusable
-
-function toggleTabIndex(element) {
-
-  let focusableItems = ['a[href]', 'button:not([disabled]):not(.help-menu-subhead)', 'input:not([disabled])'];
-
-  focusableItems.forEach(itemType => {
-
-    element.querySelectorAll(itemType).forEach(item => {
-
-      let tabIndex = item.getAttribute("tabindex") === "0"? "-1" : "0";
-  
-      item.setAttribute("tabindex", tabIndex);
-    });
-  });
-}
-
-// Toggle states of the visible help menu items when the menu is wrapped / unwrapped
-
-function toggleAriaStatesHelp() {
-
-  toggleAriaExpanded(accMainHeader);
-  toggleAriaHidden(accHelpMenu);
-
-  if (accMenuIntro.classList.contains("unwrapped")) {
-    toggleAriaHidden(accMenuIntroText);
-    toggleTabIndex(accMenuIntroText);
-  }
-
-  accSubHeaders.forEach(subheader => {
-    
-    let tabIndex = subheader.getAttribute("tabindex") === "0"? "-1" : "0";
-    subheader.setAttribute("tabindex", tabIndex);
-    toggleAriaHidden(subheader);
-  });
-
-  accWrappers.forEach(wrapper => {
-    
-    if (wrapper.classList.contains("unwrapped")) {
-      toggleTabIndex(wrapper);
-    }
-  });
-
-  let tabIndexWrapper = accWrapBtn.getAttribute("tabindex");
-
-  if (tabIndexWrapper === "0") {
-    
-    accWrapBtn.setAttribute("disabled", '');
-    accWrapBtn.setAttribute("tabindex", "-1");
-    inputForm.focus();
-
-  } else {
-    accWrapBtn.removeAttribute("disabled");
-    accWrapBtn.setAttribute("tabindex", "0");
-  }
-
-  toggleAriaHidden(accWrapBtn);
-}
-
-// Toggle states of the visible sort menu items when the menu is wrapped / unwrapped
-
-function toggleAriaStatesSort() {
-
-  toggleAriaExpanded(sortTunetableBtn);
-  toggleAriaHidden(sortMenu);
-
-  if (advOptionsBox.classList.contains("displayed-flex")) {
-    toggleAriaHidden(advOptionsBox);
-  }
-}
-
-// Show or hide help menu
-
-function toggleHelpMenu() {
-  
-  hideSortMenu();
-  helpIcon.classList.toggle("active");
-  accMainWrapper.classList.toggle("unwrapped");
-  toggleAriaStatesHelp();
-}
-
-// Hide Sort options menu
-
-function hideSortMenu() {
-
-  if (sortMenu.classList.contains("displayed")) {
-    
-    sortMenu.classList.remove("displayed");
-    toggleAriaStatesSort();
-  }
-}
-
 // Expand or collapse the Tunetable cells specified
 
 function toggleTunetable(cells) {
@@ -1412,9 +789,251 @@ function expandTuneNames() {
   }
 }
 
-//////////////////////////////////////////////
-// Add listeners to buttons and radio buttons
-/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+// Export data functions: Saving Tunetable contents and JSON files
+//////////////////////////////////////////////////////////////////
+
+// Export tune data in JSON format
+
+function exportTuneData(myJson) {
+
+  const currentJson = JSON.stringify(myJson, null, 2);
+  const fileName = "myTuneData.json"
+  let tuneBlob = new Blob([currentJson], { type: "application/json" });
+  let tuneLink = document.createElement("a");
+
+  tuneLink.href = URL.createObjectURL(tuneBlob);
+  tuneLink.download = fileName;
+  document.body.appendChild(tuneLink);
+
+  tuneLink.click();
+  document.body.removeChild(tuneLink);
+
+}
+
+// Export Tunetable in plain text format, adding relative indentation
+
+function exportTuneTable() {
+
+  const tableRows = tuneTable.getElementsByTagName('tr');
+  const tableWidths = new Array(tuneTable.rows[0].cells.length).fill(0);
+
+  let tableHeaders = "";
+  let idM = showMeter? "M" : "ID"; 
+  let urlAbc = showAbcBox.checked? "ABC" : "URL";
+  let headersList = ["#", "Name", idM, urlAbc];
+
+  tableWidths[2] = 2;
+
+  for (let f = 0; f < tableRows.length; f++) {
+
+    const tableCells = tableRows[f].getElementsByTagName('td');
+
+    for (let g = 0; g < tableCells.length; g++) {
+
+      tableWidths[g] = Math.max(tableWidths[g], tableCells[g].textContent.length);
+    }
+  }
+
+  for (let h = 0; h < headersList.length; h++) {
+
+    const headerText = headersList[h];
+    const spacesToAdd = tableWidths[h] - headerText.length + 1;
+    tableHeaders += h === (headersList.length - 1)? headerText : 
+    headerText + ' '.repeat(spacesToAdd) + '\t';
+  }
+
+  let tableContent = tableHeaders + '\n\n';
+
+  for (let i = 0; i < tableRows.length; i++) {
+
+    const tableCells = tableRows[i].getElementsByTagName('td');
+
+    for (let j = 0; j < tableCells.length; j++) {
+
+      const cellText = tableCells[j].textContent;
+      const spacesToAdd = tableWidths[j] - cellText.length + 1;
+      tableContent += j === tableCells.length - 1? cellText : 
+      cellText + ' '.repeat(spacesToAdd) + '\t';
+    }
+
+    tableContent += '\n';
+  }
+
+  const txtName = "myTuneTable.txt";
+  let tuneTableBlob = new Blob([tableContent], { type: "text/plain" });
+  let tuneTableLink = document.createElement("a");
+
+  tuneTableLink.href = URL.createObjectURL(tuneTableBlob);
+  tuneTableLink.download = txtName;
+  document.body.appendChild(tuneTableLink);
+
+  tuneTableLink.click();
+  document.body.removeChild(tuneTableLink);
+
+}
+
+////////////////////////////////////////////////////////////////////////
+// Clear data functions: Wiping Tunetable, Sort settings and JSON files
+///////////////////////////////////////////////////////////////////////
+
+// Clear local JSONs of tunes
+
+export function clearJsonData() {
+
+  importJson = {};
+  sortedJson = {};
+  saveIcon.removeAttribute("style");
+  console.log("Tune data cleared");
+
+}
+
+// Clear Tunetable if it exists, else clear Infobox
+
+export function clearTunetable() {
+
+  if (!checkIfTableEmpty()) {
+
+    tuneTable.textContent = "";
+    console.log("Tunetable cleared");
+  } 
+}
+
+// Clear only sorting style in the Sort menu
+
+export function clearSortStyle() {
+
+  if (sortStyle > 0) {
+    sortStyle = 0;
+    document.querySelector('input[name="sortstyle"]:checked').checked = false;
+    console.log("Sorting style cleared");
+  }
+}
+
+// Uncheck sorting options checkboxes if not protected
+
+export function clearCheckboxData() {
+
+  if (!alwaysUseTypeBox.checked) {
+    showTypeBox.checked = false;
+  }
+
+  if (!alwaysUseKeysBox.checked) {
+    showKeysBox.checked = false;
+  }
+
+  if (!alwaysUseAbcBox.checked) {
+    showAbcBox.checked = false;
+    useShorterAbcBox.checked = false;
+  }
+}
+
+// Clear sorting style and all checkbox settings
+
+export function clearSortMenu() {
+
+  clearSortStyle();
+
+  if (alwaysUseAbcBox.checked) {
+    alwaysUseAbcBox.click();
+    // alwaysUseAbcBox.checked = false;
+  }
+
+  if (alwaysUseKeysBox.checked) {
+    alwaysUseKeysBox.click();
+    // alwaysUseAbcBox.checked = false;
+  } 
+
+  if (alwaysUseTypeBox.checked) {
+    alwaysUseTypeBox.click();
+    // alwaysUseAbcBox.checked = false;
+  }
+
+  clearCheckboxData();
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// Menu accessibility: Changing visibility and ARIA states of Help and Sort menus
+/////////////////////////////////////////////////////////////////////////////////
+
+// Show or hide help menu
+
+function toggleHelpMenu() {
+  
+  hideSortMenu();
+  helpIcon.classList.toggle("active");
+  accMainWrapper.classList.toggle("unwrapped");
+  toggleAriaStatesHelp();
+}
+
+// Hide Sort options menu
+
+function hideSortMenu() {
+
+  if (sortMenu.classList.contains("displayed")) {
+    
+    sortMenu.classList.remove("displayed");
+    toggleAriaStatesSort();
+  }
+}
+
+// Toggle states of the visible help menu items when the menu is wrapped / unwrapped
+
+function toggleAriaStatesHelp() {
+
+  toggleAriaExpanded(accMainHeader);
+  toggleAriaHidden(accHelpMenu);
+
+  if (accMenuIntro.classList.contains("unwrapped")) {
+    toggleAriaHidden(accMenuIntroText);
+    toggleTabIndex(accMenuIntroText);
+  }
+
+  accSubHeaders.forEach(subheader => {
+    
+    let tabIndex = subheader.getAttribute("tabindex") === "0"? "-1" : "0";
+    subheader.setAttribute("tabindex", tabIndex);
+    toggleAriaHidden(subheader);
+  });
+
+  accWrappers.forEach(wrapper => {
+    
+    if (wrapper.classList.contains("unwrapped")) {
+      toggleTabIndex(wrapper);
+    }
+  });
+
+  let tabIndexWrapper = accWrapBtn.getAttribute("tabindex");
+
+  if (tabIndexWrapper === "0") {
+    
+    accWrapBtn.setAttribute("disabled", '');
+    accWrapBtn.setAttribute("tabindex", "-1");
+    inputForm.focus();
+
+  } else {
+    accWrapBtn.removeAttribute("disabled");
+    accWrapBtn.setAttribute("tabindex", "0");
+  }
+
+  toggleAriaHidden(accWrapBtn);
+}
+
+// Toggle states of the visible sort menu items when the menu is wrapped / unwrapped
+
+function toggleAriaStatesSort() {
+
+  toggleAriaExpanded(sortTunetableBtn);
+  toggleAriaHidden(sortMenu);
+
+  if (advOptionsBox.classList.contains("displayed-flex")) {
+    toggleAriaHidden(advOptionsBox);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Event listeners: Setting events for buttons, radio buttons and checkboxes
+////////////////////////////////////////////////////////////////////////////
 
 function initButtons() {
 
@@ -1436,7 +1055,8 @@ function initButtons() {
       if (validateTsoUrl()) {
 
         localStorage.setItem("inputUrl", inputForm.value);
-        fetchTheSessionJson(inputForm.value.trim());
+
+        generateTunetableSequence();
   
       } else {
         
@@ -1455,17 +1075,17 @@ function initButtons() {
     event.preventDefault();
 
     inputForm.value = "";
+    clearCheckboxData();
+    clearSortMenu();
 
     if (!checkIfJsonHasTunes(importJson) && !checkIfJsonHasSets(importJson)) {
 
-      return showInfoMsg("No tune data found!", 1)
+      return showInfoMsg("Settings cleared");
     }
 
     hideSortMenu();
-    clearSortMenu();
     clearTunetable();
     clearJsonData();
-    clearCheckboxData();
 
     showInfoMsg("Tunetable cleared!");
   });
@@ -1561,7 +1181,7 @@ function initButtons() {
 
       if (checkIfJsonHasTunes(importJson) && !checkIfJsonHasAbc(importJson)) {
 
-        loadAbcIncipits();
+        abcPreloadSequence();
       }
     }
   });
@@ -1574,7 +1194,7 @@ function initButtons() {
   
       if (!checkIfJsonHasAbc(importJson)) {
 
-        loadAbcIncipits();
+        abcPreloadSequence();
       }
     }
   });
@@ -1614,7 +1234,7 @@ function initButtons() {
 
         if (!checkIfJsonHasAbc(importJson)) {
 
-          loadAbcIncipits();
+          abcPreloadSequence();
         }
 
         showAbcBox.checked = true;
@@ -1641,7 +1261,7 @@ function initButtons() {
 
         if (!checkIfJsonHasAbc(importJson)) {
 
-          loadAbcIncipits();
+          abcPreloadSequence();
         }
 
         showKeysBox.checked = true;
@@ -1653,6 +1273,13 @@ function initButtons() {
       showKeysBox.removeAttribute("style");
       showKeysBox.checked = false;
     }
+  });
+
+  // Unwrap Offline menu when Infobox clicked
+
+  infoBox.addEventListener('click', () => {
+
+    toggleOfflineMenu();
   });
 
   // Expand / shrink Tunetable's Name column on click
@@ -1769,6 +1396,8 @@ function initButtons() {
     document.body.classList.toggle("light");
     sunIcon.classList.toggle("hidden");
     moonIcon.classList.toggle("displayed");
+    githubDark.classList.toggle("hidden");
+    githubLight.classList.toggle("displayed");
   });
 
   // Show / hide help menu button
@@ -1885,16 +1514,16 @@ function initButtons() {
 
     if (!checkIfTableEmpty()) {
 
-      clearSortMenu();
+      clearSortStyle()
       sortedJson = {};
-
+    
       if (alwaysUseKeysBox.checked) {
         alwaysUseKeysBox.click();
       } 
-
+    
       if (alwaysUseTypeBox.checked) {
         alwaysUseTypeBox.click();
-      } 
+      }
 
       createTuneTable(importJson);
       showInfoMsg("Reverted to TSO defaults!");
@@ -1978,13 +1607,32 @@ function initButtons() {
 
 }
 
+///////////////////////////////////////////////
+// Initialize necessary functions on page load
 //////////////////////////////////////////////
-// Initiate necessary functions on page load
-/////////////////////////////////////////////
 
 document.addEventListener("DOMContentLoaded", () => {
   
   inputForm.value = localStorage.getItem("inputUrl");
   initButtons();
+  generateOfflineLinks();
+  console.log("Tunetable GUI initialized");
   showInfoMsg("Hi there! Got any tunes?");
 });
+
+//////////////////////////////////////////
+// Register service worker on window load
+/////////////////////////////////////////
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('./sw.js')
+      .then((registration) => {
+        console.log(`Service Worker:\n\n` + `Registered with scope:\n` + registration.scope);
+      })
+      .catch((error) => {
+        console.error(`Service Worker:\n\n` + `Registration failed!\n` + error);
+      });
+  });
+}

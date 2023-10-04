@@ -1,4 +1,4 @@
-Tunetable: Convert The Session tunebooks, tunelists and sets to compact tables [v.1.9.0]
+Tunetable: Convert The Session tunebooks, tunelists and sets to compact tables [v.1.9.0] 
 ========================================================================================
 
 ## Overview
