@@ -68,7 +68,6 @@ b {
 }
 
 button {
-  width: 100%;
   appearance: none;
   border: none;
   box-shadow: none;
@@ -100,7 +99,7 @@ button:focus-visible {
 h1, h2 {
   color: var(--header-color);
   font-size: var(--font-large);
-  margin: 2rem 0.5rem;
+  margin: 1.7rem 2rem 2rem;
   text-align: center;
   cursor: pointer;
 }
@@ -132,7 +131,10 @@ li {
   justify-content: center;
 }
 
-.n-help-btn:is(:hover, :focus) > *, .n-theme-btn:is(:hover, :focus) > *, .t-revert-btn:is(:hover, :focus) > * {
+.logo:is(:hover, :focus-within) > .logo-icon,
+.n-help-btn:is(:hover, :focus) > *, 
+.n-theme-btn:is(:hover, :focus) > *, 
+.t-revert-btn:is(:hover, :focus) > * {
   opacity: 1;
 }
 
@@ -181,7 +183,7 @@ li {
 
 table {
   border-collapse: collapse;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 th {
@@ -487,7 +489,6 @@ input[name="sortstyle"]:checked {
 
 .r-go-sort-btn {
   justify-content: center;
-  width: 100%;
 }
 
 .r-go-sort-btn-icon {
@@ -693,12 +694,34 @@ input[name="sortstyle"]:checked {
   color: var(--highlight-color);
 }
 
+/* Offline links box styles */
+
+.offline-links-box {
+  margin: 0 1.2rem;
+  padding: 0 0.45rem;
+  text-align: center;
+}
+
+.offline-link {
+  color: var(--alt-accent-color);
+  font-size: var(--font-mid);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 1.5rem;
+}
+
+.offline-link:focus-visible {
+  outline: 0.2rem solid var(--alt-accent-color);
+  outline-offset: 0.16rem;
+  border-radius: 0.4rem;
+}
+
 /* Container settings */
 
-.main-container, .t-container, .btn-container,
-.radio-wrapper, .checkbox-container, .options-container,
-.t-head-name-container, .input-container, .nav-container,
-.adv-options-wrapper {
+.main-container, .header-container, .footer-container, 
+.nav-container, .t-container, .btn-container, .radio-wrapper, 
+.checkbox-container, .options-container, .t-head-name-container, 
+.input-container, .adv-options-wrapper, .tso-icon {
   display: flex;
 }
 
@@ -707,19 +730,31 @@ input[name="sortstyle"]:checked {
   flex-flow: column;
 }
 
-.main-container, .t-container {
+.main-container, .t-container, .footer-container, .tso-icon {
   justify-content: center;
 }
 
-.btn-container, .radio-wrapper, .checkbox-container,
+.header-container, .btn-container, .radio-wrapper, .checkbox-container, 
 .options-container, .t-head-name-container, .nav-container {
   justify-content: space-between;
+}
+
+.header-container {
+  margin: 0.5rem auto;
+  padding: 0 0.5rem;
+  max-width: 50rem;
+  min-width: 25.2rem;
 }
 
 .main-container {
   max-width: 33.4375rem;
   min-width: 25.2rem;
   margin: 0 auto;
+}
+
+.footer-container {
+  margin: 1.2rem auto;
+  min-width: 25.2rem;
 }
 
 .t-container, .btn-container, .sort-menu-container {
@@ -754,7 +789,7 @@ input[name="sortstyle"]:checked {
   padding-right: 0.94rem;
 }
 
-.adv-options-wrapper {
+.adv-options-wrapper, .tso-icon {
   align-items: center;
 }
 
@@ -766,6 +801,76 @@ input[name="sortstyle"]:checked {
   flex-direction: row;
   margin: 0.5rem 1.2rem;
   padding: 0 0.2rem;
+}
+
+/* Header and footer styles */
+
+.logo {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  position: relative;
+}
+
+.logo-icon {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.66s ease-in-out;
+}
+
+.tso-icon {
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  background-color: #e5b219;
+  background-image: linear-gradient(#eb2,#da1);
+  color: rgba(51,0,0,.9);
+  outline-width: 0.0625em;
+  outline-style: dashed;
+  outline-color: #c93;
+  border-radius: 0.2em;
+  outline-offset: -0.15em;
+}
+
+.github-logo {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.github-icon-dark {
+  color: white;
+}
+
+.github-icon-light {
+  color: black;
+  display: none;
+}
+
+.logo-link {
+  color: var(--text-color);
+  font-size: var(--font-large);
+  opacity: 1;
+  position: absolute;
+  text-align: center;
+  left: 0;
+  top: 0.1rem;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.tso-logo .logo-link {
+  color: var(--highlight-color);
+}
+
+.github-logo .logo-link {
+  color: var(--menu-color);
+}
+
+.logo-link:is(:active, :hover, :focus) {
+  opacity: 0;
+  color: transparent;
+  outline: none;
 }
 
 /* Various toggle states */
@@ -798,6 +903,10 @@ input[name="sortstyle"]:checked {
   color: var(--highlight-color);
 }
 
+.dimmed {
+  opacity: 0.7;
+}
+
 .hovered {
   box-shadow: 0px 0px 0px 0.1875rem var(--alt-accent-color);
   opacity: 1;
@@ -805,6 +914,10 @@ input[name="sortstyle"]:checked {
 
 .enlarged {
   transform: scale(1.07);
+}
+
+.wide {
+  width: 100%;
 }
 
 @media screen and (max-width: 435px) {
