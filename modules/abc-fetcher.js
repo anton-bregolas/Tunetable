@@ -319,11 +319,11 @@ export async function loadAbcIncipits(importJson) {
     
     if (checkIfJsonHasTunes(importJson)) {
 
-      abcUrl = "https://raw.githubusercontent.com/anton-bregolas/Tunetable/deploy/abc.json";
+      abcUrl = "https://raw.githubusercontent.com/anton-bregolas/Tunetable/deploy/data/abc.json";
 
     } else if (checkIfJsonHasSets(importJson)) {
 
-      abcUrl = "https://raw.githubusercontent.com/anton-bregolas/Tunetable/deploy/abc-settings.json"
+      abcUrl = "https://raw.githubusercontent.com/anton-bregolas/Tunetable/deploy/data/abc-settings.json"
     }
 
     showInfoMsg("Loading ABC incipits...");
