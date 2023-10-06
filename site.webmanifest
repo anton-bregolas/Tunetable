@@ -29,5 +29,5 @@
   "categories": ["music"],
   "orientation": "any",
   "scope": "/",
-  "start_url": "/index.html"
+  "start_url": "index.html"
 }
