@@ -29,5 +29,5 @@
   "categories": ["music"],
   "orientation": "any",
   "scope": "/",
-  "start_url": "https://anton-bregolas.github.io/Tunetable"
+  "start_url": "/index.html"
 }
