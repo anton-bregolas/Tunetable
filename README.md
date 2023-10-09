@@ -15,7 +15,7 @@ See Tunetable Help menu for detailed instructions.
 Tunetable is being developed by Anton Zille aka Bregolas.
 
 - [Launch Tunetable on Anton Zille’s GitHub](https://github.com/anton-bregolas/Tunetable/)
-- [Discuss Tunetable on The Session]()
+- [Discuss Tunetable on The Session](https://thesession.org/discussions/48665)
 
 ## TO DO:
 
