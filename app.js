@@ -277,24 +277,27 @@ async function generateOfflineLinks() {
 
 function toggleOfflineMenu() {
 
-  if (offlineBox.classList.contains("displayed")) {
+  if (offlineBox.hasChildNodes()) {
 
-    offlineBox.classList.remove("displayed");
+    if (offlineBox.classList.contains("displayed")) {
+
+      offlineBox.classList.remove("displayed");
+    
+    } else {
   
-  } else {
-
-    offlineBox.classList.add("displayed");
+      offlineBox.classList.add("displayed");
+    }
+  
+    toggleAriaExpanded(infoBoxBtn);
+    toggleAriaHidden(offlineBox);
   }
-
-  toggleAriaExpanded(infoBoxBtn);
-  toggleAriaHidden(offlineBox);
 }
 
 // Show offline links menu
 
 function displayOfflineMenu() {
 
-  if (!offlineBox.classList.contains("displayed")) {
+  if (offlineBox.hasChildNodes() && !offlineBox.classList.contains("displayed")) {
 
     offlineBox.classList.add("displayed");
     toggleAriaExpanded(infoBoxBtn);
