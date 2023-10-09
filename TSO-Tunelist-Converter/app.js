@@ -1014,7 +1014,7 @@ function toggleAriaStatesHelp() {
     
     accWrapBtn.setAttribute("disabled", '');
     accWrapBtn.setAttribute("tabindex", "-1");
-    inputForm.focus();
+    accMainHeader.focus();
 
   } else {
     accWrapBtn.removeAttribute("disabled");
