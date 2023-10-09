@@ -23,7 +23,7 @@ See Help menu (Read Me For More) for detailed instructions.
 + Fallback offline.html page added for PWA in case cached index.html doesn't work.
 + Accessibility: 
   - Regrouped Infobox and made Tunetable body selectable to fix accessibility issues
-  - Tunetable content can now be vertically expanded on hitting space or enter
+  - Tunetable content can now be vertically expanded on hitting space bar key
   - Low-contrast colors changed to recommended contrast ratio
   - Added ARIA labels to elements missing accessible names
 + Experimental: Slightly delayed logo-links transitions for mobile devices to show logos.

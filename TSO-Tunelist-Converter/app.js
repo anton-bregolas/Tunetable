@@ -458,7 +458,7 @@ export function createTuneTable(myJson) {
     tuneTable.addEventListener('click', expandTuneNames);
     tuneTable.setAttribute("tabindex", 0);
     tuneTable.addEventListener('keydown', event => {
-      if (/^(13|32)$/.test(event.which)) {
+      if (/^(32)$/.test(event.which)) {
         event.preventDefault();
         tuneTable.click();
       }
