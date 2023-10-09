@@ -12,6 +12,11 @@ It contains [information](https://github.com/adactio/TheSession-data) from The S
 
 See Tunetable Help menu for detailed instructions.
 
+Tunetable is being developed by Anton Zille aka Bregolas.
+
+[Launch Tunetable on Anton Zille’s GitHub](https://github.com/anton-bregolas/Tunetable/)
+Discuss Tunetable on The Session
+
 ## TO DO:
 
 - Collect initial feedback, fix more bugs.
