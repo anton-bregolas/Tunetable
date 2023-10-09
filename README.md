@@ -6,9 +6,11 @@ Tunetable: Convert The Session tunebooks, tunelists and sets to compact tables [
 Generate handy tunetables from [thesession.org](https://thesession.org/) tunebooks and lists of 
 tagged tunes using a simple web app with a URL input and sorting options that makes use of [The Session API](https://thesession.org/api).
 
-Contains [information](https://github.com/adactio/TheSession-data) from The Session, which is made available here under the Open Database License (ODbL).
+Tunetable is a free and open source software licensed under the terms of the GPL 3.0 license.
 
-See Help menu (Read Me For More) for detailed instructions.
+It contains [information](https://github.com/adactio/TheSession-data) from The Session, which is made available here under the Open Database License (ODbL).
+
+See Tunetable Help menu for detailed instructions.
 
 ## TO DO:
 
