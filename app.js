@@ -18,7 +18,7 @@ import { validateTsoUrl } from './modules/url-validator.js';
 // Declare global variables and constants, set default user JSONs
 /////////////////////////////////////////////////////////////////
 
-const CACHE_NAME = 'tunetable-cache-v.1.9.1';
+const CACHE_NAME = 'tunetable-cache-v.1.9.1.1';
 
 let noThe = 0;
 let noAn = 0;
@@ -1014,7 +1014,7 @@ function toggleAriaStatesHelp() {
     
     accWrapBtn.setAttribute("disabled", '');
     accWrapBtn.setAttribute("tabindex", "-1");
-    inputForm.focus();
+    accMainHeader.focus();
 
   } else {
     accWrapBtn.removeAttribute("disabled");
