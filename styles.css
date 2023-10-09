@@ -17,7 +17,7 @@ body {
   --accent-color: #ffdc18;
   --alt-accent-color: #ffdc18;
   --highlight-color: coral;
-  --link-color: #551a8b;
+  --link-color: #9f69d1;
   --link-active-color: coral;
   --border-color: #ffdc1823;
   --alt-border-color: #ffdc1851;
@@ -40,9 +40,9 @@ body.light {
   --menu-color: #551a8b;
   --accent-color: #ffdc18;
   --alt-accent-color: black;
-  --highlight-color: coral;
+  --highlight-color: #ff5518;
   --link-color: #551a8b;
-  --link-active-color: coral;
+  --link-active-color: #ff5518;
   --border-color: #ffdc18b8;
   --alt-border-color: #ffdc18de;
   --header-cell-color: #551a8b;
@@ -179,6 +179,18 @@ li {
   --width-id: 5rem;
   --width-abc: 8rem;
   --width-url: 4.375rem;
+  margin-top: 1.7rem;
+}
+
+#t-tunes:is(:focus-visible) {
+  border-radius: 0.5rem;
+  outline: 0.2rem solid var(--accent-color);
+}
+
+#t-tunes a:focus-visible {
+  outline: 0.2rem solid var(--accent-color);
+  outline-offset: -0.1rem;
+  border-radius: 0.5rem;
 }
 
 table {
@@ -687,7 +699,7 @@ input[name="sortstyle"]:checked {
   font-size: var(--font-large);
   color: var(--header-color);
   text-align: center;
-  margin: 0.12rem 1.2rem 1.7rem 1.2rem;
+  margin: 0.12rem 1.2rem 0 1.2rem;
 }
 
 .info-error {
@@ -697,7 +709,7 @@ input[name="sortstyle"]:checked {
 /* Offline links box styles */
 
 .offline-links-box {
-  margin: 0 1.2rem;
+  margin: 1.7rem 1.2rem 0;
   padding: 0 0.45rem;
   text-align: center;
 }
@@ -871,6 +883,12 @@ input[name="sortstyle"]:checked {
   opacity: 0;
   color: transparent;
   outline: none;
+}
+
+.offline-header {
+  color: var(--alt-border-color);
+  font-size: var(--font-large);
+  margin: 0 auto;
 }
 
 /* Various toggle states */

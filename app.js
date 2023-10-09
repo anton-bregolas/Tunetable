@@ -30,6 +30,7 @@ let sortedJson = {};
 
 // Navigation menu elements
 
+const logoLnk = document.querySelectorAll('.logo-link');
 const saveBtn = document.querySelector('.n-save-btn');
 const helpBtn = document.querySelector('.n-help-btn');
 const themeBtn = document.querySelector('.n-theme-btn');
@@ -64,11 +65,9 @@ const clearTunetableBtn = document.querySelector('.t-clr-btn');
 const sortTunetableBtn = document.querySelector('.t-sort-btn');
 const goSortBtn = document.querySelector('.r-go-sort-btn');
 const sortMenu = document.querySelector('#sort-menu-options');
-const radioForm = document.querySelector('.radio-container');
 const radioBtnOrder = document.querySelectorAll('input[name="sortstyle"]');
 const radioBtnNoThe = document.querySelectorAll('input[name="nothestyle"]');
 const radioBtnNoAn = document.querySelectorAll('input[name="noanstyle"]');
-const sortStyleDefaultBtn = document.querySelector("#sort-default-btn");
 const showTypeBox = document.querySelector('#add-type');
 const showKeysBox = document.querySelector('#add-keys');
 const showAbcBox = document.querySelector('#add-abc');
@@ -83,7 +82,6 @@ const alwaysUseTypeBox = document.querySelector('#use-type-default');
 
 const tableWrapper = document.querySelector('#tunetable');
 const tuneTable = tableWrapper.querySelector('#t-tunes');
-const tuneTableHeaders = tableWrapper.querySelector('#t-headers');
 const saveJsonBtn = tableWrapper.querySelector('#t-head-no');
 const tuneTableNameBtn = tableWrapper.querySelector(".t-head-name-btn");
 const tuneTableIdBtn = tableWrapper.querySelector("#t-head-id");
@@ -95,6 +93,7 @@ const revertBtn = tableWrapper.querySelector('.t-revert-btn');
 // Infobox elements
 
 const infoBox = document.querySelector('.info-box');
+const infoBoxBtn = document.querySelector('.info-box-btn');
 
 // Cached link box elements
 
@@ -287,7 +286,7 @@ function toggleOfflineMenu() {
     offlineBox.classList.add("displayed");
   }
 
-  toggleAriaExpanded(infoBox);
+  toggleAriaExpanded(infoBoxBtn);
   toggleAriaHidden(offlineBox);
 }
 
@@ -298,7 +297,7 @@ function displayOfflineMenu() {
   if (!offlineBox.classList.contains("displayed")) {
 
     offlineBox.classList.add("displayed");
-    toggleAriaExpanded(infoBox);
+    toggleAriaExpanded(infoBoxBtn);
     toggleAriaHidden(offlineBox);
   }
 }
@@ -316,7 +315,6 @@ export function createTuneTable(myJson) {
   appBusy = 1;
 
   let myData;
-  let myTuneId;
 
   if (checkIfJsonHasTunes(myJson)) {
 
@@ -458,6 +456,13 @@ export function createTuneTable(myJson) {
 
     tuneTable.appendChild(tuneRow);
     tuneTable.addEventListener('click', expandTuneNames);
+    tuneTable.setAttribute("tabindex", 0);
+    tuneTable.addEventListener('keydown', event => {
+      if (/^(32)$/.test(event.which)) {
+        event.preventDefault();
+        tuneTable.click();
+      }
+    });
   }
 
   showInfoMsg("Hup! Tunetable is ready");
@@ -1277,7 +1282,7 @@ function initButtons() {
 
   // Unwrap Offline menu when Infobox clicked
 
-  infoBox.addEventListener('click', () => {
+  infoBoxBtn.addEventListener('click', () => {
 
     toggleOfflineMenu();
   });
@@ -1514,7 +1519,8 @@ function initButtons() {
 
     if (!checkIfTableEmpty()) {
 
-      clearSortStyle()
+      hideSortMenu();
+      clearSortStyle();
       sortedJson = {};
     
       if (alwaysUseKeysBox.checked) {
@@ -1535,7 +1541,25 @@ function initButtons() {
       showInfoMsg("No tune data found!", 1);
       return;
     }
-});
+  });
+
+  // Set delay for logo-links for animation to finish before new page opens
+  // but only if the click seems to be coming from a mobile device
+
+  logoLnk.forEach(link => {
+
+    if (window.screen.width < 720) {
+
+      link.addEventListener('click', (event) => {
+
+        event.preventDefault();
+
+        console.log(location);
+
+        setTimeout(() => { location.assign(link.href) }, 500);
+      });
+    }
+  });
 
   // Trigger animations / transitions of selected buttons & their elements
 
