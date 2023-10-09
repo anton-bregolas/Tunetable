@@ -158,7 +158,7 @@ export async function fetchTheSessionJson(url) {
 
     } else {
 
-      console.error(`Found empty tune/set array, link corrupted or list missing:\n\n` + jsonUrl);
+      console.error(`Found empty tune/set array! Incorrect link or data missing:\n\n` + jsonUrl);
       errorMessage = "No tune data found! Check URL";
       throw new Error(errorMessage);
     }

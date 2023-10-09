@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Convert your Irish Traditional Music tunebooks and tune lists from thesession.org into compact tables with ABC notation incipits and links to The Session.">
     <title>Tunetable: Convert The Session tunebooks, tunelists and sets to compact tables</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="icon" href="favicon.ico" sizes="48x48">
@@ -23,11 +22,16 @@
       <div class="header-container">  
         <div class="logo tunetable-logo" title="Tunetable">
           <img src="favicon.svg" class="logo-icon" aria-hidden="true" alt="Tunetable logo">
-          <a class="logo-link" href="https://anton-bregolas.github.io/Tunetable" target="_blank" aria-label="Link to Tunetable main page">T</a>
+          <a class="logo-link" href="https://anton-bregolas.github.io/Tunetable">T</a>
+        </div>
+        <div>
+          <h2 class="offline-header" title="Tunetable is offline. Click here to refresh the page">
+            <a href="index.html">OFFLINE</a>
+          </h2>
         </div>
         <div class="logo tso-logo" title="The Session">
           <span class="logo-icon tso-icon" aria-hidden="true">S</span>
-          <a class="logo-link" href="https://thesession.org/" target="_blank" aria-label="Link to The Session main page">S</a>
+          <a class="logo-link" href="#">S</a>
         </div>
       </div>
     </header>
@@ -56,7 +60,7 @@
                   </button>
                 </h2>
                 <div id="help-menu-intro-content" class="help-menu-text" aria-hidden="true">
-                  <p>Get a link to a tunelist posted on <a href="https://thesession.org/" target="_blank" title="https://thesession.org/" tabindex="-1"><b>The&nbsp;Session</b></a>,
+                  <p>Get a link to a tunelist posted on <a href="#" title="https://thesession.org/" tabindex="-1"><b>The&nbsp;Session</b></a>,
                     paste it into the input form below and then press the big Generate button and wait a wee bit. A&nbsp;neat <b>Tunetable</b> will appear below.</p>
                 </div>
               </div>
@@ -194,7 +198,7 @@
                 <svg class="app-icon t-input-control-icon" aria-hidden="true"><use href="assets/icons/icons.svg#t-clr-btn-icon"></use></svg>
               </span>
             </button>
-            <button class="t-btn t-sort-btn" id="sort" title="Press to open or close the Sort Menu" aria-label="Sort Menu" aria-expanded="false" aria-controls="sort-menu-options">
+            <button class="t-btn t-sort-btn" id="sort" title="Press to open or close the Sort Menu" aria-expanded="false" aria-controls="sort-menu-options">
               <span class="t-btn-text">Sort</span>
               <span class="t-sort-btn-icon">
                 <svg class="app-icon t-input-control-icon" aria-hidden="true"><use href="assets/icons/icons.svg#t-sort-btn-icon"></use></svg>
@@ -270,12 +274,10 @@
             </span>
           </button>
         </form>
-        <button class="info-box-btn" aria-expanded="false" title="Information box. Press to toggle Offline menu">
-          <div class="info-box" aria-live="polite"></div>
-        </button>
+        <button class="info-box" aria-live="polite" aria-expanded="false" title="Information box. Press to toggle Offline menu"></button>
         <div class="offline-links-box hidden" aria-hidden="true"></div>
         <div class="t-container">
-          <table id="tunetable" title="Tunetable">
+          <table id="tunetable">
             <thead>
               <tr id="t-headers">
                 <th id="t-head-no"><button class="wide" title="Tunetable Index Number. Click to download Tune data">#</button></th>
@@ -291,7 +293,7 @@
                 <th id="t-head-url"><button class="wide" title="Default: Link to TSO Tune or Set. Alt: ABC incipit. Click to expand or shrink Tunetable">URL</button></th>
               </tr>
             </thead>
-            <tbody id="t-tunes" title="Tunetable contents"></tbody>
+            <tbody id="t-tunes"></tbody>
           </table>
         </div>
       </div>
@@ -301,7 +303,7 @@
       <div class="logo github-logo" title="Tunetable on GitHub">
         <svg class="logo-icon github-icon-dark" aria-hidden="true"><use href="assets/icons/icons.svg#github-icon"></use></svg>
         <svg class="logo-icon github-icon-light" aria-hidden="true"><use href="assets/icons/icons.svg#github-icon"></use></svg>
-        <a class="logo-link" href="https://github.com/anton-bregolas/Tunetable" target="_blank" aria-label="Link to Tunetable page on GitHub">O</a>
+        <a class="logo-link" href="#">O</a>
       </div>
       </div>
     </footer>

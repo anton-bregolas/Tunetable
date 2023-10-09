@@ -1,4 +1,4 @@
-Tunetable: Convert The Session tunebooks, tunelists and sets to compact tables [v.1.9.0] 
+Tunetable: Convert The Session tunebooks, tunelists and sets to compact tables [v.1.9.1] 
 ========================================================================================
 
 ## Overview
@@ -16,6 +16,17 @@ See Help menu (Read Me For More) for detailed instructions.
 - Expand capabilities of service worker.
 
 ## DONE: 
+
+[v.1.9.1]
+
++ Current service worker settings should allow falling back to cached index.html on page reload.
++ Fallback offline.html page added for PWA in case cached index.html doesn't work.
++ Accessibility: 
+  - Regrouped Infobox and made Tunetable body selectable to fix accessibility issues
+  - Tunetable content can now be vertically expanded on hitting space or enter
+  - Low-contrast colors changed to recommended contrast ratio
+  - Added ARIA labels to elements missing accessible names
++ Experimental: Slightly delayed logo-links transitions for mobile devices to show logos.
 
 [v.1.9.0]
 

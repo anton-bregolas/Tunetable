@@ -12,6 +12,7 @@ self.addEventListener('install', (event) => {
         'modules/url-validator.js',
         'app.js',
         'index.html',
+        'offline.html',
         'styles.css'
       ]);
     })
