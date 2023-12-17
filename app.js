@@ -18,7 +18,7 @@ import { validateTsoUrl } from './modules/url-validator.js';
 // Declare global variables and constants, set default user JSONs
 /////////////////////////////////////////////////////////////////
 
-const CACHE_NAME = 'tunetable-cache-v.1.9.1.2';
+const CACHE_NAME = 'tunetable-cache-v.1.9.1.3';
 
 let noThe = 0;
 let noAn = 0;
