@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tunetable-cache-v.1.9.1.3';
+const CACHE_NAME = 'tunetable-cache-v.1.9.1.4';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
