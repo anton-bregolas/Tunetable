@@ -1,4 +1,4 @@
-Tunetable: Convert The Session tunebooks, tunelists and sets to compact tables [v.1.9.1] 
+Tunetable: Convert The Session tunebooks, tunelists and sets to compact tables [v.1.9.2] 
 ========================================================================================
 
 ## Overview
@@ -23,6 +23,11 @@ Tunetable is being developed by Anton Zille aka Bregolas.
 - Expand capabilities of service worker.
 
 ## DONE: 
+
+[v.1.9.2]
+
++ Missing tune settings no longer break loading incipits into Tunetable:
++ If tune setting is not found in ABC data files (freshly submitted etc.), it's now loaded from The Session.
 
 [v.1.9.1]
 

@@ -251,7 +251,7 @@ export async function msgDelay(duration) {
 // Retrieve JSON data from The Session using async fetch requests
 // Display bonus messages if tDelay > 3s, then call createTuneTable()
 
-export async function fetchAbcIncipit(tuneId) {
+export async function fetchAbcIncipit(tuneId, settingId) {
 
   let tuneUrl = `https://thesession.org/tunes/${tuneId}?format=json`
 
@@ -268,8 +268,32 @@ export async function fetchAbcIncipit(tuneId) {
 
       console.log("Extracting ABC incipit and key from TSO tune...");
 
-      const abc = tsoTuneData.settings[0].abc;
-      const key = tsoTuneData.settings[0].key.slice(0, 4);
+      let abc;
+      let key;
+
+      // If settingId is specified, look for specific tune setting and get ABC from that setting
+      // If only tuneId is specified or matching settingId is not found, get the first tune setting
+
+      if (settingId) {
+
+        abc = tsoTuneData.settings[0].abc;
+        key = tsoTuneData.settings[0].key.slice(0, 4);
+
+        for (let s = 0; s < tsoTuneData.settings.length; s++) {
+
+          if (tsoTuneData.settings[s].id === settingId) {
+
+            abc = tsoTuneData.settings[s].abc;
+            key = tsoTuneData.settings[s].key.slice(0, 4);
+          }
+        }
+
+      } else {
+
+        abc = tsoTuneData.settings[0].abc;
+        key = tsoTuneData.settings[0].key.slice(0, 4);
+      }
+
       const abcBars = cleanTsoAbc(abc);
       const incipit = `[${key}] ${abcBars}`;
       console.log("Done fetching ABC incipit and tune key");
@@ -362,7 +386,9 @@ export async function loadAbcIncipits(importJson) {
 
             const setting = importJson.sets[m].settings[n];
             const settingId = setting.id;
-            let incipit = abcJson[settingId] === undefined? await fetchAbcIncipit(settingId) : abcJson[settingId];
+            const tuneId = setting.url.split("/")[4].split("#")[0];
+
+            let incipit = abcJson[settingId] === undefined? await fetchAbcIncipit(tuneId, settingId) : abcJson[settingId];
             let abcSetBars = incipit.slice(7);
 
             if (!setting.abc) {
