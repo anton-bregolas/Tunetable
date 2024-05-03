@@ -268,16 +268,13 @@ export async function fetchAbcIncipit(tuneId, settingId) {
 
       console.log("Extracting ABC incipit and key from TSO tune...");
 
-      let abc;
-      let key;
-
       // If settingId is specified, look for specific tune setting and get ABC from that setting
       // If only tuneId is specified or matching settingId is not found, get the first tune setting
 
-      if (settingId) {
+      let abc = tsoTuneData.settings[0].abc;
+      let key = tsoTuneData.settings[0].key.slice(0, 4);
 
-        abc = tsoTuneData.settings[0].abc;
-        key = tsoTuneData.settings[0].key.slice(0, 4);
+      if (settingId) {
 
         for (let s = 0; s < tsoTuneData.settings.length; s++) {
 
@@ -287,12 +284,7 @@ export async function fetchAbcIncipit(tuneId, settingId) {
             key = tsoTuneData.settings[s].key.slice(0, 4);
           }
         }
-
-      } else {
-
-        abc = tsoTuneData.settings[0].abc;
-        key = tsoTuneData.settings[0].key.slice(0, 4);
-      }
+      } 
 
       const abcBars = cleanTsoAbc(abc);
       const incipit = `[${key}] ${abcBars}`;
