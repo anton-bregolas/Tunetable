@@ -339,7 +339,7 @@ export async function loadAbcIncipits(importJson) {
 
     } else if (checkIfJsonHasSets(importJson)) {
 
-      abcUrl = "https://raw.githubusercontent.com/anton-bregolas/Tunetable/deploy/data/abc-settings.json"
+      abcUrl = "https://raw.githubusercontent.com/anton-bregolas/Tunetable/deploy/data/abc-settings.json";
     }
 
     showInfoMsg("Loading ABC incipits...");
